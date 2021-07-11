@@ -15,5 +15,7 @@ namespace SmartPlaylist.Contracts
         public DateTimeOffset? LastShuffleUpdate { get; set; } = null;
 
         public string UpdateType { get; set; }
+
+        public string SmartType { get; set; }
     }
 }

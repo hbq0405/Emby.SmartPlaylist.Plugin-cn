@@ -15,7 +15,7 @@ namespace SmartPlaylist.Domain
         private readonly SmartPlaylistDto _dto;
 
         public SmartPlaylist(Guid id, string name, Guid userId, RuleBase[] rules,
-            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType, SmartPlaylistDto dto)
+            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType, SmartType smartType, SmartPlaylistDto dto)
         {
             _dto = dto;
             Id = id;
@@ -25,6 +25,7 @@ namespace SmartPlaylist.Domain
             Limit = limit;
             LastShuffleUpdate = lastShuffleUpdate;
             UpdateType = updateType;
+            SmartType = smartType;
             MediaType = MediaTypeGetter.Get(rules);
         }
 
@@ -36,6 +37,7 @@ namespace SmartPlaylist.Domain
         public SmartPlaylistLimit Limit { get; }
 
         public UpdateType UpdateType { get; }
+        public SmartType SmartType { get; }
         public DateTimeOffset? LastShuffleUpdate { get; private set; }
 
 
@@ -141,6 +143,7 @@ namespace SmartPlaylist.Domain
                 Name = _dto.Name,
                 RulesTree = _dto.RulesTree,
                 UpdateType = _dto.UpdateType,
+                SmartType = _dto.SmartType,
                 UserId = _dto.UserId
             };
         }

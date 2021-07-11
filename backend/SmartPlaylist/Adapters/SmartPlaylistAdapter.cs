@@ -12,8 +12,8 @@ namespace SmartPlaylist.Adapters
         public static Domain.SmartPlaylist Adapt(SmartPlaylistDto dto)
         {
             return new Domain.SmartPlaylist(Guid.Parse(dto.Id), dto.Name, dto.UserId,
-                new RuleBase[] {RuleAdapter.Adapt(dto.RulesTree)}, GetLimit(dto.Limit), dto.LastShuffleUpdate,
-                GetUpdateType(dto.UpdateType), dto);
+                new RuleBase[] { RuleAdapter.Adapt(dto.RulesTree) }, GetLimit(dto.Limit), dto.LastShuffleUpdate,
+                GetUpdateType(dto.UpdateType), GetSmartType(dto.SmartType), dto);
         }
 
         private static UpdateType GetUpdateType(string updateTypeName)
@@ -21,6 +21,12 @@ namespace SmartPlaylist.Adapters
             if (Enum.TryParse(updateTypeName, true, out UpdateType updateType)) return updateType;
 
             return UpdateType.Live;
+        }
+
+        private static SmartType GetSmartType(string smartTypeName)
+        {
+            if (Enum.TryParse(smartTypeName, true, out SmartType smartType)) return smartType;
+            return SmartType.Playlist;
         }
 
         private static SmartPlaylistLimit GetLimit(SmartPlaylistLimitDto dto)

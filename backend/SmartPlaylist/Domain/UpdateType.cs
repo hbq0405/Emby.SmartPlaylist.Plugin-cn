@@ -8,4 +8,10 @@
         ShuffleWeekly = 4,
         ShuffleMonthly = 5
     }
+
+    public enum SmartType
+    {
+        Playlist = 1,
+        Collection = 2
+    }
 }

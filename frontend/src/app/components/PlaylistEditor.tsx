@@ -25,6 +25,17 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     return (
         <>
             <Inline>
+                <Select
+                    label="Type:"
+                    values={SmartTypes.map(x=>x)}
+                    value={basicData.smartType}
+                    onChange={newVal => {
+                        updateBasicData({
+                            smartType: newVal
+                        })
+                    }}
+                    style={{width:'120px'}}
+                />
                 <Input
                     maxWidth={true}
                     value={basicData.name}
@@ -40,16 +51,6 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             updateType: newVal,
                         })
                     }
-                />
-                <Select
-                    label="Type:"
-                    values={SmartTypes.map(x=>x)}
-                    value={basicData.smartType}
-                    onChange={newVal => {
-                        updateBasicData({
-                            smartType: newVal
-                        })
-                    }}
                 />
             </Inline>
 
