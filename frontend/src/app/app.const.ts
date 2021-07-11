@@ -7,7 +7,7 @@ import {
     RuleCriteriaDefinitionType,
     StringValue,
 } from '~/app/types/rule';
-import { LimitOrderBy, PlaylistLimit, UpdateType } from '~/app/types/playlist';
+import { LimitOrderBy, PlaylistLimit, SmartType, UpdateType } from '~/app/types/playlist';
 
 export const RuleMatchTypes = ['All', 'Any'] as const;
 export const PeriodValues = ['days', 'weeks', 'months'] as const;
@@ -18,6 +18,11 @@ export const UpdateTypes = [
     'ShuffleDaily',
     'ShuffleWeekly',
     'ShuffleMonthly',
+] as const;
+
+export const SmartTypes = [
+    'Playlist',
+     'Collection'
 ] as const;
 
 export const LimitOrderByValues = ['Random', 'Name'] as const;
@@ -98,3 +103,4 @@ export const deafultPlaylistLimit: PlaylistLimit = {
 
 export const defaultUpdateType: UpdateType = 'Live';
 export const defaultGroupMatchType: GroupMatchMode = 'All';
+export const defaultSmartType: SmartType = 'Playlist';

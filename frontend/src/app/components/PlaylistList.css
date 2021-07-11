@@ -1,0 +1,11 @@
+.plist-row {
+    padding: 2px;
+    border-radius: 10px;
+}
+.plist-row:hover,
+.plist-row:nth-child(odd):hover {
+    background-color: rgba(169, 169, 169, 0.5);
+}
+.plist-row:nth-child(odd) {
+    background-color: rgba(169, 169, 169, 0.1);
+}

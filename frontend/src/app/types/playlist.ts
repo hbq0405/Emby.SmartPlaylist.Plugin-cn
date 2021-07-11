@@ -1,6 +1,6 @@
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
-import { LimitOrderByValues, UpdateTypes } from '~/app/app.const';
+import { LimitOrderByValues, SmartTypes, UpdateTypes } from '~/app/app.const';
 
 export type PlaylistRulesTree<T> = {
     rulesTree: T;
@@ -11,6 +11,7 @@ export type PlaylistBasicData = {
     name: string;
     limit: PlaylistLimit;
     updateType: UpdateType;
+    smartType: SmartType;
 };
 
 export type PlaylistLimit = {
@@ -24,6 +25,8 @@ export type Playlist = PlaylistBasicData & PlaylistRulesTree<TreeViewData<RuleOr
 export type UpdateType = typeof UpdateTypes[number];
 
 export type LimitOrderBy = typeof LimitOrderByValues[number];
+
+export type SmartType = typeof SmartTypes[number];
 
 export const isShuffleUpdateType = (updateType: UpdateType) => {
     return (

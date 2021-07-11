@@ -9,6 +9,7 @@ import {
     defaultRuleCriteriaDefinition,
     stringCriteriaDefinitionType,
     defaultUpdateType,
+    defaultSmartType,
 } from '~/app/app.const';
 
 export const demoRulesCritDefinitions: RuleCriteriaDefinition[] = [
@@ -31,6 +32,7 @@ export const demoAppPlaylists: AppPlaylist[] = [
         name: 'Playlist1',
         limit: deafultPlaylistLimit,
         updateType: defaultUpdateType,
+        smartType: defaultSmartType,
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,

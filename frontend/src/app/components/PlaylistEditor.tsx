@@ -6,7 +6,7 @@ import { Input } from '~/common/components/Input';
 import { CheckBox } from '~/common/components/CheckBox';
 import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { defaultGroupMatchType, RuleMatchTypes, UpdateTypes } from '~/app/app.const';
+import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes } from '~/app/app.const';
 import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
@@ -40,6 +40,16 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             updateType: newVal,
                         })
                     }
+                />
+                <Select
+                    label="Type:"
+                    values={SmartTypes.map(x=>x)}
+                    value={basicData.smartType}
+                    onChange={newVal => {
+                        updateBasicData({
+                            smartType: newVal
+                        })
+                    }}
                 />
             </Inline>
 

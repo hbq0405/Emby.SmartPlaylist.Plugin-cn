@@ -65,7 +65,7 @@ namespace SmartPlaylist
 
         public override Guid Id => Guid.Parse("3C96F5BC-4182-4B86-B05D-F730F2611E45");
 
-        public override string Name => "SmartPlaylist";
+        public override string Name => "Smart Playlist";
 
         public override string Description => "Allow to define smart playlist rules.";
 

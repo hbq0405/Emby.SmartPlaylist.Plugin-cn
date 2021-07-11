@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ModalProps } from '~/common/components/Modal/Modal';
 import { Button } from '~/emby/components/Button';
+import './Modal.css';
 
 export const Modal: React.FC<ModalProps> = props => {
     return (

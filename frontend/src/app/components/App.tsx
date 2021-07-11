@@ -8,6 +8,7 @@ import { AppContext, createAppContextValue } from '~/app/state/app.context';
 import { loadAppData } from '~/app/app.data';
 import { AppData } from '~/app/types/appData';
 import { PlaylistList } from '~/app/components/PlaylistList';
+import { AddButton } from '~/common/components/AddButton';
 
 export type AppProps = {
     appId: string;
@@ -39,9 +40,16 @@ export const App: React.FC<AppProps> = props => {
     return (
         <>
             <AppContext.Provider value={appContext}>
-                <Button onClick={() => addNewPlaylist()}>Add new Smart Play List</Button>
-                <PlaylistList />
+                <div className="flex align-items-center justify-content-center focuscontainer-x itemsViewSettingsContainer padded-top padded-bottom padded-left padded-left-page padded-right">
+                    <AddButton 
+                        onClick={()=>addNewPlaylist()}
+                        label="Add Smart Playlist" />
+                </div>
 
+                <div className="verticalSection verticalSection-extrabottompadding">
+                    <PlaylistList />
+                </div>
+                
                 {editedPlaylist && (
                     <Modal
                         confirmLabel="Save"
