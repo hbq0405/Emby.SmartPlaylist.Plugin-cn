@@ -4,11 +4,11 @@ using MediaBrowser.Controller.Playlists;
 
 namespace SmartPlaylist.Domain
 {
-    public class LibraryUserFolder : UserFolder
+    public class LibraryUserFolder<T> : UserFolder where T : Folder
     {
-        private readonly Folder _item;
-        public Folder Item => _item;
-        public LibraryUserFolder(User user, Folder folder, SmartType smartType) : base(user, folder.Name, smartType)
+        private readonly T _item;
+        public T Item => _item;
+        public LibraryUserFolder(User user, T folder, SmartType smartType) : base(user, folder.Name, smartType)
         {
             _item = folder;
         }

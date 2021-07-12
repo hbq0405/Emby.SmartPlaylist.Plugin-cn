@@ -37,11 +37,10 @@ namespace SmartPlaylist.Services
             foreach (var item in folder.GetItems())
                 Debug.Write(item);
 
-            if (folder is LibraryUserFolder libraryUserPlaylist)
+            if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
-
-                Folder f = ((LibraryUserFolder)folder).Item;
-                ICollectionFolder colFolder = (ICollectionFolder)f;
+                Folder f = libraryUserCollection.Item;
+                System.Console.WriteLine(f.ToString());
             }
             else if (newItems.Any())
             {
@@ -57,7 +56,7 @@ namespace SmartPlaylist.Services
         private async Task UpdatePlaylist(UserFolder folder, BaseItem[] newItems)
         {
             var playlistItems = folder.GetItems();
-            if (folder is LibraryUserFolder libraryUserPlaylist)
+            if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
                 RemoveFromPlaylist(libraryUserPlaylist, playlistItems);
                 AddToPlaylist(libraryUserPlaylist, newItems);
@@ -73,13 +72,13 @@ namespace SmartPlaylist.Services
             }
         }
 
-        private void RemoveFromPlaylist(LibraryUserFolder playlist, BaseItem[] itemsToRemove)
+        private void RemoveFromPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] itemsToRemove)
         {
             _playlistManager.RemoveFromPlaylist(playlist.InternalId,
                 itemsToRemove.Select(x => x.ListItemEntryId).ToArray());
         }
 
-        private void AddToPlaylist(LibraryUserFolder playlist, BaseItem[] itemsToAdd)
+        private void AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] itemsToAdd)
         {
             _playlistManager.AddToPlaylist(playlist.InternalId,
                 itemsToAdd.Select(x => x.InternalId).ToArray(), playlist.User);

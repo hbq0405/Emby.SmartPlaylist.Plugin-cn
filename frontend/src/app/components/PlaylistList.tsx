@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { Button } from '~/common/components/Button';
-import { Label } from '~/common/components/Label';
-import { Inline } from '~/common/components/Inline';
-import { FloatRight } from '~/common/components/FloatRight';
 import './PlaylistList.css'
 import { ListItem } from '~/common/components/ListItem';
 
@@ -22,6 +18,7 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                     onDeleteClick={()=>deletePlaylist(playlist)}
                     onEditClick={()=>editPlaylist(playlist)}
                     label={playlist.name}
+                    type={playlist.smartType}
                 />
                 /*<Inline key={playlist.id} 
                     class="plist-row"

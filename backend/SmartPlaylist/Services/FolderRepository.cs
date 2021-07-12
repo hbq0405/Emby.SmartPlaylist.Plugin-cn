@@ -41,31 +41,37 @@ namespace SmartPlaylist.Services
         {
             var user = GetUser(userId);
 
-            var folder = smartType == SmartType.Playlist ?
-             FindPlaylist(user, playlistName) :
-             FindCollection(user, playlistName);
-
-            return folder != null ? new LibraryUserFolder(user, folder, smartType) : new UserFolder(user, playlistName, smartType);
+            return smartType == SmartType.Playlist
+                ? FindPlaylist(user, playlistName)
+                : FindCollection(user, playlistName);
         }
 
-        public Folder FindCollection(User user, string playlistName)
+        public UserFolder FindCollection(User user, string playlistName)
         {
-            return _libraryManager.GetItemsResult(new InternalItemsQuery
+            var folder = _libraryManager.GetItemsResult(new InternalItemsQuery
             {
                 Name = playlistName,
                 IncludeItemTypes = new[] { "collections", "Boxset" },
                 User = user ////try using the user with policy.IsAdministator for testing               
             }).Items.OfType<Folder>().FirstOrDefault();
+
+            return folder != null
+                ? new LibraryUserFolder<Folder>(user, folder, SmartType.Collection)
+                : new UserFolder(user, playlistName, SmartType.Collection);
         }
 
-        private Playlist FindPlaylist(User user, string playlistName)
+        private UserFolder FindPlaylist(User user, string playlistName)
         {
-            return _libraryManager.GetItemsResult(new InternalItemsQuery(user)
+            var folder = _libraryManager.GetItemsResult(new InternalItemsQuery(user)
             {
                 IncludeItemTypes = new[] { typeof(Playlist).Name },
                 Name = playlistName,
                 Recursive = true
             }).Items.OfType<Playlist>().FirstOrDefault();
+
+            return folder != null
+                ? new LibraryUserFolder<Playlist>(user, folder, SmartType.Collection)
+                : new UserFolder(user, playlistName, SmartType.Collection);
         }
     }
 }

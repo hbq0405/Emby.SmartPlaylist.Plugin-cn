@@ -4,10 +4,10 @@ namespace SmartPlaylist.Domain
 {
     public class UserFolder
     {
-        public UserFolder(User user, string playlistName, SmartType smartType)
+        public UserFolder(User user, string folderName, SmartType smartType)
         {
             User = user;
-            Name = playlistName;
+            Name = folderName;
             SmartType = smartType;
         }
 
