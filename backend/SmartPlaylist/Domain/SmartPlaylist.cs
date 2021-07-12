@@ -72,7 +72,7 @@ namespace SmartPlaylist.Domain
             return true;
         }
 
-        public IEnumerable<BaseItem> FilterPlaylistItems(UserPlaylist userPlaylist, IEnumerable<BaseItem> items)
+        public IEnumerable<BaseItem> FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
         {
             var playlistItems = userPlaylist.GetItems();
             var newItems = FilterItems(playlistItems, items, userPlaylist.User);

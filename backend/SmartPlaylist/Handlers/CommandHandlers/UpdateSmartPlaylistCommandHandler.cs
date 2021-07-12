@@ -11,8 +11,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 {
     public class UpdateSmartPlaylistCommandHandler : IMessageHandlerAsync<UpdateSmartPlaylistCommand>
     {
-        private readonly IPlaylistItemsUpdater _playlistItemsUpdater;
-        private readonly IPlaylistRepository _playlistRepository;
+        private readonly IFolderItemsUpdater _playlistItemsUpdater;
+        private readonly IFolderRepository _folderRepository;
         private readonly ISmartPlaylistProvider _smartPlaylistProvider;
         private readonly ISmartPlaylistStore _smartPlaylistStore;
 
@@ -20,12 +20,12 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 
         public UpdateSmartPlaylistCommandHandler(
             IUserItemsProvider userItemsProvider, ISmartPlaylistProvider smartPlaylistProvider,
-            IPlaylistRepository playlistRepository, IPlaylistItemsUpdater playlistItemsUpdater,
+            IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater,
             ISmartPlaylistStore smartPlaylistStore)
         {
             _userItemsProvider = userItemsProvider;
             _smartPlaylistProvider = smartPlaylistProvider;
-            _playlistRepository = playlistRepository;
+            _folderRepository = folderRepository;
             _playlistItemsUpdater = playlistItemsUpdater;
             _smartPlaylistStore = smartPlaylistStore;
         }
@@ -35,7 +35,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             var smartPlaylist = await _smartPlaylistProvider.GetSmartPlaylistAsync(message.SmartPlaylistId)
                 .ConfigureAwait(false);
 
-            var playlist = _playlistRepository.GetUserPlaylist(smartPlaylist.UserId, smartPlaylist.Name);
+            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist.UserId, smartPlaylist.Name, smartPlaylist.SmartType);
 
             var items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using SmartPlaylist.Extensions;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Net;
 using MediaBrowser.Model.Services;
@@ -36,6 +38,8 @@ namespace SmartPlaylist.Api
 
             playlist.UserId = user.Id;
             playlist.LastShuffleUpdate = DateTimeOffset.UtcNow.Date;
+            playlist.PriorNames = GetPriorNames(playlist);
+
             _smartPlaylistValidator.Validate(playlist);
             _smartPlaylistStore.Save(playlist);
 
@@ -62,6 +66,21 @@ namespace SmartPlaylist.Api
         private User GetUser()
         {
             return _sessionContext.GetUser(Request);
+        }
+
+        public static string[] GetPriorNames(SaveSmartPlaylist playlist)
+        {
+            StringCollection holder = new StringCollection();
+            if (playlist.PriorNames != null)
+                holder.AddRange(playlist.PriorNames);
+
+            if (!holder.Contains(playlist.Name))
+                holder.Add(playlist.Name);
+
+            string[] result = new string[holder.Count];
+            holder.CopyTo(result, 0);
+
+            return result;
         }
     }
 }

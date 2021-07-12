@@ -27,7 +27,7 @@ namespace SmartPlaylist.Infrastructure
                     _items[key] = item;
                 }
 
-                return (T) item;
+                return (T)item;
             });
         }
 

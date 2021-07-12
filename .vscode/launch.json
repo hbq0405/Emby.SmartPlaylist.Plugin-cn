@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Emby",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "/opt/emby-server/bin/emby-server",
+            "preLaunchTask": "Remote-Debug",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": true,
+            "console": "internalConsole",
+            "justMyCode": false,
+            "launchBrowser": {
+                "enabled": true,
+                "args": "http://127.0.0.1:8096"
+            },
+            "symbolOptions": {
+                "searchPaths": [
+                    "/opt/emby-server/system/plugins/"
+                ],
+                "searchMicrosoftSymbolServer": false,
+                "searchNuGetOrgSymbolServer": false
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "EmbyServer",
+            "internalConsoleOptions": "openOnSessionStart"
+        }
+    ]
+}

@@ -12,6 +12,7 @@ export type PlaylistBasicData = {
     limit: PlaylistLimit;
     updateType: UpdateType;
     smartType: SmartType;
+    priorNames: []
 };
 
 export type PlaylistLimit = {

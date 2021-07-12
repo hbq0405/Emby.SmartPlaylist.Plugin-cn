@@ -5,20 +5,20 @@ using SmartPlaylist.Services;
 
 namespace SmartPlaylist.PerfLoggerDecorators.Services
 {
-    public class PlaylistRepositoryPerfLoggerDecorator : IPlaylistRepository
+    public class PlaylistRepositoryPerfLoggerDecorator : IFolderRepository
     {
-        private readonly IPlaylistRepository _decorated;
+        private readonly IFolderRepository _decorated;
 
-        public PlaylistRepositoryPerfLoggerDecorator(IPlaylistRepository decorated)
+        public PlaylistRepositoryPerfLoggerDecorator(IFolderRepository decorated)
         {
             _decorated = decorated;
         }
 
-        public UserPlaylist GetUserPlaylist(Guid userId, string playlistName)
+        public override UserFolder GetUserPlaylistOrCollectionFolder(Guid userId, string playlistName, SmartType smartType)
         {
-            using (PerfLogger.Create("GetUserPlaylist", () => new {smartPlaylistName = playlistName}))
+            using (PerfLogger.Create("GetUserPlaylist", () => new { smartPlaylistName = playlistName }))
             {
-                return _decorated.GetUserPlaylist(userId, playlistName);
+                return _decorated.GetUserPlaylistOrCollectionFolder(userId, playlistName, smartType);
             }
         }
     }

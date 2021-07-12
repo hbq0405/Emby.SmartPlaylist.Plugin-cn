@@ -14,17 +14,17 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         UpdateAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<UpdateAllSmartPlaylistsCommand>
     {
         private readonly MessageBus _messageBus;
-        private readonly IPlaylistItemsUpdater _playlistItemsUpdater;
-        private readonly IPlaylistRepository _playlistRepository;
+        private readonly IFolderItemsUpdater _playlistItemsUpdater;
+        private readonly IFolderRepository _folderRepository;
         private readonly ISmartPlaylistProvider _smartPlaylistProvider;
 
         public UpdateAllSmartPlaylistsCommandHandler(MessageBus messageBus,
-            ISmartPlaylistProvider smartPlaylistProvider, IPlaylistRepository playlistRepository,
-            IPlaylistItemsUpdater playlistItemsUpdater)
+            ISmartPlaylistProvider smartPlaylistProvider, IFolderRepository folderRepository,
+            IFolderItemsUpdater playlistItemsUpdater)
         {
             _messageBus = messageBus;
             _smartPlaylistProvider = smartPlaylistProvider;
-            _playlistRepository = playlistRepository;
+            _folderRepository = folderRepository;
             _playlistItemsUpdater = playlistItemsUpdater;
         }
 
@@ -60,9 +60,9 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         private async Task GetTasks(Domain.SmartPlaylist smartPlaylist, BaseItem[] items)
         {
             BaseItem[] newItems;
-            var playlist = _playlistRepository.GetUserPlaylist(smartPlaylist.UserId, smartPlaylist.Name);
+            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist.UserId, smartPlaylist.Name, smartPlaylist.SmartType);
             using (PerfLogger.Create("FilterPlaylistItems",
-                () => new {playlistName = playlist.Name, itemsCount = items.Length}))
+                () => new { playlistName = playlist.Name, itemsCount = items.Length }))
             {
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }

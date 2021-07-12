@@ -2,16 +2,19 @@
 
 namespace SmartPlaylist.Domain
 {
-    public class UserPlaylist
+    public class UserFolder
     {
-        public UserPlaylist(User user, string playlistName)
+        public UserFolder(User user, string playlistName, SmartType smartType)
         {
             User = user;
             Name = playlistName;
+            SmartType = smartType;
         }
 
         public string Name { get; }
         public User User { get; }
+        public SmartType SmartType { get; }
+
 
         public virtual BaseItem[] GetItems()
         {

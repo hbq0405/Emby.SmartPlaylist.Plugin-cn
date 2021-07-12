@@ -36,6 +36,7 @@ export const createPlaylist = (): Playlist => {
         rulesTree: rulesTree,
         limit: deafultPlaylistLimit,
         updateType: defaultUpdateType,
-        smartType: defaultSmartType
+        smartType: defaultSmartType,
+        priorNames:[]
     };
 };

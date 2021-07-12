@@ -17,5 +17,6 @@ namespace SmartPlaylist.Contracts
         public string UpdateType { get; set; }
 
         public string SmartType { get; set; }
+        public string[] PriorNames { get; set; }
     }
 }

@@ -33,6 +33,7 @@ export const demoAppPlaylists: AppPlaylist[] = [
         limit: deafultPlaylistLimit,
         updateType: defaultUpdateType,
         smartType: defaultSmartType,
+        priorNames:[],
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,
