@@ -50,7 +50,7 @@ namespace SmartPlaylist
             var playlistItemsUpdater =
                 new PlaylistItemsUpdaterPerfLoggerDecorator(new PlayListItemsUpdater(playlistManager));
             var collectionItemsUpdater =
-                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager));
+                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager, folderRepository));
             MessageBus = new MessageBus();
 
             SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, folderRepository,

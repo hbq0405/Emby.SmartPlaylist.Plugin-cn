@@ -3,10 +3,7 @@ using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
-using MediaBrowser.Controller.Collections;
 using SmartPlaylist.Domain;
-using MediaBrowser.Model.Dto;
-using System.Collections.Generic;
 
 namespace SmartPlaylist.Services
 {
@@ -15,6 +12,7 @@ namespace SmartPlaylist.Services
 
         internal readonly ILibraryManager _libraryManager;
         internal readonly IUserManager _userManager;
+
         public IFolderRepository(IUserManager userManager, ILibraryManager libraryManager)
         {
             _userManager = userManager;
@@ -28,7 +26,11 @@ namespace SmartPlaylist.Services
             return _userManager.GetUserById(userId);
         }
 
-        public abstract UserFolder GetUserPlaylistOrCollectionFolder(Guid userId, string playlistName, SmartType smartType);
+        public abstract UserFolder GetUserPlaylistOrCollectionFolder(Domain.SmartPlaylist smartPlaylist);
+        public abstract UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist);
+        public abstract UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist, string collectionName);
+        public abstract Folder FindCollectionFolder(Domain.SmartPlaylist smartPlaylist, string collectionName);
+        public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist);
     }
 
     public class FolderRepository : IFolderRepository
@@ -37,41 +39,51 @@ namespace SmartPlaylist.Services
         public FolderRepository(IUserManager userManager, ILibraryManager libraryManager)
         : base(userManager, libraryManager) { }
 
-        public override UserFolder GetUserPlaylistOrCollectionFolder(Guid userId, string playlistName, SmartType smartType)
+        public override UserFolder GetUserPlaylistOrCollectionFolder(Domain.SmartPlaylist smartPlaylist)
         {
-            var user = GetUser(userId);
-
-            return smartType == SmartType.Playlist
-                ? FindPlaylist(user, playlistName)
-                : FindCollection(user, playlistName);
+            return smartPlaylist.SmartType == SmartType.Playlist
+                ? FindPlaylist(smartPlaylist)
+                : FindCollection(smartPlaylist);
         }
 
-        public UserFolder FindCollection(User user, string playlistName)
+        public override UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist)
         {
-            var folder = _libraryManager.GetItemsResult(new InternalItemsQuery
+            return FindCollection(smartPlaylist, smartPlaylist.Name);
+        }
+        public override UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist, string collectionName)
+        {
+            var user = _userManager.GetUserById(smartPlaylist.UserId);
+            var folder = FindCollectionFolder(smartPlaylist, collectionName);
+
+            return folder != null
+                ? new LibraryUserFolder<Folder>(user, folder, smartPlaylist)
+                : new UserFolder(user, smartPlaylist);
+        }
+
+        public override Folder FindCollectionFolder(Domain.SmartPlaylist smartPlaylist, string collectionName)
+        {
+            var user = _userManager.GetUserById(smartPlaylist.UserId);
+            return _libraryManager.GetItemsResult(new InternalItemsQuery
             {
-                Name = playlistName,
+                Name = collectionName,
                 IncludeItemTypes = new[] { "collections", "Boxset" },
                 User = user ////try using the user with policy.IsAdministator for testing               
             }).Items.OfType<Folder>().FirstOrDefault();
-
-            return folder != null
-                ? new LibraryUserFolder<Folder>(user, folder, SmartType.Collection)
-                : new UserFolder(user, playlistName, SmartType.Collection);
         }
 
-        private UserFolder FindPlaylist(User user, string playlistName)
+        public override UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist)
         {
+            var user = _userManager.GetUserById(smartPlaylist.UserId);
             var folder = _libraryManager.GetItemsResult(new InternalItemsQuery(user)
             {
                 IncludeItemTypes = new[] { typeof(Playlist).Name },
-                Name = playlistName,
+                Name = smartPlaylist.Name,
                 Recursive = true
             }).Items.OfType<Playlist>().FirstOrDefault();
 
             return folder != null
-                ? new LibraryUserFolder<Playlist>(user, folder, SmartType.Collection)
-                : new UserFolder(user, playlistName, SmartType.Collection);
+                ? new LibraryUserFolder<Playlist>(user, folder, smartPlaylist)
+                : new UserFolder(user, smartPlaylist);
         }
     }
 }

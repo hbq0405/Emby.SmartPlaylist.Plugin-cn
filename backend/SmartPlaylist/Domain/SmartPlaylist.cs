@@ -144,7 +144,8 @@ namespace SmartPlaylist.Domain
                 RulesTree = _dto.RulesTree,
                 UpdateType = _dto.UpdateType,
                 SmartType = _dto.SmartType,
-                UserId = _dto.UserId
+                UserId = _dto.UserId,
+                PriorNames = _dto.PriorNames
             };
         }
     }

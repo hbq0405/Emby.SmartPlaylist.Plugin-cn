@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Playlists;
@@ -7,9 +6,11 @@ using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Controller.Library;
-using System;
 using System.Threading;
 using System.Collections.Generic;
+using SmartPlaylist.Extensions;
+using MediaBrowser.Controller.Collections;
+using MediaBrowser.Model.Configuration;
 
 namespace SmartPlaylist.Services
 {
@@ -18,40 +19,7 @@ namespace SmartPlaylist.Services
         Task UpdateAsync(UserFolder folder, BaseItem[] newItems);
     }
 
-    public class CollectionItemUpdater : IFolderItemsUpdater
-    {
-        private readonly ILibraryManager _libraryManager;
-        public CollectionItemUpdater(ILibraryManager libraryManager)
-        {
-            _libraryManager = libraryManager;
-        }
 
-        public async Task UpdateAsync(UserFolder folder, BaseItem[] newItems)
-        {
-            if (folder is LibraryUserFolder<Folder> libraryUserCollection)
-            {
-                foreach (BaseItem item in folder.GetItems())
-                    item.RemoveCollection(libraryUserCollection.InternalId);
-
-                foreach (BaseItem b in newItems)
-                {
-                    b.AddCollectionInfo(new LinkedItemInfo()
-                    {
-                        Id = libraryUserCollection.InternalId,
-                        Name = libraryUserCollection.Name
-                    });
-                }
-
-                await Task.Run(() =>
-                {
-                    _libraryManager.UpdateItems(new List<BaseItem>(newItems),
-                            libraryUserCollection.Item,
-                            ItemUpdateType.MetadataEdit,
-                            new CancellationToken(false));
-                }).ConfigureAwait(false);
-            }
-        }
-    }
 
     public class PlayListItemsUpdater : IFolderItemsUpdater
     {
@@ -75,7 +43,7 @@ namespace SmartPlaylist.Services
                 await _playlistManager.CreatePlaylist(new PlaylistCreationRequest
                 {
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
-                    Name = folder.Name,
+                    Name = folder.SmartPlaylist.Name,
                     UserId = folder.User.InternalId
                 }).ConfigureAwait(false);
             }

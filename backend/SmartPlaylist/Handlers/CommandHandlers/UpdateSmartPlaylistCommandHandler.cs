@@ -37,13 +37,13 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             var smartPlaylist = await _smartPlaylistProvider.GetSmartPlaylistAsync(message.SmartPlaylistId)
                 .ConfigureAwait(false);
 
-            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist.UserId, smartPlaylist.Name, smartPlaylist.SmartType);
+            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
             var items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
 
             BaseItem[] newItems;
             using (PerfLogger.Create("FilterPlaylistItems",
-                () => new { playlistName = playlist.Name, itemsCount = items.Length }))
+                () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
             {
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }

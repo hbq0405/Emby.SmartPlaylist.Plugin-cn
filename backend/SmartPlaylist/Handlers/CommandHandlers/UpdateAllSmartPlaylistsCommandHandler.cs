@@ -10,8 +10,7 @@ using SmartPlaylist.Services.SmartPlaylist;
 
 namespace SmartPlaylist.Handlers.CommandHandlers
 {
-    public class
-        UpdateAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<UpdateAllSmartPlaylistsCommand>
+    public class UpdateAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<UpdateAllSmartPlaylistsCommand>
     {
         private readonly MessageBus _messageBus;
         private readonly IFolderItemsUpdater _playlistItemsUpdater;
@@ -62,9 +61,9 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         private async Task GetTasks(Domain.SmartPlaylist smartPlaylist, BaseItem[] items)
         {
             BaseItem[] newItems;
-            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist.UserId, smartPlaylist.Name, smartPlaylist.SmartType);
+            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
             using (PerfLogger.Create("FilterPlaylistItems",
-                () => new { playlistName = playlist.Name, itemsCount = items.Length }))
+                () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
             {
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }

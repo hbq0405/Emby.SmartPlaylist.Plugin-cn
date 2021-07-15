@@ -38,5 +38,14 @@ namespace SmartPlaylist.Extensions
         {
             return e.SelectMany(c => f(c).Flatten(f)).Concat(e);
         }
+
+        public static void ForEach<T>(this IEnumerable<T> sequence, Action<T> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            foreach (T item in sequence)
+                action(item);
+        }
     }
 }

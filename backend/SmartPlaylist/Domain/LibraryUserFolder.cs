@@ -8,7 +8,7 @@ namespace SmartPlaylist.Domain
     {
         private readonly T _item;
         public T Item => _item;
-        public LibraryUserFolder(User user, T folder, SmartType smartType) : base(user, folder.Name, smartType)
+        public LibraryUserFolder(User user, T folder, SmartPlaylist smartPlaylist) : base(user, smartPlaylist)
         {
             _item = folder;
         }
