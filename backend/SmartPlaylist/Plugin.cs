@@ -48,12 +48,13 @@ namespace SmartPlaylist
             var folderRepository =
                 new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager));
             var playlistItemsUpdater =
-                new PlaylistItemsUpdaterPerfLoggerDecorator(new FolderItemsUpdater(playlistManager));
-
+                new PlaylistItemsUpdaterPerfLoggerDecorator(new PlayListItemsUpdater(playlistManager));
+            var collectionItemsUpdater =
+                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager));
             MessageBus = new MessageBus();
 
             SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, folderRepository,
-                playlistItemsUpdater, smartPlaylistStore);
+                playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater);
 
             SmartPlaylistStore = smartPlaylistStore;
             SmartPlaylistValidator = new SmartPlaylistValidator();
@@ -107,15 +108,16 @@ namespace SmartPlaylist
 
         private void SubscribeMessageHandlers(ISmartPlaylistProvider smartPlaylistProvider,
             IUserItemsProvider userItemsProvider, IFolderRepository folderRepository,
-            IFolderItemsUpdater playlistItemsUpdater, ISmartPlaylistStore smartPlaylistStore)
+            IFolderItemsUpdater playlistItemsUpdater, ISmartPlaylistStore smartPlaylistStore,
+            IFolderItemsUpdater collectionItemsUpdater)
         {
             var updateSmartPlaylistCommandHandler =
                 new UpdateSmartPlaylistCommandHandler(userItemsProvider, smartPlaylistProvider,
-                    folderRepository, playlistItemsUpdater, smartPlaylistStore);
+                    folderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater);
 
             var updateAllSmartPlaylistsWithItemsCommandHandler =
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
-                    folderRepository, playlistItemsUpdater);
+                    folderRepository, playlistItemsUpdater, collectionItemsUpdater);
 
             MessageBus.Subscribe(Decorate(updateSmartPlaylistCommandHandler));
             MessageBus.Subscribe(Decorate(updateAllSmartPlaylistsWithItemsCommandHandler));

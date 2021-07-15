@@ -15,17 +15,19 @@ namespace SmartPlaylist.Handlers.CommandHandlers
     {
         private readonly MessageBus _messageBus;
         private readonly IFolderItemsUpdater _playlistItemsUpdater;
+        private readonly IFolderItemsUpdater _collectionItemsUpdater;
         private readonly IFolderRepository _folderRepository;
         private readonly ISmartPlaylistProvider _smartPlaylistProvider;
 
         public UpdateAllSmartPlaylistsCommandHandler(MessageBus messageBus,
             ISmartPlaylistProvider smartPlaylistProvider, IFolderRepository folderRepository,
-            IFolderItemsUpdater playlistItemsUpdater)
+            IFolderItemsUpdater playlistItemsUpdater, IFolderItemsUpdater collectionItemsUpdater)
         {
             _messageBus = messageBus;
             _smartPlaylistProvider = smartPlaylistProvider;
             _folderRepository = folderRepository;
             _playlistItemsUpdater = playlistItemsUpdater;
+            _collectionItemsUpdater = collectionItemsUpdater;
         }
 
 
@@ -67,7 +69,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }
 
-            await _playlistItemsUpdater.UpdateAsync(playlist, newItems).ConfigureAwait(false);
+            await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+                .UpdateAsync(playlist, newItems).ConfigureAwait(false);
         }
 
 

@@ -12,6 +12,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
     public class UpdateSmartPlaylistCommandHandler : IMessageHandlerAsync<UpdateSmartPlaylistCommand>
     {
         private readonly IFolderItemsUpdater _playlistItemsUpdater;
+        private readonly IFolderItemsUpdater _collectionItemsUpdater;
         private readonly IFolderRepository _folderRepository;
         private readonly ISmartPlaylistProvider _smartPlaylistProvider;
         private readonly ISmartPlaylistStore _smartPlaylistStore;
@@ -21,13 +22,14 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         public UpdateSmartPlaylistCommandHandler(
             IUserItemsProvider userItemsProvider, ISmartPlaylistProvider smartPlaylistProvider,
             IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater,
-            ISmartPlaylistStore smartPlaylistStore)
+            ISmartPlaylistStore smartPlaylistStore, IFolderItemsUpdater collectionItemsUpdater)
         {
             _userItemsProvider = userItemsProvider;
             _smartPlaylistProvider = smartPlaylistProvider;
             _folderRepository = folderRepository;
             _playlistItemsUpdater = playlistItemsUpdater;
             _smartPlaylistStore = smartPlaylistStore;
+            _collectionItemsUpdater = collectionItemsUpdater;
         }
 
         public async Task HandleAsync(UpdateSmartPlaylistCommand message)
@@ -46,7 +48,9 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }
 
-            await _playlistItemsUpdater.UpdateAsync(playlist, newItems).ConfigureAwait(false);
+            await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+               .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+
             var smDto = smartPlaylist.ToDto();
 
             if (!_smartPlaylistStore.Exists(smDto.UserId, smDto.Id) || smartPlaylist.IsShuffleUpdateType)

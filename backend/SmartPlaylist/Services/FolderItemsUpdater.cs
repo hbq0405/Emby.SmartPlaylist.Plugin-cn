@@ -5,55 +5,64 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Playlists;
 using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
+using MediaBrowser.Model.Dto;
+using MediaBrowser.Controller.Library;
+using System;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace SmartPlaylist.Services
 {
     public interface IFolderItemsUpdater
     {
-        Task UpdateAsync(UserFolder playlist, BaseItem[] newItems);
+        Task UpdateAsync(UserFolder folder, BaseItem[] newItems);
     }
 
-    public class FolderItemsUpdater : IFolderItemsUpdater
+    public class CollectionItemUpdater : IFolderItemsUpdater
+    {
+        private readonly ILibraryManager _libraryManager;
+        public CollectionItemUpdater(ILibraryManager libraryManager)
+        {
+            _libraryManager = libraryManager;
+        }
+
+        public async Task UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        {
+            if (folder is LibraryUserFolder<Folder> libraryUserCollection)
+            {
+                foreach (BaseItem item in folder.GetItems())
+                    item.RemoveCollection(libraryUserCollection.InternalId);
+
+                foreach (BaseItem b in newItems)
+                {
+                    b.AddCollectionInfo(new LinkedItemInfo()
+                    {
+                        Id = libraryUserCollection.InternalId,
+                        Name = libraryUserCollection.Name
+                    });
+                }
+
+                await Task.Run(() =>
+                {
+                    _libraryManager.UpdateItems(new List<BaseItem>(newItems),
+                            libraryUserCollection.Item,
+                            ItemUpdateType.MetadataEdit,
+                            new CancellationToken(false));
+                }).ConfigureAwait(false);
+            }
+        }
+    }
+
+    public class PlayListItemsUpdater : IFolderItemsUpdater
     {
         private readonly IPlaylistManager _playlistManager;
-        public FolderItemsUpdater(IPlaylistManager playlistManager)
+
+        public PlayListItemsUpdater(IPlaylistManager playlistManager)
         {
             _playlistManager = playlistManager;
         }
 
         public async Task UpdateAsync(UserFolder folder, BaseItem[] newItems)
-        {
-            if (folder.SmartType == SmartType.Playlist)
-                await UpdatePlaylist(folder, newItems);
-            else if (folder.SmartType == SmartType.Collection)
-                await UpdateCollection(folder, newItems);
-            else
-                throw new System.Exception($"Invalid SmartType: {folder.SmartType}");
-        }
-
-        private async Task UpdateCollection(UserFolder folder, BaseItem[] newItems)
-        {
-
-            foreach (var item in folder.GetItems())
-                Debug.Write(item);
-
-            if (folder is LibraryUserFolder<Folder> libraryUserCollection)
-            {
-                Folder f = libraryUserCollection.Item;
-                System.Console.WriteLine(f.ToString());
-            }
-            else if (newItems.Any())
-            {
-                await _playlistManager.CreatePlaylist(new PlaylistCreationRequest
-                {
-                    ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
-                    Name = folder.Name,
-                    UserId = folder.User.InternalId
-                }).ConfigureAwait(false);
-            }
-        }
-
-        private async Task UpdatePlaylist(UserFolder folder, BaseItem[] newItems)
         {
             var playlistItems = folder.GetItems();
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
