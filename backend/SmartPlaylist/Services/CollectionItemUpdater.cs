@@ -24,46 +24,47 @@ namespace SmartPlaylist.Services
             _folderRepository = folderRepository;
         }
 
-        public async Task UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public async Task<long> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
+            long res = 0;
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
-                RemoveItemsFromCollection(libraryUserCollection);
+                Remove(libraryUserCollection);
                 await AddItemsToCollection(libraryUserCollection, new List<BaseItem>(newItems)).ConfigureAwait(false);
+                res = libraryUserCollection.InternalId;
+
             }
             else
             {
-                await CreateCollection(new CollectionCreationOptions()
+                BoxSet result = await CreateCollection(new CollectionCreationOptions()
                 {
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray<long>(),
                     Name = folder.SmartPlaylist.Name
                 }).ConfigureAwait(false);
+
+                res = result.InternalId;
             }
 
-            foreach (string priorName in folder.SmartPlaylist.ToDto().PriorNames)
+            return res;
+        }
+
+        private void Remove(LibraryUserFolder<Folder> collection)
+        {
+            RemoveItems(collection, collection.GetItems());
+        }
+
+        public void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove)
+        {
+            if (folder is LibraryUserFolder<Folder> collectionFolder)
             {
-                if (!string.Equals(folder.SmartPlaylist.Name, priorName, StringComparison.OrdinalIgnoreCase))
-                {
-                    Folder priorFolder = _folderRepository.FindCollectionFolder(folder.SmartPlaylist, priorName);
-                    if (priorFolder != null)
-                        RemoveItemsFromCollection(priorFolder, new List<BaseItem>(priorFolder.GetChildren(folder.User)));
-                }
+                itemsToRemove.ForEach<BaseItem>((BaseItem item) =>
+                   {
+                       item.RemoveCollection(collectionFolder.InternalId);
+                   });
+
+                UpdateItems(collectionFolder.Item, new List<BaseItem>(itemsToRemove));
+                collectionFolder.Item.RefreshMetadata(new CancellationToken());
             }
-        }
-
-        private void RemoveItemsFromCollection(LibraryUserFolder<Folder> collection)
-        {
-            RemoveItemsFromCollection(collection.Item, new List<BaseItem>(collection.GetItems()));
-        }
-
-        private void RemoveItemsFromCollection(Folder collection, List<BaseItem> items)
-        {
-            items.ForEach<BaseItem>((BaseItem item) =>
-               {
-                   item.RemoveCollection(collection.InternalId);
-               });
-
-            UpdateItems(collection, items);
         }
 
         private async Task AddItemsToCollection(LibraryUserFolder<Folder> collection, List<BaseItem> items)
@@ -80,6 +81,7 @@ namespace SmartPlaylist.Services
             await Task.Run(() =>
             {
                 UpdateItems(collection.Item, items);
+                collection.Item.RefreshMetadata(new CancellationToken());
             }).ConfigureAwait(false);
         }
 

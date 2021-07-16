@@ -41,6 +41,16 @@ namespace SmartPlaylist.Api
             playlist.PriorNames = GetPriorNames(playlist);
 
             _smartPlaylistValidator.Validate(playlist);
+
+            if (playlist.InternalId != 0)
+            {
+                Task<Contracts.SmartPlaylistDto> lastPlayList = _smartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(playlist.Id));
+                if (lastPlayList.Result != null)
+                    playlist.ForceCreate = !string.Equals(lastPlayList.Result.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+                playlist.ForceCreate = true;
+
             _smartPlaylistStore.Save(playlist);
 
             _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));

@@ -1,6 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Library;
+using MediaBrowser.Controller.Playlists;
+using SmartPlaylist.Domain;
 using SmartPlaylist.Handlers.Commands;
 using SmartPlaylist.Infrastructure;
 using SmartPlaylist.Infrastructure.MesssageBus;
@@ -48,16 +53,49 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
             }
 
-            await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+            long id = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
                .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+
+            bool idChange = smartPlaylist.InternalId != id;
+            if (idChange)
+            {
+                if (smartPlaylist.InternalId != 0)
+                    CleanUp(playlist.User, smartPlaylist);
+                smartPlaylist.InternalId = id;
+            }
 
             var smDto = smartPlaylist.ToDto();
 
-            if (!_smartPlaylistStore.Exists(smDto.UserId, smDto.Id) || smartPlaylist.IsShuffleUpdateType)
+            if ((!_smartPlaylistStore.Exists(smDto.UserId, smDto.Id)) || smartPlaylist.IsShuffleUpdateType || idChange)
             {
-                smartPlaylist.UpdateLastShuffleTime();
+                if (smartPlaylist.IsShuffleUpdateType)
+                    smartPlaylist.UpdateLastShuffleTime();
                 _smartPlaylistStore.Save(smDto);
             }
+        }
+
+        private void CleanUp(User user, Domain.SmartPlaylist smartPlaylist)
+        {
+            string[] priors = smartPlaylist.ToDto().PriorNames;
+
+            foreach (string priorName in priors)
+            {
+                CleanUpPriorName<Folder>(smartPlaylist, priorName, SmartType.Collection, _folderRepository.FindCollection(smartPlaylist, priorName), _collectionItemsUpdater);
+                CleanUpPriorName<Playlist>(smartPlaylist, priorName, SmartType.Playlist, _folderRepository.FindPlaylist(smartPlaylist, priorName), _playlistItemsUpdater);
+            }
+        }
+
+        private void CleanUpPriorName<T>(Domain.SmartPlaylist smartPlaylist, string priorName, SmartType smartType, UserFolder priorFolder, IFolderItemsUpdater folderItemsUpdater) where T : Folder
+        {
+            bool current = string.Equals(smartPlaylist.Name, priorName, StringComparison.OrdinalIgnoreCase);
+
+            if (!current || (current && smartPlaylist.SmartType != smartType))
+                if (priorFolder is LibraryUserFolder<T> libFolder)
+                {
+                    folderItemsUpdater.RemoveItems(libFolder, libFolder.GetItems());
+                    smartPlaylist.RemovePriorName(priorName);
+
+                }
         }
     }
 }

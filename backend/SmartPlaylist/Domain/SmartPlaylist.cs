@@ -7,15 +7,16 @@ using SmartPlaylist.Comparers;
 using SmartPlaylist.Contracts;
 using SmartPlaylist.Domain.Rule;
 using SmartPlaylist.Extensions;
+using SmartPlaylist.Infrastructure;
 
 namespace SmartPlaylist.Domain
 {
     public class SmartPlaylist
     {
         private readonly SmartPlaylistDto _dto;
-
+        private long _internalid = 0;
         public SmartPlaylist(Guid id, string name, Guid userId, RuleBase[] rules,
-            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType, SmartType smartType, SmartPlaylistDto dto)
+            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType, SmartType smartType, long internalId, bool forceCreate, SmartPlaylistDto dto)
         {
             _dto = dto;
             Id = id;
@@ -26,7 +27,9 @@ namespace SmartPlaylist.Domain
             LastShuffleUpdate = lastShuffleUpdate;
             UpdateType = updateType;
             SmartType = smartType;
+            InternalId = internalId;
             MediaType = MediaTypeGetter.Get(rules);
+            ForceCreate = forceCreate;
         }
 
         public Guid Id { get; }
@@ -38,6 +41,16 @@ namespace SmartPlaylist.Domain
 
         public UpdateType UpdateType { get; }
         public SmartType SmartType { get; }
+        public long InternalId
+        {
+            get { return _internalid; }
+            set
+            {
+                _internalid = value;
+                _dto.InternalId = _internalid;
+            }
+        }
+        public bool ForceCreate { get; }
         public DateTimeOffset? LastShuffleUpdate { get; private set; }
 
 
@@ -133,6 +146,19 @@ namespace SmartPlaylist.Domain
             }
         }
 
+        public void RemovePriorName(string priorName)
+        {
+            for (int x = 0; x < _dto.PriorNames.Length; x++)
+            {
+                if (string.Equals(priorName, _dto.PriorNames[x], StringComparison.OrdinalIgnoreCase))
+                    _dto.PriorNames[x] = null;
+            }
+
+            if (_dto.PriorNames.Contains(null))
+                _dto.PriorNames = _dto.PriorNames.Where(x => x != null).ToArray();
+
+        }
+
         public SmartPlaylistDto ToDto()
         {
             return new SmartPlaylistDto
@@ -145,7 +171,8 @@ namespace SmartPlaylist.Domain
                 UpdateType = _dto.UpdateType,
                 SmartType = _dto.SmartType,
                 UserId = _dto.UserId,
-                PriorNames = _dto.PriorNames
+                PriorNames = _dto.PriorNames,
+                InternalId = _dto.InternalId
             };
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
+using MediaBrowser.Model.Entities;
 using SmartPlaylist.Domain;
 
 namespace SmartPlaylist.Services
@@ -31,6 +33,8 @@ namespace SmartPlaylist.Services
         public abstract UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist, string collectionName);
         public abstract Folder FindCollectionFolder(Domain.SmartPlaylist smartPlaylist, string collectionName);
         public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist);
+        public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist, string playlistName);
+        public abstract Playlist FindPlaylistFolder(Domain.SmartPlaylist smartPlaylist, string playlistName);
     }
 
     public class FolderRepository : IFolderRepository
@@ -53,7 +57,16 @@ namespace SmartPlaylist.Services
         public override UserFolder FindCollection(Domain.SmartPlaylist smartPlaylist, string collectionName)
         {
             var user = _userManager.GetUserById(smartPlaylist.UserId);
-            var folder = FindCollectionFolder(smartPlaylist, collectionName);
+
+            if (smartPlaylist.ForceCreate)
+                return new UserFolder(user, smartPlaylist);
+
+            Folder folder = null;
+            if (smartPlaylist.InternalId != 0)
+                folder = (Folder)_libraryManager.GetItemById(smartPlaylist.InternalId);
+
+            if (folder == null)
+                folder = FindCollectionFolder(smartPlaylist, collectionName);
 
             return folder != null
                 ? new LibraryUserFolder<Folder>(user, folder, smartPlaylist)
@@ -63,6 +76,7 @@ namespace SmartPlaylist.Services
         public override Folder FindCollectionFolder(Domain.SmartPlaylist smartPlaylist, string collectionName)
         {
             var user = _userManager.GetUserById(smartPlaylist.UserId);
+
             return _libraryManager.GetItemsResult(new InternalItemsQuery
             {
                 Name = collectionName,
@@ -73,17 +87,39 @@ namespace SmartPlaylist.Services
 
         public override UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist)
         {
+            return FindPlaylist(smartPlaylist, smartPlaylist.Name);
+        }
+
+        public override UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist, string playlistName)
+        {
             var user = _userManager.GetUserById(smartPlaylist.UserId);
-            var folder = _libraryManager.GetItemsResult(new InternalItemsQuery(user)
-            {
-                IncludeItemTypes = new[] { typeof(Playlist).Name },
-                Name = smartPlaylist.Name,
-                Recursive = true
-            }).Items.OfType<Playlist>().FirstOrDefault();
+
+            if (smartPlaylist.ForceCreate)
+                return new UserFolder(user, smartPlaylist);
+
+            Playlist folder = null;
+            if (smartPlaylist.InternalId != 0)
+                folder = (Playlist)_libraryManager.GetItemById(smartPlaylist.InternalId);
+
+            if (folder == null)
+                folder = FindPlaylistFolder(smartPlaylist, playlistName);
 
             return folder != null
                 ? new LibraryUserFolder<Playlist>(user, folder, smartPlaylist)
                 : new UserFolder(user, smartPlaylist);
+        }
+
+        public override Playlist FindPlaylistFolder(Domain.SmartPlaylist smartPlaylist, string playlistName)
+        {
+            var user = _userManager.GetUserById(smartPlaylist.UserId);
+
+            return _libraryManager.GetItemsResult(new InternalItemsQuery(user)
+            {
+                IncludeItemTypes = new[] { typeof(Playlist).Name },
+                Name = playlistName,
+                Recursive = true
+            }).Items.OfType<Playlist>().FirstOrDefault();
+
         }
     }
 }
