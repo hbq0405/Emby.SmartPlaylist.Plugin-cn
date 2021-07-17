@@ -10,10 +10,11 @@
     visibility: hidden;
     width: 120px;
     text-align: center;
-    color: black;
+    color: var(--theme-text-color);
     border-radius: 6px;
     padding: 1px 0;
-    border: 1px solid black;
+    border: 1px solid;
+    border-color: var(--theme-text-color);
     z-index: 1;
 }
 

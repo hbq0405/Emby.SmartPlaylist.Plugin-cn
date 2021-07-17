@@ -10,7 +10,7 @@ export type AddButtonProps = {
 
 export const AddButton: React.FC<AddButtonProps> = props => {
     return(
-        <button is="emby-button" type="button" className="raised raised-mini btnAdd submit emby-button" onClick={()=>props.onClick()} style={{marginLeft:'.5em'}} title={props.label} aria-label={props.label}>
+        <button is="emby-button" type="button" className="raised raised-mini btnAdd submit emby-button themed-button" onClick={()=>props.onClick()} title={props.label} aria-label={props.label} style={{background: 'var(--button-background)', color: 'var(--theme-text-color)', marginLeft: '.5em'}}>
             <i className="md-icon button-icon button-icon-left"></i><span>{props.label}</span>
         </button>
     )
