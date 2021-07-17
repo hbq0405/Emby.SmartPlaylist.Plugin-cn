@@ -13,7 +13,8 @@ namespace SmartPlaylist.Adapters
         {
             return new Domain.SmartPlaylist(Guid.Parse(dto.Id), dto.Name, dto.UserId,
                 new RuleBase[] { RuleAdapter.Adapt(dto.RulesTree) }, GetLimit(dto.Limit), dto.LastShuffleUpdate,
-                GetUpdateType(dto.UpdateType), GetSmartType(dto.SmartType), dto.InternalId, dto.ForceCreate, dto);
+                GetUpdateType(dto.UpdateType), GetSmartType(dto.SmartType), dto.InternalId, dto.ForceCreate,
+                GetSmartType(dto.OriginalSmartType), dto);
         }
 
         private static UpdateType GetUpdateType(string updateTypeName)

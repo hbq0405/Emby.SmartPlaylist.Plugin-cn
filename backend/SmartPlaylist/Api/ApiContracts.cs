@@ -6,7 +6,7 @@ using SmartPlaylist.Domain.CriteriaDefinition;
 namespace SmartPlaylist.Api
 {
     [Route("/smartplaylist", "POST", Summary = "")]
-    public class SaveSmartPlaylist : SmartPlaylistDto, IReturnVoid
+    public class SaveSmartPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistDto>
     {
     }
 

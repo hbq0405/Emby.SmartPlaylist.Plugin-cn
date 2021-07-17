@@ -8,6 +8,8 @@ using MediaBrowser.Model.Services;
 using SmartPlaylist.Handlers.Commands;
 using SmartPlaylist.Infrastructure.MesssageBus;
 using SmartPlaylist.Services.SmartPlaylist;
+using SmartPlaylist.Services;
+using SmartPlaylist.Adapters;
 
 namespace SmartPlaylist.Api
 {
@@ -17,7 +19,7 @@ namespace SmartPlaylist.Api
         private readonly ISessionContext _sessionContext;
         private readonly ISmartPlaylistStore _smartPlaylistStore;
         private readonly SmartPlaylistValidator _smartPlaylistValidator;
-
+        private readonly IFolderRepository _folderRepository;
 
         public SmartPlaylistApi(ISessionContext sessionContext
         )
@@ -27,6 +29,7 @@ namespace SmartPlaylist.Api
             _messageBus = Plugin.Instance.MessageBus;
             _smartPlaylistStore = Plugin.Instance.SmartPlaylistStore;
             _smartPlaylistValidator = Plugin.Instance.SmartPlaylistValidator;
+            _folderRepository = Plugin.Instance.FolderRepository;
         }
 
         public IRequest Request { get; set; }
@@ -38,27 +41,42 @@ namespace SmartPlaylist.Api
 
             playlist.UserId = user.Id;
             playlist.LastShuffleUpdate = DateTimeOffset.UtcNow.Date;
-            playlist.PriorNames = GetPriorNames(playlist);
 
             _smartPlaylistValidator.Validate(playlist);
 
-            if (playlist.InternalId != 0)
+            var lastPlaylist = GetPlaylistFromStore(Guid.Parse(playlist.Id));
+            if (lastPlaylist != null)
             {
-                Task<Contracts.SmartPlaylistDto> lastPlayList = _smartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(playlist.Id));
-                if (lastPlayList.Result != null)
-                    playlist.ForceCreate = !string.Equals(lastPlayList.Result.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
+                playlist.InternalId = lastPlaylist.InternalId;
+                playlist.ForceCreate = !string.Equals(lastPlaylist.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
+                playlist.OriginalSmartType = lastPlaylist.SmartType;
             }
-            else
-                playlist.ForceCreate = true;
 
             _smartPlaylistStore.Save(playlist);
 
             _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
         }
 
+        private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)
+        {
+            var lastPlaylist = _smartPlaylistStore.GetSmartPlaylistAsync(playlistId);
+            try
+            {
+                return (lastPlaylist.IsFaulted) ? null : lastPlaylist.Result;
+            }
+            catch (Exception)
+            {
+                return null;
+            } //Odd bug here, when trying to do a null check on lastPlayList.Result it falls with Null Exception ?!?!?!
+
+        }
+
         public void Delete(DeleteSmartPlaylist request)
         {
             var user = GetUser();
+            var playlist = GetPlaylistFromStore(Guid.Parse(request.Id));
+            if (playlist != null)
+                _folderRepository.Remove(SmartPlaylistAdapter.Adapt(playlist));
             _smartPlaylistStore.Delete(user.Id, request.Id);
         }
 
@@ -76,21 +94,6 @@ namespace SmartPlaylist.Api
         private User GetUser()
         {
             return _sessionContext.GetUser(Request);
-        }
-
-        public static string[] GetPriorNames(SaveSmartPlaylist playlist)
-        {
-            StringCollection holder = new StringCollection();
-            if (playlist.PriorNames != null)
-                holder.AddRange(playlist.PriorNames);
-
-            if (!holder.Contains(playlist.Name))
-                holder.Add(playlist.Name);
-
-            string[] result = new string[holder.Count];
-            holder.CopyTo(result, 0);
-
-            return result;
         }
     }
 }

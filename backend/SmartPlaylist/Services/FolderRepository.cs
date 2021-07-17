@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
-using MediaBrowser.Model.Entities;
 using SmartPlaylist.Domain;
 
 namespace SmartPlaylist.Services
@@ -14,11 +12,16 @@ namespace SmartPlaylist.Services
 
         internal readonly ILibraryManager _libraryManager;
         internal readonly IUserManager _userManager;
+        internal readonly IFolderItemsUpdater _collectionItemUpdater;
+        internal readonly IFolderItemsUpdater _playListItemsUpdater;
 
-        public IFolderRepository(IUserManager userManager, ILibraryManager libraryManager)
+        public IFolderRepository(IUserManager userManager, ILibraryManager libraryManager,
+        IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater)
         {
             _userManager = userManager;
             _libraryManager = libraryManager;
+            _collectionItemUpdater = collectionItemUpdater;
+            _playListItemsUpdater = playListItemsUpdater;
         }
 
         public IFolderRepository() { }
@@ -35,13 +38,15 @@ namespace SmartPlaylist.Services
         public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist);
         public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist, string playlistName);
         public abstract Playlist FindPlaylistFolder(Domain.SmartPlaylist smartPlaylist, string playlistName);
+        public abstract void Remove(Domain.SmartPlaylist smartPlaylist);
     }
 
     public class FolderRepository : IFolderRepository
     {
 
-        public FolderRepository(IUserManager userManager, ILibraryManager libraryManager)
-        : base(userManager, libraryManager) { }
+        public FolderRepository(IUserManager userManager, ILibraryManager libraryManager,
+            IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater)
+        : base(userManager, libraryManager, collectionItemUpdater, playListItemsUpdater) { }
 
         public override UserFolder GetUserPlaylistOrCollectionFolder(Domain.SmartPlaylist smartPlaylist)
         {
@@ -119,7 +124,36 @@ namespace SmartPlaylist.Services
                 Name = playlistName,
                 Recursive = true
             }).Items.OfType<Playlist>().FirstOrDefault();
+        }
 
+        public override void Remove(Domain.SmartPlaylist smartPlaylist)
+        {
+            if (smartPlaylist.OriginalSmartType == SmartType.Collection)
+                Remove<Folder>(smartPlaylist, _collectionItemUpdater, GetUser(smartPlaylist.UserId), () => { return FindCollectionFolder(smartPlaylist, smartPlaylist.Name); });
+            else if (smartPlaylist.OriginalSmartType == SmartType.Playlist)
+                Remove<Playlist>(smartPlaylist, _playListItemsUpdater, GetUser(smartPlaylist.UserId), () => { return FindPlaylistFolder(smartPlaylist, smartPlaylist.Name); });
+        }
+
+        private void Remove<T>(Domain.SmartPlaylist smartPlaylist, IFolderItemsUpdater folderItemsUpdater, User user, Func<Folder> action) where T : Folder
+        {
+            BaseItem item = smartPlaylist.InternalId > 0 ? _libraryManager.GetItemById(smartPlaylist.InternalId) : action();
+            if (item != null)
+            {
+                if (item is T)
+                {
+                    LibraryUserFolder<T> folder = new LibraryUserFolder<T>(user, (T)item, smartPlaylist);
+                    folderItemsUpdater.RemoveItems(folder, folder.GetItems());
+                }
+
+                try
+                {
+                    _libraryManager.DeleteItem(item, new DeleteOptions()
+                    {
+                        DeleteFileLocation = true
+                    });
+                }
+                catch (Exception) { }//TODO: This needs to be fixed, as it work intermittently, but we don't want to crash out.
+            }
         }
     }
 }

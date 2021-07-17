@@ -74,5 +74,13 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
                 return _decorated.FindPlaylistFolder(smartPlaylist, playlistName);
             }
         }
+
+        public override void Remove(Domain.SmartPlaylist smartPlaylist)
+        {
+            using (PerfLogger.Create("Remove", () => new { smartPlaylistName = smartPlaylist.Name }))
+            {
+                _decorated.Remove(smartPlaylist);
+            }
+        }
     }
 }

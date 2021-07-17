@@ -15,8 +15,11 @@ namespace SmartPlaylist.Domain
     {
         private readonly SmartPlaylistDto _dto;
         private long _internalid = 0;
+
         public SmartPlaylist(Guid id, string name, Guid userId, RuleBase[] rules,
-            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType, SmartType smartType, long internalId, bool forceCreate, SmartPlaylistDto dto)
+            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType,
+            SmartType smartType, long internalId, bool forceCreate, SmartType originalSmartType,
+             SmartPlaylistDto dto)
         {
             _dto = dto;
             Id = id;
@@ -30,6 +33,7 @@ namespace SmartPlaylist.Domain
             InternalId = internalId;
             MediaType = MediaTypeGetter.Get(rules);
             ForceCreate = forceCreate;
+            OriginalSmartType = originalSmartType;
         }
 
         public Guid Id { get; }
@@ -41,6 +45,7 @@ namespace SmartPlaylist.Domain
 
         public UpdateType UpdateType { get; }
         public SmartType SmartType { get; }
+        public SmartType OriginalSmartType { get; }
         public long InternalId
         {
             get { return _internalid; }
@@ -145,20 +150,6 @@ namespace SmartPlaylist.Domain
                     break;
             }
         }
-
-        public void RemovePriorName(string priorName)
-        {
-            for (int x = 0; x < _dto.PriorNames.Length; x++)
-            {
-                if (string.Equals(priorName, _dto.PriorNames[x], StringComparison.OrdinalIgnoreCase))
-                    _dto.PriorNames[x] = null;
-            }
-
-            if (_dto.PriorNames.Contains(null))
-                _dto.PriorNames = _dto.PriorNames.Where(x => x != null).ToArray();
-
-        }
-
         public SmartPlaylistDto ToDto()
         {
             return new SmartPlaylistDto
@@ -171,7 +162,7 @@ namespace SmartPlaylist.Domain
                 UpdateType = _dto.UpdateType,
                 SmartType = _dto.SmartType,
                 UserId = _dto.UserId,
-                PriorNames = _dto.PriorNames,
+                OriginalSmartType = _dto.OriginalSmartType,
                 InternalId = _dto.InternalId
             };
         }

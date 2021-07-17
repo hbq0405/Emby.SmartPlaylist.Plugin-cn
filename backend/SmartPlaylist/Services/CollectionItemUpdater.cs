@@ -17,11 +17,9 @@ namespace SmartPlaylist.Services
     public class CollectionItemUpdater : IFolderItemsUpdater
     {
         private readonly ILibraryManager _libraryManager;
-        private readonly IFolderRepository _folderRepository;
-        public CollectionItemUpdater(ILibraryManager libraryManager, IFolderRepository folderRepository)
+        public CollectionItemUpdater(ILibraryManager libraryManager)
         {
             _libraryManager = libraryManager;
-            _folderRepository = folderRepository;
         }
 
         public async Task<long> UpdateAsync(UserFolder folder, BaseItem[] newItems)
@@ -34,7 +32,7 @@ namespace SmartPlaylist.Services
                 res = libraryUserCollection.InternalId;
 
             }
-            else
+            else if (newItems.Any())
             {
                 BoxSet result = await CreateCollection(new CollectionCreationOptions()
                 {
@@ -44,6 +42,8 @@ namespace SmartPlaylist.Services
 
                 res = result.InternalId;
             }
+            else
+                res = -1;
 
             return res;
         }

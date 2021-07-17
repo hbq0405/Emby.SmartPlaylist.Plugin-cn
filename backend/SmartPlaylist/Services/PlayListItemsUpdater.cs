@@ -52,6 +52,8 @@ namespace SmartPlaylist.Services
 
                 res = long.Parse(request.Id);
             }
+            else
+                res = -1;
             return res;
         }
 

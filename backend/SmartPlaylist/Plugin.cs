@@ -45,16 +45,17 @@ namespace SmartPlaylist
             var userItemsProvider = new UserItemsProviderPerfLoggerDecorator(new UserItemsProvider(libraryManager));
             var smartPlaylistProvider =
                 new SmartPlaylistProviderPerfLoggerDecorator(new SmartPlaylistProvider(smartPlaylistStore));
-            var folderRepository =
-                new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager));
             var playlistItemsUpdater =
                 new PlaylistItemsUpdaterPerfLoggerDecorator(new PlayListItemsUpdater(playlistManager));
             var collectionItemsUpdater =
-                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager, folderRepository));
+                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager));
+            FolderRepository =
+                new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager, collectionItemsUpdater, playlistItemsUpdater));
+
             MessageBus = new MessageBus();
 
-            SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, folderRepository,
-                playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater);
+            SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, FolderRepository,
+                playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater, libraryManager);
 
             SmartPlaylistStore = smartPlaylistStore;
             SmartPlaylistValidator = new SmartPlaylistValidator();
@@ -63,12 +64,13 @@ namespace SmartPlaylist
         }
 
         public SmartPlaylistValidator SmartPlaylistValidator { get; }
+        public IFolderRepository FolderRepository { get; }
 
         public override Guid Id => Guid.Parse("3C96F5BC-4182-4B86-B05D-F730F2611E45");
 
         public override string Name => "Smart Playlist";
 
-        public override string Description => "Allow to define smart playlist rules.";
+        public override string Description => "Allow to define smart playlist and collection rules.";
 
         public static Plugin Instance { get; private set; }
 
@@ -91,7 +93,8 @@ namespace SmartPlaylist
                 {
                     Name = "smartplaylist.html",
                     EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.html",
-                    EnableInMainMenu = true
+                    EnableInMainMenu = true,
+                    MenuIcon = "subscriptions"
                 },
                 new PluginPageInfo
                 {
@@ -109,11 +112,12 @@ namespace SmartPlaylist
         private void SubscribeMessageHandlers(ISmartPlaylistProvider smartPlaylistProvider,
             IUserItemsProvider userItemsProvider, IFolderRepository folderRepository,
             IFolderItemsUpdater playlistItemsUpdater, ISmartPlaylistStore smartPlaylistStore,
-            IFolderItemsUpdater collectionItemsUpdater)
+            IFolderItemsUpdater collectionItemsUpdater, ILibraryManager libraryManager)
         {
             var updateSmartPlaylistCommandHandler =
                 new UpdateSmartPlaylistCommandHandler(userItemsProvider, smartPlaylistProvider,
-                    folderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater);
+                    folderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater,
+                    libraryManager);
 
             var updateAllSmartPlaylistsWithItemsCommandHandler =
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
