@@ -1,11 +1,22 @@
-.plist-row {
-    padding: 2px;
-    border-radius: 10px;
-}
 .plist-row:hover,
-.plist-row:nth-child(odd):hover {
-    background-color: rgba(169, 169, 169, 0.5);
+.plist-row:nth-child(even):hover {
+    background-color: rgba(169, 169, 169, 0.2);
 }
-.plist-row:nth-child(odd) {
+.plist-row:nth-child(even) {
     background-color: rgba(169, 169, 169, 0.1);
+}
+
+.plist-row .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    text-align: center;
+    color: black;
+    border-radius: 6px;
+    padding: 1px 0;
+    border: 1px solid black;
+    z-index: 1;
+}
+
+.plist-row:hover .tooltiptext {
+    visibility: visible;
 }

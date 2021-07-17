@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SmartTypes } from '~/app/app.const';
 import { SmartType } from '~/app/types/playlist';
 
 export type ListItemProps = {
@@ -10,13 +11,16 @@ export type ListItemProps = {
     BaseProps;
 
 export const ListItem: React.FC<ListItemProps> = props => {
+    var icon = props.type == SmartTypes[0]?'playlist_play':'video_library';
     return(
-            <a className="listItem listItem-border emby-button" data-ripple="false">
-                <div className="listItemImageContainer"><i className="listItemIcon md-icon listItemIcon-transparent">dvr</i></div>
-                <div className="listItemBody">
-                    <div className="listItemBodyText">{props.label}</div>
+            <a className="listItem listItem-border emby-button plist-row" data-ripple="false">
+                <div className="listItemImageContainer">
+                    <i className="listItemIcon md-icon listItemIcon-transparent">{icon}</i>
                 </div>
-                <div style={{float:"right"}}>[{props.type}]</div>
+                <div className="listItemBody">
+                    <div className="listItemBodyText" onClick={()=>props.onEditClick()}>{props.label}</div>
+                </div>
+                <span className="tooltiptext">{props.type}</span>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={()=>props.onEditClick()}><i className="md-icon">edit</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={()=>props.onDeleteClick()}><i className="md-icon">delete</i></button>
             </a>
