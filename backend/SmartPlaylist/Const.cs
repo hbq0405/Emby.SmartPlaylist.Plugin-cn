@@ -16,8 +16,7 @@ namespace SmartPlaylist
         public static readonly string[] SupportedItemTypeNames = SupportedItemTypes.Select(x => x.Name).ToArray();
 
         public static readonly Type[] ListenForChangeItemTypes =
-            SupportedItemTypes.Concat(new[] {typeof(MusicAlbum), typeof(Season), typeof(Series)}).ToArray();
-
+            SupportedItemTypes.Concat(new[] { typeof(MusicAlbum), typeof(Season), typeof(Series) }).ToArray();
 
         public static readonly TimeSpan GetAllSmartPlaylistsCacheExpiration = TimeSpan.FromHours(2);
         public static readonly TimeSpan DefaultSemaphoreSlimTimeout = TimeSpan.FromSeconds(30);

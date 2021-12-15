@@ -19,7 +19,7 @@ namespace SmartPlaylist.Domain
         public SmartPlaylist(Guid id, string name, Guid userId, RuleBase[] rules,
             SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType,
             SmartType smartType, long internalId, bool forceCreate, SmartType originalSmartType,
-             SmartPlaylistDto dto)
+            CollectionMode collectionMode, SmartPlaylistDto dto)
         {
             _dto = dto;
             Id = id;
@@ -34,18 +34,18 @@ namespace SmartPlaylist.Domain
             MediaType = MediaTypeGetter.Get(rules);
             ForceCreate = forceCreate;
             OriginalSmartType = originalSmartType;
+            CollectionMode = collectionMode;
         }
 
         public Guid Id { get; }
         public string Name { get; }
         public Guid UserId { get; }
         public RuleBase[] Rules { get; }
-
         public SmartPlaylistLimit Limit { get; }
-
         public UpdateType UpdateType { get; }
         public SmartType SmartType { get; }
         public SmartType OriginalSmartType { get; }
+        public CollectionMode CollectionMode { get; }
         public long InternalId
         {
             get { return _internalid; }
@@ -95,6 +95,8 @@ namespace SmartPlaylist.Domain
             var playlistItems = userPlaylist.GetItems();
             var newItems = FilterItems(playlistItems, items, userPlaylist.User);
             newItems = RemoveMissingEpisodes(newItems);
+            if (SmartType == SmartType.Collection && CollectionMode != CollectionMode.Item)
+                newItems = RollUpForCollectionMode(newItems);
 
             if (IsShuffleUpdateType)
             {
@@ -113,6 +115,33 @@ namespace SmartPlaylist.Domain
         private static IEnumerable<BaseItem> RemoveMissingEpisodes(IEnumerable<BaseItem> items)
         {
             return items.Where(x => !(x is Episode episode && episode.IsMissingEpisode));
+        }
+
+        private IEnumerable<BaseItem> RollUpForCollectionMode(IEnumerable<BaseItem> items)
+        {
+
+            List<BaseItem> ret = new List<BaseItem>();
+            foreach (BaseItem item in items)
+            {
+                if (item.GetType().IsAssignableFrom(typeof(Episode)))
+                {
+                    switch (CollectionMode)
+                    {
+                        case CollectionMode.Season:
+                            ret.Add(item.Parent);
+                            break;
+                        case CollectionMode.Series:
+                            ret.Add(item.Parent?.Parent);
+                            break;
+                        default:
+                            ret.Add(item);
+                            break;
+                    }
+                }
+                else
+                    ret.Add(item);
+            }
+            return ret.Distinct();
         }
 
         private IEnumerable<BaseItem> OrderItems(IEnumerable<BaseItem> playlistItems)
@@ -163,7 +192,8 @@ namespace SmartPlaylist.Domain
                 SmartType = _dto.SmartType,
                 UserId = _dto.UserId,
                 OriginalSmartType = _dto.OriginalSmartType,
-                InternalId = _dto.InternalId
+                InternalId = _dto.InternalId,
+                CollectionMode = _dto.CollectionMode
             };
         }
     }

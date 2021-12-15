@@ -8,7 +8,7 @@ import {
     addChildNode,
     addNewNode,
 } from '~/common/components/TreeView/actions/treeViewData.actions';
-import { deafultPlaylistLimit, defaultSmartType, defaultUpdateType } from '~/app/app.const';
+import { defaultPlaylistLimit, defaultSmartType, defaultUpdateType, defaultCollectionMode } from '~/app/app.const';
 
 export const createPlaylist = (): Playlist => {
     const newChildNode = createTreeNodeData({
@@ -34,9 +34,11 @@ export const createPlaylist = (): Playlist => {
         id: Guid.newGuid(),
         name: '',
         rulesTree: rulesTree,
-        limit: deafultPlaylistLimit,
+        limit: defaultPlaylistLimit,
         updateType: defaultUpdateType,
         smartType: defaultSmartType,
-        priorNames:[]
+        collectionMode: defaultCollectionMode,
+        priorNames: [],
+        mustUpdate: false
     };
 };

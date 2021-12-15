@@ -6,7 +6,7 @@ import { Input } from '~/common/components/Input';
 import { CheckBox } from '~/common/components/CheckBox';
 import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes } from '~/app/app.const';
+import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes } from '~/app/app.const';
 import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
@@ -31,16 +31,36 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     value={basicData.smartType}
                     onChange={newVal => {
                         updateBasicData({
-                            smartType: newVal
+                            smartType: newVal,
+                            mustUpdate: true
                         })
                     }}
                     style={{width:'120px'}}
                 />
+                {basicData.smartType==="Collection" && <Select
+                    label='Mode:'
+                
+                    values={CollectionModes.map(x=>x)}
+                    value={basicData.collectionMode}
+                    onChange={newVal =>
+                        updateBasicData({
+                            collectionMode: newVal,
+                            mustUpdate: true
+                            
+                        })
+                    }
+                    style={{width:'100px'}}
+                />}
                 <Input
                     maxWidth={true}
                     value={basicData.name}
                     label="Name:"
-                    onBlur={e => updateBasicData({ name: e.target.value })}
+                    onBlur={e => 
+                        updateBasicData({
+                            name: e.target.value,
+                            mustUpdate: true 
+                            })
+                        }
                 />
                 <Select
                     label="Update type:"
@@ -49,8 +69,10 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     onChange={newVal =>
                         updateBasicData({
                             updateType: newVal,
+                            mustUpdate: true
                         })
                     }
+                    style={{width:'120px'}}
                 />
             </Inline>
 
@@ -62,8 +84,9 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                         updateBasicData({
                             limit: {
                                 ...basicData.limit,
-                                hasLimit: e.target.checked,
+                                hasLimit: e.target.checked
                             },
+                            mustUpdate: true
                         })
                     }
                 />
@@ -77,8 +100,9 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                         updateBasicData({
                             limit: {
                                 ...basicData.limit,
-                                maxItems: Number(e.target.value),
+                                maxItems: Number(e.target.value)
                             },
+                            mustUpdate: true
                         })
                     }
                 />
@@ -94,6 +118,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                                 ...basicData.limit,
                                 orderBy: newVal,
                             },
+                            mustUpdate: true
                         })
                     }
                 />

@@ -5,7 +5,7 @@ import { PlaylistAction, playlistReducer } from '~/app/state/playlist/playlist.r
 import { normalizeArray } from '~/common/helpers/array';
 import { createTreeViewData } from '~/common/components/TreeView/types/tree.factory';
 import { AppData } from '~/app/types/appData';
-import { deafultPlaylistLimit } from '~/app/app.const';
+import { defaultPlaylistLimit } from '~/app/app.const';
 
 export type AppPlaylistState = {
     byId: {
@@ -45,7 +45,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
     switch (action.type) {
         case 'app:loadSettings': {
             const playlists = action.settings.playlists.map(x => ({
-                limit: deafultPlaylistLimit,
+                limit: defaultPlaylistLimit,
                 ...x,
                 rulesTree: createTreeViewData(x.rulesTree),
             }));

@@ -20,8 +20,6 @@ namespace SmartPlaylist.Services
         void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove);
     }
 
-
-
     public class PlayListItemsUpdater : IFolderItemsUpdater
     {
         private readonly IPlaylistManager _playlistManager;
@@ -45,9 +43,10 @@ namespace SmartPlaylist.Services
             {
                 PlaylistCreationResult request = await _playlistManager.CreatePlaylist(new PlaylistCreationRequest
                 {
+
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
                     Name = folder.SmartPlaylist.Name,
-                    UserId = folder.User.InternalId
+                    UserId = folder.User.InternalId,
                 }).ConfigureAwait(false);
 
                 res = long.Parse(request.Id);

@@ -16,5 +16,6 @@ namespace SmartPlaylist.Contracts
         public long InternalId { get; set; }
         public string OriginalSmartType { get; set; }
         public bool ForceCreate { get; set; }
+        public string CollectionMode { get; set; }
     }
 }

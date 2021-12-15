@@ -67,7 +67,7 @@ namespace SmartPlaylist.Services
                 return new UserFolder(user, smartPlaylist);
 
             Folder folder = null;
-            if (smartPlaylist.InternalId != 0)
+            if (smartPlaylist.InternalId > 0)
                 folder = (Folder)_libraryManager.GetItemById(smartPlaylist.InternalId);
 
             if (folder == null)
@@ -103,7 +103,7 @@ namespace SmartPlaylist.Services
                 return new UserFolder(user, smartPlaylist);
 
             Playlist folder = null;
-            if (smartPlaylist.InternalId != 0)
+            if (smartPlaylist.InternalId > 0)
                 folder = (Playlist)_libraryManager.GetItemById(smartPlaylist.InternalId);
 
             if (folder == null)

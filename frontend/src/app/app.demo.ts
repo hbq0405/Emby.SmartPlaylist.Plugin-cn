@@ -5,11 +5,12 @@ import { Guid } from '~/common/helpers/guid';
 import { createRule, createRuleGroup } from '~/app/types/rule.factory';
 import {
     dateCriteriaDefinitionType,
-    deafultPlaylistLimit,
+    defaultPlaylistLimit,
     defaultRuleCriteriaDefinition,
     stringCriteriaDefinitionType,
     defaultUpdateType,
     defaultSmartType,
+    defaultCollectionMode
 } from '~/app/app.const';
 
 export const demoRulesCritDefinitions: RuleCriteriaDefinition[] = [
@@ -30,10 +31,12 @@ export const demoAppPlaylists: AppPlaylist[] = [
     {
         id: Guid.newGuid(),
         name: 'Playlist1',
-        limit: deafultPlaylistLimit,
+        limit: defaultPlaylistLimit,
         updateType: defaultUpdateType,
         smartType: defaultSmartType,
-        priorNames:[],
+        collectionMode: defaultCollectionMode,
+        mustUpdate: false,
+        priorNames: [],
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,

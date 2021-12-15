@@ -14,4 +14,11 @@
         Playlist = 1,
         Collection = 2
     }
+
+    public enum CollectionMode
+    {
+        Item = 1,
+        Season = 2,
+        Series = 3
+    }
 }
