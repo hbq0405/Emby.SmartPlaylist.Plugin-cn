@@ -12,6 +12,7 @@ import {
     defaultSmartType,
     defaultCollectionMode
 } from '~/app/app.const';
+import { PlaylistInfo } from './types/playlist';
 
 export const demoRulesCritDefinitions: RuleCriteriaDefinition[] = [
     defaultRuleCriteriaDefinition,
@@ -35,7 +36,6 @@ export const demoAppPlaylists: AppPlaylist[] = [
         updateType: defaultUpdateType,
         smartType: defaultSmartType,
         collectionMode: defaultCollectionMode,
-        mustUpdate: false,
         priorNames: [],
         rulesTree: [
             createTreeNodeData({
@@ -51,6 +51,20 @@ export const demoAppPlaylists: AppPlaylist[] = [
         ],
     },
 ];
+
+export const demoAppPlaylistView: PlaylistInfo = {
+    id: Guid.newGuid(),
+    name: 'Playlist1',
+    limit: defaultPlaylistLimit,
+    updateType: defaultUpdateType,
+    smartType: defaultSmartType,
+    collectionMode: defaultCollectionMode,
+    priorNames: [],
+    rulesTree: {
+        byId: {},
+        rootIds: []
+    }
+}
 
 export const demoLimitOrdersBy = ['Album', 'Artist'];
 

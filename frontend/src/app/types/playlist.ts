@@ -14,7 +14,6 @@ export type PlaylistBasicData = {
     smartType: SmartType;
     collectionMode: CollectionMode;
     priorNames: [];
-    mustUpdate: boolean;
 };
 
 export type PlaylistLimit = {
@@ -23,7 +22,16 @@ export type PlaylistLimit = {
     orderBy: LimitOrderBy;
 };
 
+export type PlaylistViewData = PlaylistBasicData & {
+    internalId?: number,
+    lastShuffleUpdate?: Date,
+    lastUpdated?: Date,
+    lastSync?: Date,
+    syncCount?: number
+}
+
 export type Playlist = PlaylistBasicData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;
+export type PlaylistInfo = PlaylistViewData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;
 
 export type UpdateType = typeof UpdateTypes[number];
 

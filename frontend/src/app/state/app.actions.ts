@@ -3,7 +3,7 @@ import { Playlist } from '~/app/types/playlist';
 import { createPlaylist } from '~/app/types/playlist.factory';
 import { AppAction, AppState } from '~/app/state/app.reducer';
 import { AppData } from '~/app/types/appData';
-import { saveAppPlaylist, deletePlaylist } from '~/app/app.data';
+import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
 import { getAppPlaylist } from '~/app/state/app.selectors';
 
 export type AppActions = {
@@ -13,6 +13,7 @@ export type AppActions = {
     deletePlaylist(plalist: Playlist): void;
     discardPlaylist(): void;
     loadAppData(appData: AppData): void;
+    viewPlaylist(plalist: Playlist): void;
 };
 
 export const createAppActions = (
@@ -43,6 +44,12 @@ export const createAppActions = (
             dispatcher({
                 type: 'app:removePlaylist',
                 playlist: plalist,
+            });
+        },
+        viewPlaylist: async (plalist: Playlist) => {
+            dispatcher({
+                type: 'app:loadPlaylistInfo',
+                playlistInfo: await viewPlaylist(plalist.id)
             });
         },
         discardPlaylist: () => {

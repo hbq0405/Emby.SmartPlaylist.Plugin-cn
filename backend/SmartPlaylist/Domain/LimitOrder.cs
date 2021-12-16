@@ -5,12 +5,22 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Querying;
 using SmartPlaylist.Comparers;
+using SmartPlaylist.Contracts;
 using SmartPlaylist.Extensions;
 
 namespace SmartPlaylist.Domain
 {
     public class SmartPlaylistLimit
     {
+        public SmartPlaylistLimit() { }
+        public SmartPlaylistLimit(SmartPlaylistLimitDto dto)
+        {
+            MaxItems = dto.HasLimit ? dto.MaxItems : 100000;
+            OrderBy = dto.HasLimit ? DefinedLimitOrders.All.FirstOrDefault(x =>
+                                string.Equals(x.Name, dto.OrderBy, StringComparison.CurrentCultureIgnoreCase)) ??
+                          SmartPlaylistLimit.None.OrderBy : new NoneLimitOrder();
+        }
+
         public static readonly SmartPlaylistLimit None = new SmartPlaylistLimit
         {
             MaxItems = 100000,
@@ -67,7 +77,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Album";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.Album, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.Album, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -212,7 +222,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Name";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.Name, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.Name, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -225,7 +235,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Episode";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.AiredEpisodeOrder, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.AiredEpisodeOrder, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -238,7 +248,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "SortName asc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.SortName, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -251,7 +261,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "SortName desc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.SortName, SortOrder.Descending)};
+            new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Descending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -264,7 +274,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Release date asc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.PremiereDate, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -277,7 +287,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Release date desc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.PremiereDate, SortOrder.Descending)};
+            new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Descending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -290,7 +300,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Runtime asc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.Runtime, SortOrder.Ascending)};
+            new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Ascending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
@@ -303,7 +313,7 @@ namespace SmartPlaylist.Domain
         public override string Name => "Runtime desc";
 
         public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] {(ItemSortBy.Runtime, SortOrder.Descending)};
+            new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Descending) };
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {

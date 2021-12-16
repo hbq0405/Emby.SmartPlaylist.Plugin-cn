@@ -1,5 +1,6 @@
 import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
-import { demoAppData } from '~/app/app.demo';
+import { demoAppData, demoAppPlaylistView } from '~/app/app.demo';
+import { PlaylistInfo } from './types/playlist';
 
 export const loadAppData = (appId: string): Promise<AppData> => {
     return new Promise<AppData>(res => {
@@ -21,5 +22,13 @@ export const saveAppPlaylist = (playlist: AppPlaylist): Promise<AppPlaylists | v
 export const deletePlaylist = (playlistId: string): Promise<void> => {
     return new Promise<void>(res => {
         res();
+    });
+};
+
+export const viewPlaylist = (playlistId: string): Promise<PlaylistInfo> => {
+    return new Promise<PlaylistInfo>(res => {
+        res({
+            ...demoAppPlaylistView
+        });
     });
 };

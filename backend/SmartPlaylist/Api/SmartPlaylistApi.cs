@@ -52,6 +52,7 @@ namespace SmartPlaylist.Api
                 playlist.OriginalSmartType = lastPlaylist.SmartType;
             }
 
+            playlist.LastUpdated = DateTime.Now;
             _smartPlaylistStore.Save(playlist);
 
             _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
@@ -60,15 +61,7 @@ namespace SmartPlaylist.Api
         private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)
         {
             var lastPlaylist = _smartPlaylistStore.GetSmartPlaylistAsync(playlistId);
-            try
-            {
-                return (lastPlaylist.IsFaulted) ? null : lastPlaylist.Result;
-            }
-            catch (Exception)
-            {
-                return null;
-            } //Odd bug here, when trying to do a null check on lastPlayList.Result it falls with Null Exception ?!?!?!
-
+            return lastPlaylist != null ? ((lastPlaylist.IsFaulted) ? null : lastPlaylist.Result) : null;
         }
 
         public void Delete(DeleteSmartPlaylist request)

@@ -59,23 +59,20 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             long id = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
                .UpdateAsync(playlist, newItems).ConfigureAwait(false);
 
-            bool idChange = smartPlaylist.InternalId != id;
-            if (idChange)
+            if (smartPlaylist.InternalId != id)
             {
                 if (smartPlaylist.InternalId > 0)
                     _folderRepository.Remove(smartPlaylist);
 
                 smartPlaylist.InternalId = id;
             }
+            smartPlaylist.LastSync = DateTime.Now;
+            smartPlaylist.SyncCount++;
 
-            var smDto = smartPlaylist.ToDto();
+            if (smartPlaylist.IsShuffleUpdateType)
+                smartPlaylist.UpdateLastShuffleTime();
 
-            if ((!_smartPlaylistStore.Exists(smDto.UserId, smDto.Id)) || smartPlaylist.IsShuffleUpdateType || idChange)
-            {
-                if (smartPlaylist.IsShuffleUpdateType)
-                    smartPlaylist.UpdateLastShuffleTime();
-                _smartPlaylistStore.Save(smartPlaylist.ToDto());
-            }
+            _smartPlaylistStore.Save(smartPlaylist.ToDto());
         }
 
 

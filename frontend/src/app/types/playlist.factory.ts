@@ -38,7 +38,6 @@ export const createPlaylist = (): Playlist => {
         updateType: defaultUpdateType,
         smartType: defaultSmartType,
         collectionMode: defaultCollectionMode,
-        priorNames: [],
-        mustUpdate: false
+        priorNames: []
     };
 };

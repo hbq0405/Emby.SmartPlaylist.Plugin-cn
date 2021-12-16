@@ -7,6 +7,7 @@ export type PlaylistSelectors = {
     getRulesTree(): TreeViewData<RuleOrRuleGroup>;
     getBasicData(): PlaylistBasicData;
     isShuffleUpdateType(): boolean;
+    getPlaylist(): PlaylistState
 };
 
 export const createPlaylistSelectors = (state: PlaylistState): PlaylistSelectors => {
@@ -21,5 +22,8 @@ export const createPlaylistSelectors = (state: PlaylistState): PlaylistSelectors
         isShuffleUpdateType: (): boolean => {
             return isShuffleUpdateType(state.updateType);
         },
+        getPlaylist: (): PlaylistState => {
+            return state;
+        }
     };
 };

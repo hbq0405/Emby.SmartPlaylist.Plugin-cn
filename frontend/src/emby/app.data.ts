@@ -2,12 +2,15 @@ import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
 import camelcaseKeys = require('camelcase-keys');
 import { parseDate } from '~/common/helpers/date';
 import { convertObjectPropValues } from '~/common/helpers/object';
+import { PlaylistInfo, PlaylistViewData } from '~/app/types/playlist';
 
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;
     updatePluginConfiguration<TConfig>(pluginId: string, config: TConfig): Promise<any>;
     ajax<T = any>(request: any): Promise<T>;
 };
+
+export const version = "2.0.0.2";
 
 declare global {
     // tslint:disable-next-line:interface-name
@@ -20,7 +23,7 @@ declare global {
 export const loadAppData = async (appId: string): Promise<AppData> => {
     let appData = await window.ApiClient.ajax<AppData>(
         {
-            url: '/smartplaylist/appData',
+            url: `/smartplaylist/appData?v=${version}`,
             type: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -48,7 +51,7 @@ export const loadAppData = async (appId: string): Promise<AppData> => {
 export const saveAppPlaylist = async (playlist: AppPlaylist): Promise<AppPlaylists> => {
     return window.ApiClient.ajax(
         {
-            url: '/smartplaylist',
+            url: `/smartplaylist?v=${version}`,
             type: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -62,8 +65,33 @@ export const saveAppPlaylist = async (playlist: AppPlaylist): Promise<AppPlaylis
 export const deletePlaylist = async (playlistId: string): Promise<any> => {
     return window.ApiClient.ajax(
         {
-            url: `/smartplaylist/${playlistId}`,
+            url: `/smartplaylist/${playlistId}?v=${version}`,
             type: 'DELETE',
         }
     );
+};
+
+export const viewPlaylist = async (playlistId: string): Promise<PlaylistInfo> => {
+    let playlistInfo = await window.ApiClient.ajax<PlaylistInfo>(
+        {
+            url: `/smartplaylist/info/${playlistId}?v=${version}`,
+            type: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+        }
+    );
+
+    playlistInfo = camelcaseKeys(playlistInfo, {
+        deep: true,
+    }) as PlaylistInfo;
+
+    convertObjectPropValues(playlistInfo, o => parseDate(o));
+
+    return new Promise<PlaylistInfo>(res => {
+        res(playlistInfo);
+    });
 };

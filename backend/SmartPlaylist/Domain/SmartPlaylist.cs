@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
+using SmartPlaylist.Adapters;
 using SmartPlaylist.Comparers;
 using SmartPlaylist.Contracts;
 using SmartPlaylist.Domain.Rule;
 using SmartPlaylist.Extensions;
-using SmartPlaylist.Infrastructure;
-
 namespace SmartPlaylist.Domain
 {
     public class SmartPlaylist
@@ -16,25 +15,25 @@ namespace SmartPlaylist.Domain
         private readonly SmartPlaylistDto _dto;
         private long _internalid = 0;
 
-        public SmartPlaylist(Guid id, string name, Guid userId, RuleBase[] rules,
-            SmartPlaylistLimit limit, DateTimeOffset? lastShuffleUpdate, UpdateType updateType,
-            SmartType smartType, long internalId, bool forceCreate, SmartType originalSmartType,
-            CollectionMode collectionMode, SmartPlaylistDto dto)
+        public SmartPlaylist(SmartPlaylistDto dto)
         {
             _dto = dto;
-            Id = id;
-            Name = name;
-            UserId = userId;
-            Rules = rules;
-            Limit = limit;
-            LastShuffleUpdate = lastShuffleUpdate;
-            UpdateType = updateType;
-            SmartType = smartType;
-            InternalId = internalId;
-            MediaType = MediaTypeGetter.Get(rules);
-            ForceCreate = forceCreate;
-            OriginalSmartType = originalSmartType;
-            CollectionMode = collectionMode;
+            Id = Guid.Parse(dto.Id);
+            Name = dto.Name;
+            UserId = dto.UserId;
+            Rules = new RuleBase[] { RuleAdapter.Adapt(dto.RulesTree) };
+            Limit = new SmartPlaylistLimit(dto.Limit);
+            LastShuffleUpdate = dto.LastShuffleUpdate;
+            UpdateType = UpdateType.ConvertFromString<UpdateType>(dto.UpdateType, UpdateType.Live);
+            SmartType = SmartType.ConvertFromString<SmartType>(dto.SmartType, SmartType.Playlist);
+            InternalId = dto.InternalId;
+            MediaType = MediaTypeGetter.Get(Rules);
+            ForceCreate = dto.ForceCreate;
+            OriginalSmartType = SmartType.ConvertFromString<SmartType>(dto.OriginalSmartType, SmartType.Playlist);
+            CollectionMode = CollectionMode.ConvertFromString<CollectionMode>(dto.CollectionMode, CollectionMode.Item);
+            LastUpdated = dto.LastUpdated;
+            LastSync = dto.LastSync;
+            SyncCount = dto.SyncCount;
         }
 
         public Guid Id { get; }
@@ -57,7 +56,9 @@ namespace SmartPlaylist.Domain
         }
         public bool ForceCreate { get; }
         public DateTimeOffset? LastShuffleUpdate { get; private set; }
-
+        public DateTime? LastUpdated { get; set; }
+        public DateTime? LastSync { get; set; }
+        public int SyncCount { get; set; } = 0;
 
         public bool CanUpdatePlaylist => CheckIfCanUpdatePlaylist();
 
@@ -155,7 +156,7 @@ namespace SmartPlaylist.Domain
         {
             return new SmartPlaylistDto
             {
-                Id = _dto.Id,
+                Id = Id.ToString(),
                 LastShuffleUpdate = LastShuffleUpdate,
                 Limit = _dto.Limit,
                 Name = _dto.Name,
@@ -165,7 +166,10 @@ namespace SmartPlaylist.Domain
                 UserId = _dto.UserId,
                 OriginalSmartType = _dto.OriginalSmartType,
                 InternalId = _dto.InternalId,
-                CollectionMode = _dto.CollectionMode
+                CollectionMode = _dto.CollectionMode,
+                LastUpdated = LastUpdated,
+                LastSync = LastSync,
+                SyncCount = SyncCount
             };
         }
     }

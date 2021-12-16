@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Playlist } from '~/app/types/playlist';
+import { Playlist, PlaylistInfo } from '~/app/types/playlist';
 import { RuleCriteriaDefinition } from '~/app/types/rule';
 import { PlaylistAction, playlistReducer } from '~/app/state/playlist/playlist.reducer';
 import { normalizeArray } from '~/common/helpers/array';
@@ -20,6 +20,7 @@ export type AppState = {
     rulesCriteriaDefinitions: RuleCriteriaDefinition[];
     limitOrdersBy: string[];
     editedPlaylist?: Playlist;
+    viewPlaylist?: PlaylistInfo
 };
 
 export const initAppState: AppState = {
@@ -31,6 +32,7 @@ export const initAppState: AppState = {
     rulesCriteriaDefinitions: [],
     limitOrdersBy: [],
     editedPlaylist: undefined,
+    viewPlaylist: undefined
 };
 
 export type AppAction =
@@ -39,7 +41,8 @@ export type AppAction =
     | { type: 'app:editPlaylist'; playlist: Playlist }
     | { type: 'app:discardPlaylist' }
     | { type: 'app:savePlaylist' }
-    | { type: 'app:removePlaylist'; playlist: Playlist };
+    | { type: 'app:removePlaylist'; playlist: Playlist }
+    | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo };
 
 export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (state, action) => {
     switch (action.type) {
@@ -74,6 +77,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             return {
                 ...state,
                 editedPlaylist: undefined,
+                viewPlaylist: undefined
             };
         }
         case 'app:removePlaylist': {
@@ -85,6 +89,13 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                     byId: byId,
                     names: state.playlists.names.filter(x => x !== action.playlist.id),
                 },
+            };
+        }
+        case 'app:loadPlaylistInfo': {
+            return {
+                ...state,
+                viewPlaylist: action.playlistInfo,
+                editedPlaylist: undefined
             };
         }
         case 'app:savePlaylist': {

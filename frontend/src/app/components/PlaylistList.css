@@ -7,7 +7,6 @@
 }
 
 .plist-row .tooltiptext {
-    visibility: hidden;
     width: 120px;
     text-align: center;
     color: var(--theme-text-color);
@@ -15,9 +14,14 @@
     padding: 1px 0;
     border: 1px solid;
     border-color: var(--theme-text-color);
+    display: inline-block;
+}
+
+.plist-row .popper {
+    visibility: hidden;
     z-index: 1;
 }
 
-.plist-row:hover .tooltiptext {
+.plist-row:hover .popper {
     visibility: visible;
 }

@@ -1,4 +1,4 @@
-import { Playlist } from '~/app/types/playlist';
+import { Playlist, PlaylistInfo } from '~/app/types/playlist';
 import {
     RuleCriteriaDefinition,
     RuleCriteriaOperator,
@@ -18,12 +18,16 @@ export type AppSelectors = {
     getRulesCriteriaDefinition(criteriaName: string): RuleCriteriaDefinition;
     getAppData(): AppData;
     getLimitOrdersBy(): string[];
+    getViewPlaylist(): PlaylistInfo;
 };
 
 export const createAppSelectors = (state: AppState): AppSelectors => {
     return {
         getPlaylists: (): Playlist[] => {
             return state.playlists.names.map(name => state.playlists.byId[name]);
+        },
+        getViewPlaylist: (): PlaylistInfo => {
+            return state.viewPlaylist;
         },
         getEditedPlaylist: (): Playlist => {
             return state.editedPlaylist;
