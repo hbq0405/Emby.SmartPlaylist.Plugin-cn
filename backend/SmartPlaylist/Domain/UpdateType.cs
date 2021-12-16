@@ -1,4 +1,6 @@
-﻿namespace SmartPlaylist.Domain
+﻿using MediaBrowser.Controller.Entities.TV;
+
+namespace SmartPlaylist.Domain
 {
     public enum UpdateType
     {
@@ -17,8 +19,11 @@
 
     public enum CollectionMode
     {
+        [Epimode(typeof(Episode))]
         Item = 1,
+        [Epimode(typeof(Season))]
         Season = 2,
+        [Epimode(typeof(Series))]
         Series = 3
     }
 }

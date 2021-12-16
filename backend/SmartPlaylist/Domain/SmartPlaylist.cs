@@ -96,20 +96,9 @@ namespace SmartPlaylist.Domain
             var newItems = FilterItems(playlistItems, items, userPlaylist.User);
             newItems = RemoveMissingEpisodes(newItems);
             if (SmartType == SmartType.Collection && CollectionMode != CollectionMode.Item)
-                newItems = RollUpForCollectionMode(newItems);
+                newItems = RollUpTo(newItems);
 
-            if (IsShuffleUpdateType)
-            {
-                newItems = newItems.Shuffle();
-            }
-            else
-            {
-                newItems = OrderItems(newItems);
-            }
-
-            newItems = newItems.Take(Limit.MaxItems);
-
-            return newItems;
+            return (IsShuffleUpdateType ? newItems.Shuffle() : OrderItems(newItems)).Take(Limit.MaxItems);
         }
 
         private static IEnumerable<BaseItem> RemoveMissingEpisodes(IEnumerable<BaseItem> items)
@@ -117,31 +106,15 @@ namespace SmartPlaylist.Domain
             return items.Where(x => !(x is Episode episode && episode.IsMissingEpisode));
         }
 
-        private IEnumerable<BaseItem> RollUpForCollectionMode(IEnumerable<BaseItem> items)
+        private IEnumerable<BaseItem> RollUpTo(IEnumerable<BaseItem> items)
         {
+            EpimodeAttribute rollTo = CollectionMode.GetAttributeOfType<EpimodeAttribute>();
+            return items.Select(x => (x is Episode) ? RollUpToItemType(x, rollTo.MediaType) : x).Distinct();
+        }
 
-            List<BaseItem> ret = new List<BaseItem>();
-            foreach (BaseItem item in items)
-            {
-                if (item.GetType().IsAssignableFrom(typeof(Episode)))
-                {
-                    switch (CollectionMode)
-                    {
-                        case CollectionMode.Season:
-                            ret.Add(item.Parent);
-                            break;
-                        case CollectionMode.Series:
-                            ret.Add(item.Parent?.Parent);
-                            break;
-                        default:
-                            ret.Add(item);
-                            break;
-                    }
-                }
-                else
-                    ret.Add(item);
-            }
-            return ret.Distinct();
+        private BaseItem RollUpToItemType(BaseItem item, Type rollType)
+        {
+            return item.GetType().IsAssignableFrom(rollType) ? item : RollUpToItemType(item.Parent, rollType);
         }
 
         private IEnumerable<BaseItem> OrderItems(IEnumerable<BaseItem> playlistItems)
@@ -160,7 +133,6 @@ namespace SmartPlaylist.Domain
         {
             return Rules.All(x => x.IsMatch(new UserItem(user, item)));
         }
-
 
         public void UpdateLastShuffleTime()
         {

@@ -38,7 +38,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     style={{width:'120px'}}
                 />
                 {basicData.smartType==="Collection" && <Select
-                    label='Mode:'
+                    label='EpiMode:'
                 
                     values={CollectionModes.map(x=>x)}
                     value={basicData.collectionMode}
