@@ -8,5 +8,7 @@
       - Series: Collection will roll up episode to series
 - Added a new feature that shows smart play list statistics. (Info Icon on smartlist)
 - Small UI changes
+- Added the following criteria:
+  - Studio
 - ### Bug fix
   - Fixed a bug then when generating a new playlist or collection that an error was raised with 'Invalid Parameter Id'
