@@ -17,6 +17,16 @@
     display: inline-block;
 }
 
+.tooltiptext-green {
+    color: green !important;
+    border-color: green !important;
+}
+
+.tooltiptext-blue {
+    color: blueviolet !important;
+    border-color: blueviolet !important;
+}
+
 .plist-row .popper {
     visibility: hidden;
     z-index: 1;
@@ -24,4 +34,9 @@
 
 .plist-row:hover .popper {
     visibility: visible;
+}
+
+.sp-icon:hover {
+    box-shadow: 0 0 10px var(--theme-text-color);
+    border-radius: 100%;
 }

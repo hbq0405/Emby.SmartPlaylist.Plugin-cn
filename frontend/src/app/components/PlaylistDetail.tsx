@@ -3,6 +3,7 @@ import { PlaylistInfo } from '~/app/types/playlist';
 import './PlaylistDetail.css'
 import { PlaylistContext } from '~/app/state/playlist/playlist.context';
 import { InfoRow } from '~/common/components/InfoRow';
+import { TagList } from '~/common/components/TagList';
 
 export type PlaylistDetailProps = {
     playlist: PlaylistInfo
@@ -20,7 +21,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             ]} />
             <InfoRow InfoItems={[
                 { label: 'Type: ', text: playlist.smartType },
-                { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? playlist.collectionMode : 'N/A' },
+                { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? (playlist.collectionMode ? playlist.collectionMode : 'Item') : 'N/A' },
                 { label: 'Update: ', text: playlist.updateType },
             ]} />
             <InfoRow InfoItems={[
@@ -37,6 +38,8 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
                 { label: 'Last Run Status: ', text: playlist.status ? playlist.status : 'N/A' },
                 { label: 'Last Run Duration: ', text: playlist.lastDurationStr ? playlist.lastDurationStr : 'N/A' }
             ]} />
+            <div className='info-row info-row-label'>Items:</div>
+            <TagList Items={playlist.items} />
         </>
     );
 };

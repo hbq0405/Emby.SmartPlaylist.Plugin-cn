@@ -14,6 +14,8 @@ export type ListItemProps = {
 export const ListItem: React.FC<ListItemProps> = props => {
     var icon = props.type == SmartTypes[1] ? 'video_library' : 'playlist_play';
     var txt = props.type == SmartTypes[1] ? 'Collection' : 'Playlist';
+    var txt_cls = props.type == SmartTypes[1] ? 'tooltiptext-blue' : 'tooltiptext-green';
+
     return (
         <a className="listItem listItem-border emby-button plist-row" data-ripple="false">
             <div className="listItemImageContainer">
@@ -23,10 +25,10 @@ export const ListItem: React.FC<ListItemProps> = props => {
                 <div className="listItemBodyText" onClick={() => props.onEditClick()}>{props.label}</div>
             </div>
             <div className='popper'>
-                <span className="tooltiptext">{txt}</span>
-                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onViewClick()}><i className="md-icon">info</i></button>
-                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onEditClick()}><i className="md-icon">edit</i></button>
-                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon">delete</i></button>
+                <span className={`tooltiptext ${txt_cls}`}>{txt}</span>
+                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onViewClick()}><i className="md-icon sp-icon">info</i></button>
+                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onEditClick()}><i className="md-icon sp-icon">edit</i></button>
+                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon sp-icon">delete</i></button>
             </div>
         </a>
     )
