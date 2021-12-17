@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
@@ -42,37 +43,55 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 
         public async Task HandleAsync(UpdateSmartPlaylistCommand message)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             var smartPlaylist = await _smartPlaylistProvider.GetSmartPlaylistAsync(message.SmartPlaylistId)
                 .ConfigureAwait(false);
 
-            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
-
-            var items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
-
-            BaseItem[] newItems;
-            using (PerfLogger.Create("FilterPlaylistItems",
-                () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
+            try
             {
-                newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
+                smartPlaylist.LastSyncDuration = 0;
+                smartPlaylist.Status = "Complete";
+
+                var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
+
+                var items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
+
+                BaseItem[] newItems;
+                using (PerfLogger.Create("FilterPlaylistItems",
+                    () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
+                {
+                    newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
+                }
+
+                long id = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+                   .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+
+                if (smartPlaylist.InternalId != id)
+                {
+                    if (smartPlaylist.InternalId > 0)
+                        _folderRepository.Remove(smartPlaylist);
+
+                    smartPlaylist.InternalId = id;
+                }
+                smartPlaylist.LastSync = DateTime.Now;
+                smartPlaylist.SyncCount++;
+
+                if (smartPlaylist.IsShuffleUpdateType)
+                    smartPlaylist.UpdateLastShuffleTime();
+
             }
-
-            long id = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-               .UpdateAsync(playlist, newItems).ConfigureAwait(false);
-
-            if (smartPlaylist.InternalId != id)
+            catch (Exception ex)
             {
-                if (smartPlaylist.InternalId > 0)
-                    _folderRepository.Remove(smartPlaylist);
-
-                smartPlaylist.InternalId = id;
+                smartPlaylist.Status = $"Error {ex.Message}";
+                throw ex;
             }
-            smartPlaylist.LastSync = DateTime.Now;
-            smartPlaylist.SyncCount++;
-
-            if (smartPlaylist.IsShuffleUpdateType)
-                smartPlaylist.UpdateLastShuffleTime();
-
-            _smartPlaylistStore.Save(smartPlaylist.ToDto());
+            finally
+            {
+                sw.Stop();
+                smartPlaylist.LastSyncDuration = sw.ElapsedTicks;
+                _smartPlaylistStore.Save(smartPlaylist.ToDto());
+            }
         }
 
 

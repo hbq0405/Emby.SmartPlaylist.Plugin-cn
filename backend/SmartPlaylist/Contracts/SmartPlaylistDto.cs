@@ -20,5 +20,8 @@ namespace SmartPlaylist.Contracts
         public bool ForceCreate { get; set; }
         public string CollectionMode { get; set; }
         public int SyncCount { get; set; }
+        public long LastSyncDuration { get; set; } = 0;
+        public string Status { get; set; }
+
     }
 }

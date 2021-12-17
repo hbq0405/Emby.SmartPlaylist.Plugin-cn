@@ -60,6 +60,8 @@ export const demoAppPlaylistView: PlaylistInfo = {
     smartType: defaultSmartType,
     collectionMode: defaultCollectionMode,
     priorNames: [],
+    items: [],
+    ruleCount: 0,
     rulesTree: {
         byId: {},
         rootIds: []

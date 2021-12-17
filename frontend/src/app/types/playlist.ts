@@ -27,7 +27,12 @@ export type PlaylistViewData = PlaylistBasicData & {
     lastShuffleUpdate?: Date,
     lastUpdated?: Date,
     lastSync?: Date,
-    syncCount?: number
+    syncCount?: number,
+    lastDuration?: number,
+    status?: string,
+    lastDurationStr?: string
+    items: string[],
+    ruleCount: number
 }
 
 export type Playlist = PlaylistBasicData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;

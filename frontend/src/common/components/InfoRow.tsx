@@ -14,7 +14,6 @@ export type InfoRowProps = {
 
 export const InfoRow: React.FC<InfoRowProps> = props => {
     const embyProps = parseEmbyProps(props);
-    console.log(props)
     return (
         <Inline>
             {props.InfoItems.map((i, key) =>

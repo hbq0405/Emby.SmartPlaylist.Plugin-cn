@@ -13,7 +13,6 @@ export const loadAppData = (appId: string): Promise<AppData> => {
 
 export const saveAppPlaylist = (playlist: AppPlaylist): Promise<AppPlaylists | void> => {
     // tslint:disable-next-line:no-console
-    console.log(`saveAppPlaylist:\n ${JSON.stringify(playlist)}`);
     return new Promise<AppPlaylists | void>(res => {
         res();
     });

@@ -4,7 +4,7 @@ using MediaBrowser.Model.Services;
 using SmartPlaylist.Contracts;
 using SmartPlaylist.Domain;
 using SmartPlaylist.Domain.CriteriaDefinition;
-
+using System.Linq;
 namespace SmartPlaylist.Api
 {
     [Route("/smartplaylist", "POST", Summary = "")]
@@ -40,6 +40,9 @@ namespace SmartPlaylist.Api
             if (lastPlaylist != null)
             {
                 SmartPlaylistInfoDto smartPlaylistInfo = SmartPlaylistInfoDto.FromSmartPlaylist(lastPlaylist);
+                var folder = Plugin.Instance.FolderRepository.GetUserPlaylistOrCollectionFolder(new Domain.SmartPlaylist(lastPlaylist));
+                smartPlaylistInfo.Items = folder.GetItems().Select(x => x.Name).ToArray();
+
                 return smartPlaylistInfo;
             }
             return "{}";

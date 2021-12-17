@@ -34,6 +34,8 @@ namespace SmartPlaylist.Domain
             LastUpdated = dto.LastUpdated;
             LastSync = dto.LastSync;
             SyncCount = dto.SyncCount;
+            LastSyncDuration = dto.LastSyncDuration;
+            Status = dto.Status;
         }
 
         public Guid Id { get; }
@@ -59,7 +61,8 @@ namespace SmartPlaylist.Domain
         public DateTime? LastUpdated { get; set; }
         public DateTime? LastSync { get; set; }
         public int SyncCount { get; set; } = 0;
-
+        public long LastSyncDuration { get; set; } = 0;
+        public string Status { get; set; }
         public bool CanUpdatePlaylist => CheckIfCanUpdatePlaylist();
 
         public bool IsShuffleUpdateType => UpdateType == UpdateType.ShuffleDaily ||
@@ -169,7 +172,9 @@ namespace SmartPlaylist.Domain
                 CollectionMode = _dto.CollectionMode,
                 LastUpdated = LastUpdated,
                 LastSync = LastSync,
-                SyncCount = SyncCount
+                SyncCount = SyncCount,
+                LastSyncDuration = LastSyncDuration,
+                Status = Status
             };
         }
     }
