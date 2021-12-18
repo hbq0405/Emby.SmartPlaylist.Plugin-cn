@@ -10,5 +10,6 @@
 - Small UI changes
 - Added the following criteria:
   - Studio
+  - Added "Music and Home Video" to Media Type. <span style="color:red">**This could introduce a breaking change, please re-save any playlist that uses the criteria**</span>
 - ### Bug fix
   - Fixed a bug then when generating a new playlist or collection that an error was raised with 'Invalid Parameter Id'
