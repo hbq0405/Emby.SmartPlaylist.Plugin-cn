@@ -8,7 +8,7 @@ const { TypedCssModulesPlugin } = require('typed-css-modules-webpack-plugin');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const MiniCssExtractPluginConfig = new MiniCssExtractPlugin({
-    filename: 'smartplaylist.css',
+    filename: 'smartplaylist.2.0.0.2.css',
 });
 const outDir = path.join(__dirname, '../backend/SmartPlaylist/Configuration');
 
@@ -19,7 +19,7 @@ module.exports = {
         new TypedCssModulesPlugin({
             globPattern: 'src/**/*.css',
         }),
-        new webpack.NormalModuleReplacementPlugin(/./, function(resource) {
+        new webpack.NormalModuleReplacementPlugin(/./, function (resource) {
             if (!resource.context.includes('emby')) {
                 const component = resource.request.match(/[^\/]+$/)[0];
                 const isFileExists = fs.existsSync(
@@ -64,7 +64,7 @@ module.exports = {
 
     output: {
         path: outDir,
-        filename: 'smartplaylist.js',
+        filename: 'smartplaylist.2.0.0.2.js',
     },
 
     module: {

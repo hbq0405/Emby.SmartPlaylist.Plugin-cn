@@ -4,6 +4,7 @@ import {
     RuleCriteriaOperator,
     ListValueRange,
     ListValue,
+    ListMapValue
 } from '~/app/types/rule';
 import { AppPlaylistState, AppState } from '~/app/state/app.reducer';
 import { AppData, AppPlaylist } from '~/app/types/appData';

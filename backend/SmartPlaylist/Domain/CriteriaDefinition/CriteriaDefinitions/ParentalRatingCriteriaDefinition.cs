@@ -11,7 +11,7 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
         private static readonly ParentalRating[] ParentalRatings = BaseItem.LocalizationManager.GetParentalRatings();
 
         private static readonly ListValue[] ParentalRatingsListValues = ParentalRatings
-            .Select(x => ListValue.Create(x.Name, x.Value)).OrderBy(x=>x.NumValue).ToArray();
+            .Select(x => ListValue.Create(x.Name, x.Value)).OrderBy(x => x.NumValue).ToArray();
 
         public override string Name => "Parental rating";
         public override CriteriaDefinitionType Type => new ComparableListValueDefinitionType(ParentalRatingsListValues.First());

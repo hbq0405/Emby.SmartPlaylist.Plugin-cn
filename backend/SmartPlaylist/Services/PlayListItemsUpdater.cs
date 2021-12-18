@@ -37,6 +37,7 @@ namespace SmartPlaylist.Services
             {
                 RemoveItems(libraryUserPlaylist, playlistItems);
                 AddToPlaylist(libraryUserPlaylist, newItems);
+                libraryUserPlaylist.Item.Name = folder.SmartPlaylist.Name;
                 res = libraryUserPlaylist.InternalId;
             }
             else if (newItems.Any())
@@ -46,7 +47,7 @@ namespace SmartPlaylist.Services
 
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
                     Name = folder.SmartPlaylist.Name,
-                    UserId = folder.User.InternalId,
+                    UserId = folder.User.InternalId
                 }).ConfigureAwait(false);
 
                 res = long.Parse(request.Id);
@@ -60,6 +61,7 @@ namespace SmartPlaylist.Services
         {
             _playlistManager.AddToPlaylist(playlist.InternalId,
                 itemsToAdd.Select(x => x.InternalId).ToArray(), playlist.User);
+
             playlist.Item.RefreshMetadata(new CancellationToken());
         }
 

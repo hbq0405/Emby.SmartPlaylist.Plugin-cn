@@ -76,7 +76,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
                     changed = true;
                 }
-                else if (IsOldListValue(criteria.Value, criteriaDefinition.Values))
+                else if (IsOldListOrMapValue(criteria.Value, criteriaDefinition.Values))
                 {
                     criteria.Value = criteriaDefinition.Values.First();
                     changed = true;
@@ -116,9 +116,10 @@ namespace SmartPlaylist.Services.SmartPlaylist
             return changed;
         }
 
-        private static bool IsOldListValue(object currentValue, Value[] availableValues)
+        private static bool IsOldListOrMapValue(object currentValue, Value[] availableValues)
         {
-            return currentValue is ListValue listValue && availableValues.Any() && !availableValues.Contains(listValue);
+            return currentValue is ListValue listValue && availableValues.Any() && !availableValues.Contains(listValue)
+            || currentValue is ListMapValue listMapValue && availableValues.Any() && !availableValues.Contains(listMapValue);
         }
 
         public bool Exists(Guid userId, string smartPlaylistId)

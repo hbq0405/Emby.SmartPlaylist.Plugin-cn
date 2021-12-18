@@ -22,13 +22,8 @@ namespace SmartPlaylist.Domain
                 .Distinct()
                 .ToArray();
 
-            var isAudioMediaType = mediaTypes.Contains(nameof(Audio));
-            var isVideoMediaType = mediaTypes.Contains(nameof(Video)) || mediaTypes.Contains(nameof(Episode)) ||
-                                   mediaTypes.Contains(nameof(Series));
-
-            if (isVideoMediaType && !isAudioMediaType) return MediaBrowser.Model.Entities.MediaType.Video;
-
-            return MediaBrowser.Model.Entities.MediaType.Audio;
+            MediaTypeDescriptor descriptor = Const.SupportedItemTypes.FirstOrDefault(x => mediaTypes.Contains(x.Description));
+            return descriptor != null ? descriptor.BaseType : MediaBrowser.Model.Entities.MediaType.Audio;
         }
     }
 }

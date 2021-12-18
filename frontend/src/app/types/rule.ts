@@ -20,6 +20,7 @@ export type CrtieriaValue =
     | LastPeriodValue
     | DateRangeValue
     | ListValue
+    | ListMapValue
     | NumberValue
     | NumberRangeValue
     | ListValueRange;
@@ -49,6 +50,7 @@ export type OperatorType =
     | 'lastPeriod'
     | 'dateRange'
     | 'listValue'
+    | 'listMapValue'
     | 'number'
     | 'numberRange'
     | 'listValueRange'
@@ -95,6 +97,13 @@ export type NumberRangeValue = {
 export type ListValue = {
     kind: 'listValue';
     value: string;
+    numValue: number;
+};
+
+export type ListMapValue = {
+    kind: 'listMapValue';
+    value: string;
+    map: string;
     numValue: number;
 };
 
