@@ -9,6 +9,7 @@ import {
 import { AppPlaylistState, AppState } from '~/app/state/app.reducer';
 import { AppData, AppPlaylist } from '~/app/types/appData';
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
+import { ConfirmationProps } from '~/emby/components/Confirmation';
 
 export type AppSelectors = {
     getPlaylists(): Playlist[];
@@ -20,6 +21,7 @@ export type AppSelectors = {
     getAppData(): AppData;
     getLimitOrdersBy(): string[];
     getViewPlaylist(): PlaylistInfo;
+    getConfirmation(): ConfirmationProps;
 };
 
 export const createAppSelectors = (state: AppState): AppSelectors => {
@@ -56,6 +58,9 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         getLimitOrdersBy: (): string[] => {
             return state.limitOrdersBy;
         },
+        getConfirmation: (): ConfirmationProps => {
+            return state.confirmation;
+        }
     };
 };
 

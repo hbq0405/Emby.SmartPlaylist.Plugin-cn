@@ -1,4 +1,4 @@
-import { Modal } from '~/common/components/Modal/Modal';
+
 import { PlaylistEditor } from '~/app/components/PlaylistEditor';
 import * as React from 'react';
 import { createPlaylistContextValue, PlaylistContext } from '~/app/state/playlist/playlist.context';
@@ -9,6 +9,9 @@ import { AppData } from '~/app/types/appData';
 import { PlaylistList } from '~/app/components/PlaylistList';
 import { AddButton } from '~/common/components/AddButton';
 import { PlaylistDetail } from '~/app/components/PlaylistDetail';
+import './App.css';
+import { Confirmation } from '~/emby/components/Confirmation';
+import { Modal } from '~/emby/components/Modal';
 
 export type AppProps = {
     appId: string;
@@ -33,11 +36,13 @@ export const App: React.FC<AppProps> = props => {
         savePlaylist,
         getEditedPlaylist,
         isNewPlaylist,
-        getViewPlaylist
+        getViewPlaylist,
+        getConfirmation
     } = appContext;
 
     const editedPlaylist = getEditedPlaylist();
     const viewPlaylistInfo = getViewPlaylist();
+    const confirmation = getConfirmation();
 
     return (
         <>
@@ -48,7 +53,7 @@ export const App: React.FC<AppProps> = props => {
                         label="Add Smart Playlist" />
                 </div>
 
-                <div className="verticalSection verticalSection-extrabottompadding">
+                <div className="verticalSection verticalSection-extrabottompadding app-container">
                     <PlaylistList />
                 </div>
 
@@ -82,6 +87,17 @@ export const App: React.FC<AppProps> = props => {
                             playlist={viewPlaylistInfo}
                         />
                     </Modal>
+                )}
+
+                {confirmation && (
+                    <Confirmation
+                        {...confirmation}
+                        onNo={(data) => discardPlaylist()}
+                        onYes={(data) => {
+                            confirmation.onYes(data);
+                        }}
+                    >
+                    </Confirmation>
                 )}
             </AppContext.Provider>
         </>

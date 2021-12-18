@@ -10,7 +10,7 @@ type ApiClient = {
     ajax<T = any>(request: any): Promise<T>;
 };
 
-export const version = "2.0.0.2";
+export const version = "2.1.0.0";
 
 declare global {
     // tslint:disable-next-line:interface-name
@@ -61,6 +61,8 @@ export const saveAppPlaylist = async (playlist: AppPlaylist): Promise<AppPlaylis
         }
     );
 };
+
+
 
 export const deletePlaylist = async (playlistId: string): Promise<any> => {
     return window.ApiClient.ajax(

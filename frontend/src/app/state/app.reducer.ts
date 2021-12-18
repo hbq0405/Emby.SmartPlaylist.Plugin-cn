@@ -6,6 +6,7 @@ import { normalizeArray } from '~/common/helpers/array';
 import { createTreeViewData } from '~/common/components/TreeView/types/tree.factory';
 import { AppData } from '~/app/types/appData';
 import { defaultPlaylistLimit } from '~/app/app.const';
+import { ConfirmationProps } from '~/emby/components/Confirmation';
 
 export type AppPlaylistState = {
     byId: {
@@ -20,7 +21,9 @@ export type AppState = {
     rulesCriteriaDefinitions: RuleCriteriaDefinition[];
     limitOrdersBy: string[];
     editedPlaylist?: Playlist;
-    viewPlaylist?: PlaylistInfo
+    viewPlaylist?: PlaylistInfo,
+    confirmation?: ConfirmationProps
+
 };
 
 export const initAppState: AppState = {
@@ -42,7 +45,8 @@ export type AppAction =
     | { type: 'app:discardPlaylist' }
     | { type: 'app:savePlaylist' }
     | { type: 'app:removePlaylist'; playlist: Playlist }
-    | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo };
+    | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo }
+    | { type: 'app:confirmDeletePlaylist'; confirmationProps: ConfirmationProps };
 
 export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (state, action) => {
     switch (action.type) {
@@ -65,25 +69,33 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             return {
                 ...state,
                 editedPlaylist: { ...action.playlist },
+                viewPlaylist: undefined,
+                confirmation: undefined
             };
         }
         case 'app:editPlaylist': {
             return {
                 ...state,
                 editedPlaylist: { ...state.playlists.byId[action.playlist.id] },
+                viewPlaylist: undefined,
+                confirmation: undefined
             };
         }
         case 'app:discardPlaylist': {
             return {
                 ...state,
                 editedPlaylist: undefined,
-                viewPlaylist: undefined
+                viewPlaylist: undefined,
+                confirmation: undefined
             };
         }
         case 'app:removePlaylist': {
             const { [action.playlist.id]: deleted, ...byId } = state.playlists.byId;
             return {
                 ...state,
+                editedPlaylist: undefined,
+                viewPlaylist: undefined,
+                confirmation: undefined,
                 playlists: {
                     ...state.playlists,
                     byId: byId,
@@ -117,6 +129,12 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 },
                 editedPlaylist: undefined,
             };
+        }
+        case 'app:confirmDeletePlaylist': {
+            return {
+                ...state,
+                confirmation: action.confirmationProps
+            }
         }
 
         default: {

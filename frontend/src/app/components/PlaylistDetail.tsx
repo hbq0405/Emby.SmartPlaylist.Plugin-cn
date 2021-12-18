@@ -15,12 +15,12 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
     return (
         <>
             <InfoRow InfoItems={[
-                { label: 'Id: ', text: playlist.id },//`${playlist.id} (Internal Item Id: ${playlist.internalId}`
+                { label: 'Id: ', text: playlist.id },
                 { label: 'Internal Item Id: ', text: playlist.internalId ? playlist.internalId.toString() : 'N/A' },
                 { label: 'Name: ', text: playlist.name },
             ]} />
             <InfoRow InfoItems={[
-                { label: 'Type: ', text: playlist.smartType },
+                { label: 'Type: ', text: (playlist.smartType ? playlist.smartType : 'Playlist') },
                 { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? (playlist.collectionMode ? playlist.collectionMode : 'Item') : 'N/A' },
                 { label: 'Update: ', text: playlist.updateType },
             ]} />

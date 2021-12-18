@@ -14,6 +14,7 @@ export type AppActions = {
     discardPlaylist(): void;
     loadAppData(appData: AppData): void;
     viewPlaylist(plalist: Playlist): void;
+    confirmDeletePlaylist(plalist: Playlist): void;
 };
 
 export const createAppActions = (
@@ -56,6 +57,25 @@ export const createAppActions = (
             dispatcher({
                 type: 'app:discardPlaylist',
             });
+        },
+        confirmDeletePlaylist: (plalist: Playlist) => {
+            dispatcher({
+                type: 'app:confirmDeletePlaylist',
+                confirmationProps: {
+                    title: 'Confirm playlist removal',
+                    data: plalist,
+                    question: `Are you sure you want to delete the playlist: "${plalist.name}"`,
+                    onNo: (data => { }),
+                    onYes: (data => {
+                        deletePlaylist((data as Playlist).id).finally(() => {
+                            dispatcher({
+                                type: 'app:removePlaylist',
+                                playlist: data,
+                            })
+                        });
+                    })
+                }
+            })
         },
         loadAppData: (appData: AppData) => {
             dispatcher({

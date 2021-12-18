@@ -20,7 +20,7 @@ export const InfoRow: React.FC<InfoRowProps> = props => {
                     <div className='info-row-label'>{i.label}</div>
                     <div className='info-row-text'>{i.text}</div>
                 </div>
-            )};
+            )}
         </Inline>
-    )
+    );
 };
