@@ -16,7 +16,7 @@ namespace SmartPlaylist.Services
 {
     public interface IFolderItemsUpdater
     {
-        Task<long> UpdateAsync(UserFolder folder, BaseItem[] newItems);
+        Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
         void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove);
     }
 
@@ -29,16 +29,17 @@ namespace SmartPlaylist.Services
             _playlistManager = playlistManager;
         }
 
-        public async Task<long> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
+            (long internalId, string message) ret = (0, string.Empty);
             var playlistItems = folder.GetItems();
-            long res = 0;
+
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
                 RemoveItems(libraryUserPlaylist, playlistItems);
                 AddToPlaylist(libraryUserPlaylist, newItems);
                 libraryUserPlaylist.Item.Name = folder.SmartPlaylist.Name;
-                res = libraryUserPlaylist.InternalId;
+                ret = (libraryUserPlaylist.InternalId, $"Completed - (Added {newItems.Count()} to existing playlist)");
             }
             else if (newItems.Any())
             {
@@ -50,11 +51,12 @@ namespace SmartPlaylist.Services
                     UserId = folder.User.InternalId
                 }).ConfigureAwait(false);
 
-                res = long.Parse(request.Id);
+                ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
             }
             else
-                res = -1;
-            return res;
+                ret = (-1, "Completed - (No new items found)");
+
+            return ret;
         }
 
         private void AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] itemsToAdd)

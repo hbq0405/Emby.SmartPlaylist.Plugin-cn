@@ -25,7 +25,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public async Task<long> UpdateAsync(UserFolder playlist, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(UserFolder playlist, BaseItem[] newItems)
         {
             using (PerfLogger.Create("UpdatePlaylistItems",
                 () => new { playlistName = playlist.SmartPlaylist.Name, newItemsCount = newItems.Length }))

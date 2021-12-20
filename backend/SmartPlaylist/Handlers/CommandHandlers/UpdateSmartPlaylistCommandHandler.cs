@@ -64,15 +64,17 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                     newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
                 }
 
-                long id = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+                var update = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
                    .UpdateAsync(playlist, newItems).ConfigureAwait(false);
 
-                if (smartPlaylist.InternalId != id)
+                smartPlaylist.Status = update.message;
+
+                if (smartPlaylist.InternalId != update.internalId)
                 {
                     if (smartPlaylist.InternalId > 0)
                         _folderRepository.Remove(smartPlaylist);
 
-                    smartPlaylist.InternalId = id;
+                    smartPlaylist.InternalId = update.internalId;
                 }
                 smartPlaylist.LastSync = DateTime.Now;
                 smartPlaylist.SyncCount++;

@@ -22,14 +22,14 @@ namespace SmartPlaylist.Services
             _libraryManager = libraryManager;
         }
 
-        public async Task<long> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
-            long res = 0;
+            (long internalId, string message) ret = (0, string.Empty);
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 Remove(libraryUserCollection);
                 await AddItemsToCollection(libraryUserCollection, new List<BaseItem>(newItems)).ConfigureAwait(false);
-                res = libraryUserCollection.InternalId;
+                ret = (libraryUserCollection.InternalId, $"Completed - (Added {newItems.Count()} to existing collection)");
 
             }
             else if (newItems.Any())
@@ -40,12 +40,13 @@ namespace SmartPlaylist.Services
                     Name = folder.SmartPlaylist.Name
                 }).ConfigureAwait(false);
 
-                res = result.InternalId;
+                ret = (result.InternalId, $"Completed - (Added {newItems.Count()} to new collection)");
+
             }
             else
-                res = -1;
+                ret = (-1, "Completed - (No new items found)");
 
-            return res;
+            return ret;
         }
 
         private void Remove(LibraryUserFolder<Folder> collection)

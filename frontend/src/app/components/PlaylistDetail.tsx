@@ -25,7 +25,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
                 { label: 'Update: ', text: playlist.updateType },
             ]} />
             <InfoRow InfoItems={[
-                { label: 'Last Shuffle: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A' },
+                { label: 'Next Shuffle: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A' },
                 { label: 'Last Edited: ', text: playlist.lastUpdated ? playlist.lastUpdated.toLocaleString() : 'N/A' },
                 { label: 'Last Populated: ', text: playlist.lastSync ? playlist.lastSync.toLocaleString() : 'N/A' }
             ]} />
@@ -36,7 +36,8 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             ]} />
             <InfoRow InfoItems={[
                 { label: 'Last Run Status: ', text: playlist.status ? playlist.status : 'N/A' },
-                { label: 'Last Run Duration: ', text: playlist.lastDurationStr ? playlist.lastDurationStr : 'N/A' }
+                { label: 'Last Run Duration: ', text: playlist.lastDurationStr ? playlist.lastDurationStr : 'N/A' },
+                { label: "Synced Count: ", text: playlist.syncCount ? playlist.syncCount.toString() : '0' }
             ]} />
             <div className='info-row info-row-label'>Items:</div>
             <TagList Items={playlist.items} />
