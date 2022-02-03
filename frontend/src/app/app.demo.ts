@@ -37,6 +37,7 @@ export const demoAppPlaylists: AppPlaylist[] = [
         smartType: defaultSmartType,
         collectionMode: defaultCollectionMode,
         priorNames: [],
+        enabled: true,
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,
@@ -60,6 +61,7 @@ export const demoAppPlaylistView: PlaylistInfo = {
     smartType: defaultSmartType,
     collectionMode: defaultCollectionMode,
     priorNames: [],
+    enabled: true,
     items: [],
     ruleCount: 0,
     rulesTree: {

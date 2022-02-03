@@ -1,31 +1,38 @@
 import * as React from 'react';
 import { SmartTypes } from '~/app/app.const';
-import { SmartType } from '~/app/types/playlist';
+import { playlistReducer } from '~/app/state/playlist/playlist.reducer';
+import { Playlist, PlaylistBasicData, SmartType } from '~/app/types/playlist';
+import { Toggle } from './Toggle';
 
 export type ListItemProps = {
     onEditClick(): void;
     onDeleteClick(): void;
     onViewClick(): void;
-    label: string;
-    type: SmartType;
+    onUpdateData(playlist: Partial<Playlist>): void;
+    playList: Playlist;
 } & React.AllHTMLAttributes<HTMLDivElement> &
     BaseProps;
 
 export const ListItem: React.FC<ListItemProps> = props => {
-    var icon = props.type == SmartTypes[1] ? 'video_library' : 'playlist_play';
-    var txt = props.type == SmartTypes[1] ? 'Collection' : 'Playlist';
-    var txt_cls = props.type == SmartTypes[1] ? 'tooltiptext-blue' : 'tooltiptext-green';
-
+    const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled")
     return (
-        <a className="listItem listItem-border emby-button plist-row" data-ripple="false">
+        <a className={mainStyle} data-ripple="false">
             <div className="listItemImageContainer">
-                <i className="listItemIcon md-icon listItemIcon-transparent">{icon}</i>
+                <i className="listItemIcon md-icon listItemIcon-transparent">{props.playList.smartType == SmartTypes[1] ? 'video_library' : 'playlist_play'}</i>
             </div>
             <div className="listItemBody">
-                <div className="listItemBodyText" onClick={() => props.onEditClick()}>{props.label}</div>
+                <div className="listItemBodyText" onClick={() => props.onEditClick()}>{props.playList.name}</div>
             </div>
             <div className='popper'>
-                <span className={`tooltiptext ${txt_cls}`}>{txt}</span>
+                <span className={`tooltiptext`}>
+                    <Toggle id={'toggle-' + props.playList.id} checked={props.playList.enabled} onChange={(checked: boolean) => {
+                        console.log('toggle');
+                        props.onUpdateData({
+                            enabled: checked
+                        });
+                    }
+                    } />
+                </span>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onViewClick()}><i className="md-icon sp-icon">info</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onEditClick()}><i className="md-icon sp-icon">edit</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon sp-icon">delete</i></button>

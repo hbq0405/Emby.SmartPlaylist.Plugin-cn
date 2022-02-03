@@ -2,13 +2,15 @@ import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
 import './PlaylistList.css'
 import { ListItem } from '~/common/components/ListItem';
+import { Playlist } from '../types/playlist';
+
 
 type PlaylistListProps = {};
 
 export const PlaylistList: React.FC<PlaylistListProps> = () => {
     const appContext = React.useContext(AppContext);
 
-    const { getPlaylists, editPlaylist, confirmDeletePlaylist, viewPlaylist } = appContext;
+    const { getPlaylists, editPlaylist, updatePlaylist, confirmDeletePlaylist, viewPlaylist } = appContext;
 
     return (
         <>
@@ -18,8 +20,15 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                     onDeleteClick={() => confirmDeletePlaylist(playlist)}
                     onEditClick={() => editPlaylist(playlist)}
                     onViewClick={() => viewPlaylist(playlist)}
-                    label={playlist.name}
-                    type={playlist.smartType}
+                    onUpdateData={(pl: Partial<Playlist>) => {
+                        console.log('update');
+                        updatePlaylist({
+                            ...playlist,
+                            ...pl
+                        });
+
+                    }}
+                    playList={playlist}
                 />
             ))}
         </>

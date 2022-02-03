@@ -43,6 +43,7 @@ export type AppAction =
     | { type: 'app:addNewPlaylist'; playlist: Playlist }
     | { type: 'app:editPlaylist'; playlist: Playlist }
     | { type: 'app:discardPlaylist' }
+    | { type: 'app:updatePlaylist'; playlist: Playlist }
     | { type: 'app:savePlaylist' }
     | { type: 'app:removePlaylist'; playlist: Playlist }
     | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo }
@@ -74,6 +75,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             };
         }
         case 'app:editPlaylist': {
+            alert('edit')
             return {
                 ...state,
                 editedPlaylist: { ...state.playlists.byId[action.playlist.id] },
@@ -108,6 +110,25 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 ...state,
                 viewPlaylist: action.playlistInfo,
                 editedPlaylist: undefined
+            };
+        }
+        case 'app:updatePlaylist': {
+            let names = state.playlists.names;
+            if (!names.includes(action.playlist.id)) {
+                names = [...names, action.playlist.id];
+            }
+            return {
+                ...state,
+                playlists: {
+                    ...state.playlists,
+                    byId: {
+                        ...state.playlists.byId,
+                        [action.playlist.id]: {
+                            ...action.playlist,
+                        },
+                    },
+                    names: names,
+                }
             };
         }
         case 'app:savePlaylist': {

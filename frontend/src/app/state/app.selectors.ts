@@ -72,14 +72,17 @@ export const getAppData = (state: AppState): AppData => {
 };
 
 export const getAppPlaylist = (state: AppState): AppPlaylist => {
-    const playlist = state.editedPlaylist;
+    return getAppPlaylistForPlaylist(state.editedPlaylist);
+};
+
+export const getAppPlaylistForPlaylist = (playlist: Playlist): AppPlaylist => {
     return {
         ...playlist,
         rulesTree: getOrderedNodeIds(playlist.rulesTree.rootIds, playlist.rulesTree).map(
             id => playlist.rulesTree.byId[id],
         ),
     };
-};
+}
 
 const convertToAppPlaylists = (playlistState: AppPlaylistState): AppPlaylist[] => {
     return playlistState.names

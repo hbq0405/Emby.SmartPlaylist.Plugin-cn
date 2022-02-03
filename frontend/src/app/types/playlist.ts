@@ -14,6 +14,7 @@ export type PlaylistBasicData = {
     smartType: SmartType;
     collectionMode: CollectionMode;
     priorNames: [];
+    enabled: boolean;
 };
 
 export type PlaylistLimit = {

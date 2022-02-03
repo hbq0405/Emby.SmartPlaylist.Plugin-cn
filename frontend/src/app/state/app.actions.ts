@@ -4,11 +4,13 @@ import { createPlaylist } from '~/app/types/playlist.factory';
 import { AppAction, AppState } from '~/app/state/app.reducer';
 import { AppData } from '~/app/types/appData';
 import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
-import { getAppPlaylist } from '~/app/state/app.selectors';
+import { getAppPlaylist, getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
+import { playlistReducer } from './playlist/playlist.reducer';
 
 export type AppActions = {
     addNewPlaylist(): void;
     editPlaylist(plalist: Playlist): void;
+    updatePlaylist(plalist: Playlist): void;
     savePlaylist(): void;
     deletePlaylist(plalist: Playlist): void;
     discardPlaylist(): void;
@@ -32,6 +34,13 @@ export const createAppActions = (
             dispatcher({
                 type: 'app:editPlaylist',
                 playlist: playlist,
+            });
+        },
+        updatePlaylist: async (playlist: Playlist) => {
+            await saveAppPlaylist(getAppPlaylistForPlaylist(playlist));
+            dispatcher({
+                type: 'app:updatePlaylist',
+                playlist: playlist
             });
         },
         savePlaylist: async () => {
