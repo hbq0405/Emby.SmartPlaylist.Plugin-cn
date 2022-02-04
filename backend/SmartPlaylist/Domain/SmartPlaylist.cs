@@ -182,25 +182,25 @@ namespace SmartPlaylist.Domain
         {
             return new SmartPlaylistDto
             {
-                Id = _dto.Id.ToString(),
-                LastShuffleUpdate = _dto.LastShuffleUpdate,
+                Id = Id.ToString(),
+                LastShuffleUpdate = LastShuffleUpdate,
                 Limit = _dto.Limit,
                 NewItemOrder = _dto.NewItemOrder,
-                Name = _dto.Name,
+                Name = Name,
                 RulesTree = _dto.RulesTree,
                 UpdateType = _dto.UpdateType,
                 SmartType = _dto.SmartType,
-                UserId = _dto.UserId,
+                UserId = UserId,
                 OriginalSmartType = _dto.OriginalSmartType,
-                InternalId = _dto.InternalId,
+                InternalId = InternalId,
                 CollectionMode = _dto.CollectionMode,
-                LastUpdated = _dto.LastUpdated,
-                LastSync = _dto.LastSync,
-                SyncCount = _dto.SyncCount,
-                LastSyncDuration = _dto.LastSyncDuration,
-                Status = _dto.Status,
-                Enabled = _dto.Enabled,
-                SourceType = _dto.SourceType,
+                LastUpdated = LastUpdated,
+                LastSync = LastSync,
+                SyncCount = SyncCount,
+                LastSyncDuration = LastSyncDuration,
+                Status = Status,
+                Enabled = Enabled,
+                SourceType = SourceType,
                 Source = _dto.Source
             };
         }

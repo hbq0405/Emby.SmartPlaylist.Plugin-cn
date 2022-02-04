@@ -5,6 +5,8 @@ using SmartPlaylist.Contracts;
 using SmartPlaylist.Domain;
 using SmartPlaylist.Domain.CriteriaDefinition;
 using System.Linq;
+using SmartPlaylist.Handlers.Commands;
+
 namespace SmartPlaylist.Api
 {
     [Route("/smartplaylist", "POST", Summary = "")]
@@ -40,19 +42,40 @@ namespace SmartPlaylist.Api
         {
             var lastPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
             if (lastPlaylist != null)
-            {
-                SmartPlaylistInfoDto smartPlaylistInfo = SmartPlaylistInfoDto.FromSmartPlaylist(lastPlaylist);
-                var folder = Plugin.Instance.FolderRepository.GetUserPlaylistOrCollectionFolder(new Domain.SmartPlaylist(lastPlaylist));
-                smartPlaylistInfo.Items = folder.GetItems().Select(x => x.Name).ToArray();
+                return getInfo(lastPlaylist);
 
-                return smartPlaylistInfo;
-            }
             return "{}";
         }
+
+        private SmartPlaylistInfoDto getInfo(SmartPlaylistDto dto)
+        {
+            SmartPlaylistInfoDto smartPlaylistInfo = SmartPlaylistInfoDto.FromSmartPlaylist(dto);
+            var folder = Plugin.Instance.FolderRepository.GetUserPlaylistOrCollectionFolder(new Domain.SmartPlaylist(dto));
+            smartPlaylistInfo.Items = folder.GetItems().Select(x => x.Name).ToArray();
+            return smartPlaylistInfo;
+        }
+
+        public async Task<object> Post(ExecutePlaylist request)
+        {
+            await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(request.Id)));
+
+            var lastPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
+            if (lastPlaylist != null)
+                return getInfo(lastPlaylist);
+
+            return "{}";
+        }
+
     }
 
     [Route("/smartplaylist/info/{Id}", "GET", Summary = "")]
     public class GetPlaylistItems : IReturn<SmartPlaylistInfoDto>
+    {
+        public string Id { get; set; }
+    }
+
+    [Route("/smartplaylist/info/{Id}", "POST", Summary = "")]
+    public class ExecutePlaylist : IReturn<SmartPlaylistInfoDto>
     {
         public string Id { get; set; }
     }

@@ -53,6 +53,10 @@ namespace SmartPlaylist
                 new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager, collectionItemsUpdater, playlistItemsUpdater));
 
             MessageBus = new MessageBus();
+            SmartPlaylistCommandHandler =
+                new UpdateSmartPlaylistCommandHandler(userItemsProvider, smartPlaylistProvider,
+                    FolderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater,
+                    libraryManager);
 
             SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, FolderRepository,
                 playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater, libraryManager);
@@ -75,6 +79,7 @@ namespace SmartPlaylist
         public static Plugin Instance { get; private set; }
 
         public MessageBus MessageBus { get; }
+        public UpdateSmartPlaylistCommandHandler SmartPlaylistCommandHandler { get; }
         public ISmartPlaylistStore SmartPlaylistStore { get; }
 
         public Stream GetThumbImage()
@@ -114,16 +119,13 @@ namespace SmartPlaylist
             IFolderItemsUpdater playlistItemsUpdater, ISmartPlaylistStore smartPlaylistStore,
             IFolderItemsUpdater collectionItemsUpdater, ILibraryManager libraryManager)
         {
-            var updateSmartPlaylistCommandHandler =
-                new UpdateSmartPlaylistCommandHandler(userItemsProvider, smartPlaylistProvider,
-                    folderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater,
-                    libraryManager);
+
 
             var updateAllSmartPlaylistsWithItemsCommandHandler =
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
                     folderRepository, playlistItemsUpdater, collectionItemsUpdater);
 
-            MessageBus.Subscribe(Decorate(updateSmartPlaylistCommandHandler));
+            MessageBus.Subscribe(Decorate(SmartPlaylistCommandHandler));
             MessageBus.Subscribe(Decorate(updateAllSmartPlaylistsWithItemsCommandHandler));
         }
 
