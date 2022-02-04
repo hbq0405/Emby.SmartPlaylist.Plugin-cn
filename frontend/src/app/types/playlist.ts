@@ -15,6 +15,7 @@ export type PlaylistBasicData = {
     collectionMode: CollectionMode;
     priorNames: [];
     enabled: boolean;
+    newItemOrder: NewItemOrder;
 };
 
 export type PlaylistLimit = {
@@ -22,6 +23,11 @@ export type PlaylistLimit = {
     maxItems: number;
     orderBy: LimitOrderBy;
 };
+
+export type NewItemOrder = {
+    hasSort: boolean;
+    orderBy: string;
+}
 
 export type PlaylistViewData = PlaylistBasicData & {
     internalId?: number,

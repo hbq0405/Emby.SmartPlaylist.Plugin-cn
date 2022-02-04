@@ -21,7 +21,6 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                     onEditClick={() => editPlaylist(playlist)}
                     onViewClick={() => viewPlaylist(playlist)}
                     onUpdateData={(pl: Partial<Playlist>) => {
-                        console.log('update');
                         updatePlaylist({
                             ...playlist,
                             ...pl

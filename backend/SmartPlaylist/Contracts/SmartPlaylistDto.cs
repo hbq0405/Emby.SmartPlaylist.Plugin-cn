@@ -5,11 +5,22 @@ namespace SmartPlaylist.Contracts
     [Serializable]
     public class SmartPlaylistDto
     {
+        public SmartPlaylistDto()
+        {
+            Enabled = true;
+            NewItemOrder = new SmartPlaylistNewItemOrderDto()
+            {
+                HasSort = false,
+                OrderBy = "None"
+            };
+        }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public RuleTreeNodeDto[] RulesTree { get; set; }
         public Guid UserId { get; set; }
         public SmartPlaylistLimitDto Limit { get; set; }
+        public SmartPlaylistNewItemOrderDto NewItemOrder { get; set; }
         public DateTimeOffset? LastShuffleUpdate { get; set; } = null;
         public DateTime? LastUpdated { get; set; } = null;
         public DateTime? LastSync { get; set; } = null;
@@ -22,6 +33,7 @@ namespace SmartPlaylist.Contracts
         public int SyncCount { get; set; }
         public long LastSyncDuration { get; set; } = 0;
         public string Status { get; set; }
+        public bool Enabled { get; set; }
 
     }
 }

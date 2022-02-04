@@ -7,7 +7,7 @@ import {
     RuleCriteriaDefinitionType,
     StringValue,
 } from '~/app/types/rule';
-import { LimitOrderBy, PlaylistLimit, SmartType, UpdateType, CollectionMode as CollectionMode } from '~/app/types/playlist';
+import { LimitOrderBy, PlaylistLimit, SmartType, UpdateType, CollectionMode as CollectionMode, NewItemOrder } from '~/app/types/playlist';
 
 export const RuleMatchTypes = ['All', 'Any'] as const;
 export const PeriodValues = ['days', 'weeks', 'months'] as const;
@@ -106,6 +106,11 @@ export const defaultPlaylistLimit: PlaylistLimit = {
     maxItems: 0,
     orderBy: nameLimitOrderBy,
 };
+
+export const defaultNewItemOrder: NewItemOrder = {
+    hasSort: false,
+    orderBy: nameLimitOrderBy
+}
 
 export const defaultUpdateType: UpdateType = 'Live';
 export const defaultGroupMatchType: GroupMatchMode = 'All';

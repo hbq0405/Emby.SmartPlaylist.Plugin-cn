@@ -11,6 +11,7 @@ import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
 import { AutoSize } from '~/common/components/AutoSize';
+import { Toggle } from '~/common/components/Toggle';
 
 type PlaylistEditorProps = {};
 
@@ -72,17 +73,63 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             </Inline>
 
             <Inline>
-                <CheckBox
-                    checked={basicData.limit.hasLimit}
-                    label="Limit"
-                    onChange={e =>
+                <Toggle
+                    id="Toggle-Sort"
+                    label='Sort'
+                    checked={basicData.newItemOrder.hasSort}
+                    onToggled={c => {
                         updateBasicData({
-                            limit: {
-                                ...basicData.limit,
-                                hasLimit: e.target.checked
+                            newItemOrder: {
+                                ...basicData.newItemOrder,
+                                hasSort: c
+                            }
+                        })
+                        if (c)
+                            updateBasicData({
+                                limit: {
+                                    ...basicData.limit,
+                                    hasLimit: false
+                                }
+                            })
+
+                    }}
+                />
+                <Select
+                    label='Sort newly added items by:'
+                    disabled={!basicData.newItemOrder.hasSort}
+                    maxWidth={true}
+                    values={limitOrdersBy}
+                    value={basicData.newItemOrder.orderBy}
+                    onChange={newVal =>
+                        updateBasicData({
+                            newItemOrder: {
+                                ...basicData.newItemOrder,
+                                orderBy: newVal,
                             },
                         })
                     }
+                />
+                <Toggle
+                    id="Toggle-Limit"
+                    label='Limited:'
+                    checked={basicData.limit.hasLimit}
+                    onToggled={c => {
+                        updateBasicData({
+                            limit: {
+                                ...basicData.limit,
+                                hasLimit: c
+                            }
+                        })
+
+                        if (c)
+                            updateBasicData({
+                                newItemOrder: {
+                                    ...basicData.newItemOrder,
+                                    hasSort: false
+                                }
+                            })
+
+                    }}
                 />
                 <Input
                     disabled={!basicData.limit.hasLimit}

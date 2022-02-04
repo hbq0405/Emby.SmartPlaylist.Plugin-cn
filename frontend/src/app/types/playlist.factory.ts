@@ -8,7 +8,7 @@ import {
     addChildNode,
     addNewNode,
 } from '~/common/components/TreeView/actions/treeViewData.actions';
-import { defaultPlaylistLimit, defaultSmartType, defaultUpdateType, defaultCollectionMode } from '~/app/app.const';
+import { defaultPlaylistLimit, defaultSmartType, defaultUpdateType, defaultCollectionMode, defaultNewItemOrder } from '~/app/app.const';
 
 export const createPlaylist = (): Playlist => {
     const newChildNode = createTreeNodeData({
@@ -39,6 +39,7 @@ export const createPlaylist = (): Playlist => {
         smartType: defaultSmartType,
         collectionMode: defaultCollectionMode,
         priorNames: [],
-        enabled: true
+        enabled: true,
+        newItemOrder: defaultNewItemOrder,
     };
 };

@@ -1,11 +1,11 @@
 # ChangeLog
 ## Version 2.1.0.1
-
 - ### Feature
   - Added Sync Count to playlist statistics
   - Added more detailed status messages to playlist statistics
-## Version 2.1.0.1
-
+  - Added the ability to turn playlist syncing on or off
+  - Added sort for newly added items
+## Version 2.1.0.0
 - ### Feature
   - Added a new feature that can roll up episode items to either their season or series, this is only available for smart collections. (Emby restriction)
     - EpiModes:

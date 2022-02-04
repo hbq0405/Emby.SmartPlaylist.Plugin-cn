@@ -23,6 +23,7 @@ namespace SmartPlaylist.Domain
             UserId = dto.UserId;
             Rules = new RuleBase[] { RuleAdapter.Adapt(dto.RulesTree) };
             Limit = new SmartPlaylistLimit(dto.Limit);
+            NewItemOrder = new NewItemOrder(dto.NewItemOrder);
             LastShuffleUpdate = dto.LastShuffleUpdate;
             UpdateType = UpdateType.ConvertFromString<UpdateType>(dto.UpdateType, UpdateType.Live);
             SmartType = SmartType.ConvertFromString<SmartType>(dto.SmartType, SmartType.Playlist);
@@ -36,6 +37,7 @@ namespace SmartPlaylist.Domain
             SyncCount = dto.SyncCount;
             LastSyncDuration = dto.LastSyncDuration;
             Status = dto.Status;
+            Enabled = dto.Enabled;
         }
 
         public Guid Id { get; }
@@ -43,10 +45,12 @@ namespace SmartPlaylist.Domain
         public Guid UserId { get; }
         public RuleBase[] Rules { get; }
         public SmartPlaylistLimit Limit { get; }
+        public NewItemOrder NewItemOrder { get; }
         public UpdateType UpdateType { get; }
         public SmartType SmartType { get; }
         public SmartType OriginalSmartType { get; }
         public CollectionMode CollectionMode { get; }
+        public bool Enabled { get; }
         public long InternalId
         {
             get { return _internalid; }
@@ -102,7 +106,15 @@ namespace SmartPlaylist.Domain
             if (SmartType == SmartType.Collection && CollectionMode != CollectionMode.Item)
                 newItems = RollUpTo(newItems);
 
-            return (IsShuffleUpdateType ? newItems.Shuffle() : OrderItems(newItems)).Take(Limit.MaxItems);
+            if (IsShuffleUpdateType)
+                newItems = newItems.Shuffle();
+
+            if (NewItemOrder.HasSort)
+                newItems = OrderNewItems(newItems);
+            else if (Limit.HasLimit)
+                newItems = OrderLimitItems(newItems).Take(Limit.MaxItems);
+
+            return newItems;
         }
 
         private static IEnumerable<BaseItem> RemoveMissingEpisodes(IEnumerable<BaseItem> items)
@@ -121,9 +133,14 @@ namespace SmartPlaylist.Domain
             return item.GetType().IsAssignableFrom(rollType) ? item : RollUpToItemType(item.Parent, rollType);
         }
 
-        private IEnumerable<BaseItem> OrderItems(IEnumerable<BaseItem> playlistItems)
+        private IEnumerable<BaseItem> OrderLimitItems(IEnumerable<BaseItem> playlistItems)
         {
             return Limit.OrderBy.Order(playlistItems);
+        }
+
+        private IEnumerable<BaseItem> OrderNewItems(IEnumerable<BaseItem> playlistItems)
+        {
+            return NewItemOrder.OrderBy.Order(playlistItems);
         }
 
         private IEnumerable<BaseItem> FilterItems(IEnumerable<BaseItem> playlistItems, IEnumerable<BaseItem> newItems,
@@ -162,6 +179,7 @@ namespace SmartPlaylist.Domain
                 Id = Id.ToString(),
                 LastShuffleUpdate = LastShuffleUpdate,
                 Limit = _dto.Limit,
+                NewItemOrder = _dto.NewItemOrder,
                 Name = _dto.Name,
                 RulesTree = _dto.RulesTree,
                 UpdateType = _dto.UpdateType,
@@ -174,7 +192,8 @@ namespace SmartPlaylist.Domain
                 LastSync = LastSync,
                 SyncCount = SyncCount,
                 LastSyncDuration = LastSyncDuration,
-                Status = Status
+                Status = Status,
+                Enabled = Enabled
             };
         }
     }

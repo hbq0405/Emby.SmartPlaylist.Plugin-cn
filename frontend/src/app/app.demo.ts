@@ -10,7 +10,8 @@ import {
     stringCriteriaDefinitionType,
     defaultUpdateType,
     defaultSmartType,
-    defaultCollectionMode
+    defaultCollectionMode,
+    defaultNewItemOrder
 } from '~/app/app.const';
 import { PlaylistInfo } from './types/playlist';
 
@@ -38,6 +39,7 @@ export const demoAppPlaylists: AppPlaylist[] = [
         collectionMode: defaultCollectionMode,
         priorNames: [],
         enabled: true,
+        newItemOrder: defaultNewItemOrder,
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,
@@ -64,6 +66,7 @@ export const demoAppPlaylistView: PlaylistInfo = {
     enabled: true,
     items: [],
     ruleCount: 0,
+    newItemOrder: defaultNewItemOrder,
     rulesTree: {
         byId: {},
         rootIds: []

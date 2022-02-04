@@ -75,7 +75,6 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             };
         }
         case 'app:editPlaylist': {
-            alert('edit')
             return {
                 ...state,
                 editedPlaylist: { ...state.playlists.byId[action.playlist.id] },

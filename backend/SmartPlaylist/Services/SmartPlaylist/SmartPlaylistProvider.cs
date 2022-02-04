@@ -23,7 +23,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         public async Task<Domain.SmartPlaylist[]> GetAllUpdateableSmartPlaylistsAsync()
         {
             var smartPlaylistDtos = await _smartPlaylistStore.GetAllSmartPlaylistsAsync().ConfigureAwait(false);
-            return SmartPlaylistAdapter.Adapt(smartPlaylistDtos).Where(x => x.CanUpdatePlaylist).ToArray();
+            return SmartPlaylistAdapter.Adapt(smartPlaylistDtos).Where(x => x.Enabled && x.CanUpdatePlaylist).ToArray();
         }
 
 

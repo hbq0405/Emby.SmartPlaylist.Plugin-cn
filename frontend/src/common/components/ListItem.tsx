@@ -25,8 +25,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
             </div>
             <div className='popper'>
                 <span className={`tooltiptext`}>
-                    <Toggle id={'toggle-' + props.playList.id} checked={props.playList.enabled} onChange={(checked: boolean) => {
-                        console.log('toggle');
+                    <Toggle id={'toggle-' + props.playList.id} checked={props.playList.enabled} onToggled={(checked: boolean) => {
                         props.onUpdateData({
                             enabled: checked
                         });
