@@ -41,5 +41,7 @@ export const createPlaylist = (): Playlist => {
         priorNames: [],
         enabled: true,
         newItemOrder: defaultNewItemOrder,
+        sourceType: 'Media Items',
+        source: undefined
     };
 };

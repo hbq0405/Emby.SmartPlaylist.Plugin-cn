@@ -8,13 +8,17 @@ export type ListItemProps = {
     onEditClick(): void;
     onDeleteClick(): void;
     onViewClick(): void;
+    onExecuteClick(): void;
     onUpdateData(playlist: Partial<Playlist>): void;
     playList: Playlist;
 } & React.AllHTMLAttributes<HTMLDivElement> &
     BaseProps;
 
 export const ListItem: React.FC<ListItemProps> = props => {
-    const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled")
+    const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled");
+    console.log(props.playList);
+    const sub = props.playList.sourceType + (props.playList.sourceType === "Media Items" ? "" : " (" + props.playList.source.name + ")");
+
     return (
         <a className={mainStyle} data-ripple="false">
             <div className="listItemImageContainer">
@@ -22,6 +26,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
             </div>
             <div className="listItemBody">
                 <div className="listItemBodyText" onClick={() => props.onEditClick()}>{props.playList.name}</div>
+                <div className="listItemBodyTextSub" onClick={() => props.onEditClick()}>{sub}</div>
             </div>
             <div className='popper'>
                 <span className={`tooltiptext`}>
@@ -32,6 +37,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
                     }
                     } />
                 </span>
+                <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onExecuteClick()}><i className="md-icon sp-icon">play_arrow</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onViewClick()}><i className="md-icon sp-icon">info</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onEditClick()}><i className="md-icon sp-icon">edit</i></button>
                 <button type="button" is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon sp-icon">delete</i></button>

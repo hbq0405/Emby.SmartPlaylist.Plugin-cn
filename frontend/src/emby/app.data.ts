@@ -73,11 +73,11 @@ export const deletePlaylist = async (playlistId: string): Promise<any> => {
     );
 };
 
-export const viewPlaylist = async (playlistId: string): Promise<PlaylistInfo> => {
+export const viewPlaylist = async (playlistId: string, execute: boolean): Promise<PlaylistInfo> => {
     let playlistInfo = await window.ApiClient.ajax<PlaylistInfo>(
         {
             url: `/smartplaylist/info/${playlistId}?v=${version}`,
-            type: 'GET',
+            type: execute ? 'POST' : 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',

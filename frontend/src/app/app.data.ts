@@ -24,7 +24,7 @@ export const deletePlaylist = (playlistId: string): Promise<void> => {
     });
 };
 
-export const viewPlaylist = (playlistId: string): Promise<PlaylistInfo> => {
+export const viewPlaylist = (playlistId: string, execute: boolean): Promise<PlaylistInfo> => {
     return new Promise<PlaylistInfo>(res => {
         res({
             ...demoAppPlaylistView

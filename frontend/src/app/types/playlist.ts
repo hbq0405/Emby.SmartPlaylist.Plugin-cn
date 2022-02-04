@@ -1,6 +1,7 @@
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
-import { LimitOrderByValues, CollectionModes, SmartTypes, UpdateTypes } from '~/app/app.const';
+import { LimitOrderByValues, CollectionModes, SmartTypes, UpdateTypes, SourceTypes } from '~/app/app.const';
+import { Source } from './appData';
 
 export type PlaylistRulesTree<T> = {
     rulesTree: T;
@@ -16,6 +17,8 @@ export type PlaylistBasicData = {
     priorNames: [];
     enabled: boolean;
     newItemOrder: NewItemOrder;
+    sourceType: SourceType,
+    source: Source | undefined
 };
 
 export type PlaylistLimit = {
@@ -46,6 +49,8 @@ export type Playlist = PlaylistBasicData & PlaylistRulesTree<TreeViewData<RuleOr
 export type PlaylistInfo = PlaylistViewData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;
 
 export type UpdateType = typeof UpdateTypes[number];
+
+export type SourceType = typeof SourceTypes[number];
 
 export type LimitOrderBy = typeof LimitOrderByValues[number];
 

@@ -16,6 +16,7 @@ export type AppActions = {
     discardPlaylist(): void;
     loadAppData(appData: AppData): void;
     viewPlaylist(plalist: Playlist): void;
+    executePlaylist(plalist: Playlist): void;
     confirmDeletePlaylist(plalist: Playlist): void;
 };
 
@@ -59,7 +60,13 @@ export const createAppActions = (
         viewPlaylist: async (plalist: Playlist) => {
             dispatcher({
                 type: 'app:loadPlaylistInfo',
-                playlistInfo: await viewPlaylist(plalist.id)
+                playlistInfo: await viewPlaylist(plalist.id, false)
+            });
+        },
+        executePlaylist: async (plalist: Playlist) => {
+            dispatcher({
+                type: 'app:loadPlaylistInfo',
+                playlistInfo: await viewPlaylist(plalist.id, true)
             });
         },
         discardPlaylist: () => {

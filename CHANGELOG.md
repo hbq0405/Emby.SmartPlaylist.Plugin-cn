@@ -5,6 +5,10 @@
   - Added more detailed status messages to playlist statistics
   - Added the ability to turn playlist syncing on or off
   - Added sort for newly added items
+  - Added new source type for playlists
+    - Media Items: Use all media items as a base to apply filters on.
+    - Playlist: Use an existing playlist as a base to apply filters on.
+    - Collection: Use an existing Collection as a base to apply filters on.
 ## Version 2.1.0.0
 - ### Feature
   - Added a new feature that can roll up episode items to either their season or series, this is only available for smart collections. (Emby restriction)

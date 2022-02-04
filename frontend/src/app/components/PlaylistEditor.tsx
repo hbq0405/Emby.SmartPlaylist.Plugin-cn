@@ -3,15 +3,15 @@ import { Select } from '~/common/components/Select';
 import { TreeView } from '~/common/components/TreeView/TreeView';
 import { RuleTreeNodeContent } from '~/app/components/RuleTreeNodeContent';
 import { Input } from '~/common/components/Input';
-import { CheckBox } from '~/common/components/CheckBox';
 import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes } from '~/app/app.const';
+import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes, SourceTypes } from '~/app/app.const';
 import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
 import { AutoSize } from '~/common/components/AutoSize';
 import { Toggle } from '~/common/components/Toggle';
+import { Source } from '../types/appData';
 
 type PlaylistEditorProps = {};
 
@@ -22,6 +22,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const rulesTree = playlistContext.getRulesTree();
     const basicData = playlistContext.getBasicData();
     const limitOrdersBy = appContext.getLimitOrdersBy();
+    var sourceItems = appContext.getSourcesFor(basicData.sourceType);
 
     return (
         <>
@@ -39,15 +40,36 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                 />
                 {basicData.smartType === "Collection" && <Select
                     label='EpiMode:'
-
                     values={CollectionModes.map(x => x)}
                     value={basicData.collectionMode}
                     onChange={newVal =>
                         updateBasicData({
-                            collectionMode: newVal,
+                            collectionMode: newVal
                         })
                     }
                     style={{ width: '100px' }}
+                />}
+                <Select
+                    label='Source Type'
+                    values={SourceTypes.map(x => x)}
+                    value={basicData.sourceType}
+                    onChange={newVal => {
+                        sourceItems = appContext.getSourcesFor(newVal);
+                        updateBasicData({
+                            sourceType: newVal,
+                            source: sourceItems[0]
+                        });
+                        console.log(basicData);
+                    }}
+                    style={{ width: '150px' }}
+                />
+                {basicData.sourceType !== SourceTypes[0] && <Select
+                    label='Source'
+                    values={sourceItems.map(x => x.name)}
+                    value={basicData.source.name}
+                    onChange={newVal => updateBasicData({
+                        source: sourceItems.filter(x => x.name === newVal)[0]
+                    })}
                 />}
                 <Input
                     maxWidth={true}

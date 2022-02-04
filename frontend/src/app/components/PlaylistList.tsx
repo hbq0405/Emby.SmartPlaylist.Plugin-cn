@@ -10,7 +10,7 @@ type PlaylistListProps = {};
 export const PlaylistList: React.FC<PlaylistListProps> = () => {
     const appContext = React.useContext(AppContext);
 
-    const { getPlaylists, editPlaylist, updatePlaylist, confirmDeletePlaylist, viewPlaylist } = appContext;
+    const { getPlaylists, editPlaylist, updatePlaylist, confirmDeletePlaylist, viewPlaylist, executePlaylist } = appContext;
 
     return (
         <>
@@ -20,6 +20,7 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                     onDeleteClick={() => confirmDeletePlaylist(playlist)}
                     onEditClick={() => editPlaylist(playlist)}
                     onViewClick={() => viewPlaylist(playlist)}
+                    onExecuteClick={() => executePlaylist(playlist)}
                     onUpdateData={(pl: Partial<Playlist>) => {
                         updatePlaylist({
                             ...playlist,

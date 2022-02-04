@@ -31,6 +31,12 @@ export const CollectionModes = [
     'Series'
 ] as const;
 
+export const SourceTypes = [
+    'Media Items',
+    'Playlist',
+    'Collection'
+] as const;
+
 export const LimitOrderByValues = ['Random', 'Name'] as const;
 
 export const defaultString: StringValue = {

@@ -7,7 +7,7 @@ import {
     ListMapValue
 } from '~/app/types/rule';
 import { AppPlaylistState, AppState } from '~/app/state/app.reducer';
-import { AppData, AppPlaylist } from '~/app/types/appData';
+import { AppData, AppPlaylist, Source } from '~/app/types/appData';
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
 
@@ -22,6 +22,7 @@ export type AppSelectors = {
     getLimitOrdersBy(): string[];
     getViewPlaylist(): PlaylistInfo;
     getConfirmation(): ConfirmationProps;
+    getSourcesFor(type: string): Source[];
 };
 
 export const createAppSelectors = (state: AppState): AppSelectors => {
@@ -60,6 +61,10 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         },
         getConfirmation: (): ConfirmationProps => {
             return state.confirmation;
+        },
+        getSourcesFor: (type: string): Source[] => {
+            console.log('Getting:' + type);
+            return state.sources.filter(s => s.type === type);
         }
     };
 };
@@ -68,6 +73,7 @@ export const getAppData = (state: AppState): AppData => {
     return {
         ...state,
         playlists: convertToAppPlaylists(state.playlists),
+        sources: state.sources
     };
 };
 

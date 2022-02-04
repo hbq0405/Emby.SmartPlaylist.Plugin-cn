@@ -40,6 +40,8 @@ export const demoAppPlaylists: AppPlaylist[] = [
         priorNames: [],
         enabled: true,
         newItemOrder: defaultNewItemOrder,
+        sourceType: 'Media Items',
+        source: undefined,
         rulesTree: [
             createTreeNodeData({
                 isRoot: true,
@@ -67,6 +69,8 @@ export const demoAppPlaylistView: PlaylistInfo = {
     items: [],
     ruleCount: 0,
     newItemOrder: defaultNewItemOrder,
+    sourceType: 'Media Items',
+    source: undefined,
     rulesTree: {
         byId: {},
         rootIds: []
@@ -80,4 +84,5 @@ export const demoAppData: AppData = {
     playlists: demoAppPlaylists,
     rulesCriteriaDefinitions: demoRulesCritDefinitions,
     limitOrdersBy: demoLimitOrdersBy,
+    sources: []
 };
