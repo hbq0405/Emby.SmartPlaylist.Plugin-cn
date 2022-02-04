@@ -29,7 +29,6 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             _collectionItemsUpdater = collectionItemsUpdater;
         }
 
-
         public async Task HandleAsync(UpdateAllSmartPlaylistsCommand message)
         {
             var smartPlaylists =

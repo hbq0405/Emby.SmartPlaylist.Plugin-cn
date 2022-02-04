@@ -82,5 +82,29 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
                 _decorated.Remove(smartPlaylist);
             }
         }
+
+        public override BaseItem[] GetAllPlaylists()
+        {
+            using (PerfLogger.Create("GetAll", () => new { }))
+            {
+                return _decorated.GetAllPlaylists();
+            }
+        }
+
+        public override BaseItem[] GetAllCollections()
+        {
+            using (PerfLogger.Create("GetAll", () => new { }))
+            {
+                return _decorated.GetAllCollections();
+            }
+        }
+
+        public override BaseItem[] GetItemsForFolderId(string folderId, User user)
+        {
+            using (PerfLogger.Create("GetItemsForFolderId", () => new { folderId }))
+            {
+                return _decorated.GetItemsForFolderId(folderId, user);
+            }
+        }
     }
 }

@@ -55,7 +55,11 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 
                 var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
-                var items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
+                BaseItem[] items = null;
+                if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
+                    items = _folderRepository.GetItemsForFolderId(smartPlaylist.Source.Id, playlist.User);
+                else
+                    items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
 
                 BaseItem[] newItems;
                 using (PerfLogger.Create("FilterPlaylistItems",

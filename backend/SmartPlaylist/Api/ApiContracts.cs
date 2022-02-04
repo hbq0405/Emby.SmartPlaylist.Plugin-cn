@@ -25,6 +25,8 @@ namespace SmartPlaylist.Api
         public CriteriaDefinition[] RulesCriteriaDefinitions => DefinedCriteriaDefinitions.All;
 
         public string[] LimitOrdersBy => DefinedLimitOrders.AllNames;
+
+        public SourceDto[] Sources => SourceDto.All;
     }
 
     [Route("/smartplaylist/appData", "GET", Summary = "")]

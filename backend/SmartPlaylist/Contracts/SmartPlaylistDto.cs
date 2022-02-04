@@ -13,6 +13,7 @@ namespace SmartPlaylist.Contracts
                 HasSort = false,
                 OrderBy = "None"
             };
+            SourceType = "Media Items";
         }
 
         public string Id { get; set; }
@@ -34,6 +35,8 @@ namespace SmartPlaylist.Contracts
         public long LastSyncDuration { get; set; } = 0;
         public string Status { get; set; }
         public bool Enabled { get; set; }
+        public string SourceType { get; set; }
+        public SourceDto Source { get; set; }
 
     }
 }

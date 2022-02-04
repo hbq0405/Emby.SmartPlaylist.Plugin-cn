@@ -23,6 +23,7 @@ namespace SmartPlaylist.Contracts
             infoDto.LastDurationStr = TimeSpan.FromTicks(smartPlaylist.LastSyncDuration).ToString("c");
             infoDto.RuleCount = smartPlaylist.RulesTree.Length;
 
+
             return infoDto;
         }
     }

@@ -38,6 +38,9 @@ namespace SmartPlaylist.Domain
             LastSyncDuration = dto.LastSyncDuration;
             Status = dto.Status;
             Enabled = dto.Enabled;
+            SourceType = dto.SourceType;
+            if (dto.Source != null)
+                Source = new Source(dto.Source);
         }
 
         public Guid Id { get; }
@@ -76,6 +79,9 @@ namespace SmartPlaylist.Domain
         public bool CanUpdatePlaylistWithNewItems => (IsRandomSort || !Limit.HasLimit) && !IsShuffleUpdateType;
         public bool IsRandomSort => Limit.OrderBy is RandomLimitOrder;
         public string MediaType { get; }
+
+        public String SourceType { get; }
+        public Source Source { get; }
 
         private bool CheckIfCanUpdatePlaylist()
         {
@@ -176,8 +182,8 @@ namespace SmartPlaylist.Domain
         {
             return new SmartPlaylistDto
             {
-                Id = Id.ToString(),
-                LastShuffleUpdate = LastShuffleUpdate,
+                Id = _dto.Id.ToString(),
+                LastShuffleUpdate = _dto.LastShuffleUpdate,
                 Limit = _dto.Limit,
                 NewItemOrder = _dto.NewItemOrder,
                 Name = _dto.Name,
@@ -188,12 +194,14 @@ namespace SmartPlaylist.Domain
                 OriginalSmartType = _dto.OriginalSmartType,
                 InternalId = _dto.InternalId,
                 CollectionMode = _dto.CollectionMode,
-                LastUpdated = LastUpdated,
-                LastSync = LastSync,
-                SyncCount = SyncCount,
-                LastSyncDuration = LastSyncDuration,
-                Status = Status,
-                Enabled = Enabled
+                LastUpdated = _dto.LastUpdated,
+                LastSync = _dto.LastSync,
+                SyncCount = _dto.SyncCount,
+                LastSyncDuration = _dto.LastSyncDuration,
+                Status = _dto.Status,
+                Enabled = _dto.Enabled,
+                SourceType = _dto.SourceType,
+                Source = _dto.Source
             };
         }
     }

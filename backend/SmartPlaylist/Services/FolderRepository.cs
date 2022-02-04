@@ -39,6 +39,9 @@ namespace SmartPlaylist.Services
         public abstract UserFolder FindPlaylist(Domain.SmartPlaylist smartPlaylist, string playlistName);
         public abstract Playlist FindPlaylistFolder(Domain.SmartPlaylist smartPlaylist, string playlistName);
         public abstract void Remove(Domain.SmartPlaylist smartPlaylist);
+        public abstract BaseItem[] GetAllPlaylists();
+        public abstract BaseItem[] GetAllCollections();
+        public abstract BaseItem[] GetItemsForFolderId(string folderId, User user);
     }
 
     public class FolderRepository : IFolderRepository
@@ -154,6 +157,32 @@ namespace SmartPlaylist.Services
                 }
                 catch (Exception) { }//TODO: This needs to be fixed, as it work intermittently, but we don't want to crash out.
             }
+        }
+
+        public override BaseItem[] GetAllPlaylists()
+        {
+            return _libraryManager.GetItemsResult(new InternalItemsQuery
+            {
+                IncludeItemTypes = new[] { typeof(Playlist).Name },
+                Recursive = true
+            }).Items.ToArray();
+        }
+
+        public override BaseItem[] GetAllCollections()
+        {
+            return _libraryManager.GetItemsResult(new InternalItemsQuery
+            {
+                IncludeItemTypes = new[] { "collections", "Boxset" },
+                Recursive = true
+            }).Items.ToArray();
+        }
+
+        public override BaseItem[] GetItemsForFolderId(string folderId, User user)
+        {
+            return (_libraryManager.GetItemById(Guid.Parse(folderId)) as Folder).GetChildren(new InternalItemsQuery(user)
+            {
+                Recursive = true
+            });
         }
     }
 }
