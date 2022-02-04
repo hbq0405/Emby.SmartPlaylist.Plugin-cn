@@ -9,6 +9,7 @@
     - Media Items: Use all media items as a base to apply filters on.
     - Playlist: Use an existing playlist as a base to apply filters on.
     - Collection: Use an existing Collection as a base to apply filters on.
+  - Added the ability to execute a playlist from the editor.
 ## Version 2.1.0.0
 - ### Feature
   - Added a new feature that can roll up episode items to either their season or series, this is only available for smart collections. (Emby restriction)

@@ -5,7 +5,9 @@ import { AppAction, AppState } from '~/app/state/app.reducer';
 import { AppData } from '~/app/types/appData';
 import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
 import { getAppPlaylist, getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
-import { playlistReducer } from './playlist/playlist.reducer';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure();
 
 export type AppActions = {
     addNewPlaylist(): void;
@@ -64,10 +66,8 @@ export const createAppActions = (
             });
         },
         executePlaylist: async (plalist: Playlist) => {
-            dispatcher({
-                type: 'app:loadPlaylistInfo',
-                playlistInfo: await viewPlaylist(plalist.id, true)
-            });
+            toast('Executing playlist: ' + plalist.name);
+            viewPlaylist(plalist.id, true)
         },
         discardPlaylist: () => {
             dispatcher({
