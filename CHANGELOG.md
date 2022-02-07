@@ -9,7 +9,9 @@
     - Media Items: Use all media items as a base to apply filters on.
     - Playlist: Use an existing playlist as a base to apply filters on.
     - Collection: Use an existing Collection as a base to apply filters on.
-  - Added the ability to execute a playlist from the editor.
+  - Added the ability to execute a playlist from the editor.(Pop up is not the actual execution time, you need to check the info to see how the playlist updated)
+  - Renamed criteria "Path" to "Path/Filename".  <span style="color:red">**BREAKING CHANGE, please re-select path/filename, save any playlist that uses the criteria**</span>
+  - Fixed thumbnail image rendering in plugin list.
 ## Version 2.1.0.0
 - ### Feature
   - Added a new feature that can roll up episode items to either their season or series, this is only available for smart collections. (Emby restriction)

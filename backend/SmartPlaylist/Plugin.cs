@@ -84,8 +84,11 @@ namespace SmartPlaylist
 
         public Stream GetThumbImage()
         {
-            var type = GetType();
-            return type.Assembly.GetManifestResourceStream(type.Namespace + ".Images.plugin.png");
+            Type type = GetType();
+            string[] test3 = type.Assembly.GetManifestResourceNames();
+            Console.WriteLine(String.Join(",", test3));
+
+            return type.Assembly.GetManifestResourceStream(type.Namespace + ".Configuration.thumb.png");
         }
 
         public ImageFormat ThumbImageFormat => ImageFormat.Png;
@@ -111,6 +114,7 @@ namespace SmartPlaylist
                     Name = "smartplaylist.2.1.0.1.js",
                     EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.1.0.1.js"
                 }
+
             };
         }
 
@@ -119,8 +123,6 @@ namespace SmartPlaylist
             IFolderItemsUpdater playlistItemsUpdater, ISmartPlaylistStore smartPlaylistStore,
             IFolderItemsUpdater collectionItemsUpdater, ILibraryManager libraryManager)
         {
-
-
             var updateAllSmartPlaylistsWithItemsCommandHandler =
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
                     folderRepository, playlistItemsUpdater, collectionItemsUpdater);

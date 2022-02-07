@@ -89,7 +89,7 @@ namespace SmartPlaylist.Services
             {
                 Name = collectionName,
                 IncludeItemTypes = new[] { "collections", "Boxset" },
-                User = user ////try using the user with policy.IsAdministator for testing               
+                User = user ////try using the user with policy.IsAdministrator for testing               
             }).Items.OfType<Folder>().FirstOrDefault();
         }
 

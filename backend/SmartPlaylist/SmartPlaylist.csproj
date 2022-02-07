@@ -10,11 +10,13 @@
     <None Remove="Configuration\smartplaylist.2.1.0.1.css"/>
     <None Remove="Configuration\smartplaylist.2.1.0.1.html"/>
     <None Remove="Configuration\smartplaylist.2.1.0.1.js"/>
+    <None Remove="Configuration\thumb.png"/>
     <None Remove="Configuration\test.html"/>
     <None Remove="Configuration\test.js"/>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\smartplaylist.2.1.0.1.html"/>
+    <EmbeddedResource Include="Configuration\thumb.png"/>
     <EmbeddedResource Include="Configuration\*.css"/>
     <EmbeddedResource Include="Configuration\*.js"/>
   </ItemGroup>
