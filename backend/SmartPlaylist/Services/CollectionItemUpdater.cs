@@ -27,8 +27,9 @@ namespace SmartPlaylist.Services
             (long internalId, string message) ret = (0, string.Empty);
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
-                Remove(libraryUserCollection);
-                await AddItemsToCollection(libraryUserCollection, new List<BaseItem>(newItems)).ConfigureAwait(false);
+                var currentItems = libraryUserCollection.GetItems();
+                RemoveItems(libraryUserCollection, currentItems, newItems);
+                await AddItemsToCollection(libraryUserCollection, new List<BaseItem>(currentItems), new List<BaseItem>(newItems)).ConfigureAwait(false);
                 ret = (libraryUserCollection.InternalId, $"Completed - (Added {newItems.Count()} to existing collection)");
 
             }
@@ -49,28 +50,25 @@ namespace SmartPlaylist.Services
             return ret;
         }
 
-        private void Remove(LibraryUserFolder<Folder> collection)
+        public void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            RemoveItems(collection, collection.GetItems());
-        }
+            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
 
-        public void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove)
-        {
-            if (folder is LibraryUserFolder<Folder> collectionFolder)
+            if (toRemove.Any() && folder is LibraryUserFolder<Folder> collectionFolder)
             {
-                itemsToRemove.ForEach<BaseItem>((BaseItem item) =>
+                toRemove.ForEach<BaseItem>((BaseItem item) =>
                    {
                        item.RemoveCollection(collectionFolder.InternalId);
                    });
 
-                UpdateItems(collectionFolder.Item, new List<BaseItem>(itemsToRemove));
-                collectionFolder.Item.RefreshMetadata(new CancellationToken());
+                UpdateItems(collectionFolder.Item, toRemove);
             }
         }
 
-        private async Task AddItemsToCollection(LibraryUserFolder<Folder> collection, List<BaseItem> items)
+        private async Task AddItemsToCollection(LibraryUserFolder<Folder> collection, List<BaseItem> currentItems, List<BaseItem> newItems)
         {
-            items.ForEach<BaseItem>((BaseItem item) =>
+            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (c, n) => c.InternalId == n.InternalId));
+            toAdd.ForEach<BaseItem>((BaseItem item) =>
                 {
                     item.AddCollectionInfo(new LinkedItemInfo()
                     {
@@ -81,8 +79,8 @@ namespace SmartPlaylist.Services
 
             await Task.Run(() =>
             {
-                UpdateItems(collection.Item, items);
-                collection.Item.RefreshMetadata(new CancellationToken());
+                UpdateItems(collection.Item, toAdd);
+
             }).ConfigureAwait(false);
         }
 
@@ -91,9 +89,8 @@ namespace SmartPlaylist.Services
             _libraryManager.UpdateItems(
                             items,
                             collection,
-                            ItemUpdateType.MetadataEdit,
+                            ItemUpdateType.None,
                             new CancellationToken(false));
-
         }
         private List<Folder> FindFolders() => this._libraryManager.GetUserRootFolder().GetChildren(new InternalItemsQuery()
         {
@@ -142,7 +139,6 @@ namespace SmartPlaylist.Services
             await this._libraryManager.AddVirtualFolder("Collections", options, true).ConfigureAwait(false);
             return this.FindFolders().FirstOrDefault<Folder>();
         }
-
 
         private BoxSet AddCollection(BaseItem item, string collectionName)
         {

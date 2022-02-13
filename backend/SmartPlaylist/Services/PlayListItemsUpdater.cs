@@ -17,7 +17,7 @@ namespace SmartPlaylist.Services
     public interface IFolderItemsUpdater
     {
         Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
-        void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove);
+        void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
     }
 
     public class PlayListItemsUpdater : IFolderItemsUpdater
@@ -36,8 +36,8 @@ namespace SmartPlaylist.Services
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                RemoveItems(libraryUserPlaylist, playlistItems);
-                AddToPlaylist(libraryUserPlaylist, newItems);
+                RemoveItems(libraryUserPlaylist, playlistItems, newItems);
+                AddToPlaylist(libraryUserPlaylist, playlistItems, newItems);
                 libraryUserPlaylist.Item.Name = folder.SmartPlaylist.Name;
                 ret = (libraryUserPlaylist.InternalId, $"Completed - (Added {newItems.Count()} to existing playlist)");
             }
@@ -59,22 +59,21 @@ namespace SmartPlaylist.Services
             return ret;
         }
 
-        private void AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] itemsToAdd)
+        private void AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            _playlistManager.AddToPlaylist(playlist.InternalId,
-                itemsToAdd.Select(x => x.InternalId).ToArray(), playlist.User);
-
-            playlist.Item.RefreshMetadata(new CancellationToken());
+            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
+            if (toAdd.Any())
+                _playlistManager.AddToPlaylist(playlist.InternalId,
+                    toAdd.Select(x => x.InternalId).ToArray(), playlist.User);
         }
 
-        public void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove)
+        public void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
-
-            if (folder is LibraryUserFolder<Playlist> playlist)
+            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
+            if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
                 _playlistManager.RemoveFromPlaylist(playlist.InternalId,
-                    itemsToRemove.Select(x => x.ListItemEntryId).ToArray());
-                playlist.Item.RefreshMetadata(new CancellationToken());
+                    toRemove.Select(x => x.ListItemEntryId).ToArray());
             }
         }
     }

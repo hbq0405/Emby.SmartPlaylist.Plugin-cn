@@ -1,4 +1,12 @@
 # ChangeLog
+
+## Version 2.1.0.2
+- ### Performance
+  - Optimized addition and removal of items to a playlist or collection.
+- ### Bugs
+  - Fixed a bug where images could be removed under certain circumstances.
+  - Fixed bug where it sometimes would not remove the related playlist when deleting or converting to collection.
+  - Fixed when limiting results to 'X' number of items, was not being applied correctly. 
 ## Version 2.1.0.1
 - ### Feature
   - Added Sync Count to playlist statistics

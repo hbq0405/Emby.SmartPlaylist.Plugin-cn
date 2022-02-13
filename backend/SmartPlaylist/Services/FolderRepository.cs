@@ -139,23 +139,26 @@ namespace SmartPlaylist.Services
 
         private void Remove<T>(Domain.SmartPlaylist smartPlaylist, IFolderItemsUpdater folderItemsUpdater, User user, Func<Folder> action) where T : Folder
         {
-            BaseItem item = smartPlaylist.InternalId > 0 ? _libraryManager.GetItemById(smartPlaylist.InternalId) : action();
-            if (item != null)
+            BaseItem baseFolder = smartPlaylist.InternalId > 0 ? _libraryManager.GetItemById(smartPlaylist.InternalId) : action();
+            if (baseFolder != null)
             {
-                if (item is T)
+                if (baseFolder is T)
                 {
-                    LibraryUserFolder<T> folder = new LibraryUserFolder<T>(user, (T)item, smartPlaylist);
-                    folderItemsUpdater.RemoveItems(folder, folder.GetItems());
+                    LibraryUserFolder<T> folder = new LibraryUserFolder<T>(user, (T)baseFolder, smartPlaylist);
+                    folderItemsUpdater.RemoveItems(folder, folder.GetItems(), new BaseItem[] { });
                 }
 
                 try
                 {
-                    _libraryManager.DeleteItem(item, new DeleteOptions()
+                    _libraryManager.DeleteItem(baseFolder, new DeleteOptions()
                     {
                         DeleteFileLocation = true
                     });
                 }
-                catch (Exception) { }//TODO: This needs to be fixed, as it work intermittently, but we don't want to crash out.
+                catch (Exception)
+                {
+                    _libraryManager.DeleteItems(new long[] { baseFolder.InternalId });
+                }//TODO: This needs to be fixed, as it work intermittently, but we don't want to crash out.
             }
         }
 

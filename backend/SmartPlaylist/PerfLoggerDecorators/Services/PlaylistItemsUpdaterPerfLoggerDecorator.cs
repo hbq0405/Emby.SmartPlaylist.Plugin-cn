@@ -15,13 +15,13 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             _decorated = decorated;
         }
 
-        public void RemoveItems(UserFolder folder, BaseItem[] itemsToRemove)
+        public void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             using (PerfLogger.Create("RemoveItems",
-                () => new { playlistName = folder.SmartPlaylist.Name, newItemsCount = itemsToRemove.Length }))
+                () => new { playlistName = folder.SmartPlaylist.Name, newItemsCount = currentItems.Length }))
 
             {
-                _decorated.RemoveItems(folder, itemsToRemove);
+                _decorated.RemoveItems(folder, currentItems, newItems);
             }
         }
 

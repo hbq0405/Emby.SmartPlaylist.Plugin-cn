@@ -47,5 +47,28 @@ namespace SmartPlaylist.Extensions
             foreach (T item in sequence)
                 action(item);
         }
+
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> setA, IEnumerable<T> setB, Func<T, T, bool> f)
+        {
+            return setA.Except(setB, new ExceptComparer<T>(f));
+        }
+
+        private class ExceptComparer<T> : IEqualityComparer<T>
+        {
+            Func<T, T, bool> _lambda;
+            public ExceptComparer(Func<T, T, bool> lambda)
+            {
+                _lambda = lambda;
+            }
+            public bool Equals(T x, T y)
+            {
+                return _lambda(x, y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return 0;
+            }
+        }
     }
 }

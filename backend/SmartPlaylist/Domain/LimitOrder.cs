@@ -31,7 +31,7 @@ namespace SmartPlaylist.Domain
 
         public LimitOrder OrderBy { get; set; }
 
-        public bool HasLimit => this != None;
+        public bool HasLimit => !(OrderBy is NoneLimitOrder);
     }
 
     public class NoneLimitOrder : LimitOrder

@@ -6,13 +6,9 @@ namespace SmartPlaylist.Domain
 {
     public class NewItemOrder
     {
-        public static readonly NewItemOrder None = new NewItemOrder
-        {
-            OrderBy = new NoneLimitOrder()
-        };
         public LimitOrder OrderBy { get; set; }
 
-        public bool HasSort => this != None;
+        public bool HasSort => !(OrderBy is NoneLimitOrder);
 
         public NewItemOrder() { }
         public NewItemOrder(SmartPlaylistNewItemOrderDto dto)
