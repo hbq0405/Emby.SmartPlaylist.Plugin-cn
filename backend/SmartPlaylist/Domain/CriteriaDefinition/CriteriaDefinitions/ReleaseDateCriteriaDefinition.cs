@@ -1,6 +1,6 @@
 ﻿using SmartPlaylist.Domain.Rule;
 using SmartPlaylist.Domain.Values;
-using SmartPlaylist.Services;
+using SmartPlaylist.Getters;
 
 namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 {

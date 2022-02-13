@@ -2,7 +2,7 @@
 using System.Globalization;
 using MediaBrowser.Controller.Entities;
 
-namespace SmartPlaylist.Services
+namespace SmartPlaylist.Getters
 {
     public static class ReleaseDateGetter
     {

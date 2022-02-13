@@ -34,10 +34,11 @@ namespace SmartPlaylist.Domain.Operator
         where T2 : Value
     {
         public abstract bool Compare(T1 itemValue, T2 value);
+        public abstract bool Compare(ArrayValue<T1> itemValues, T2 value);
 
         public override bool CanCompare(Value itemValue, Value value)
         {
-            return !value.IsNone && itemValue.IsType(typeof(T1)) && value.IsType(typeof(T2));
+            return !value.IsNone && (itemValue.IsType(typeof(T1)) || itemValue.IsType(typeof(ArrayValue<T1>))) && value.IsType(typeof(T2));
         }
     }
 }

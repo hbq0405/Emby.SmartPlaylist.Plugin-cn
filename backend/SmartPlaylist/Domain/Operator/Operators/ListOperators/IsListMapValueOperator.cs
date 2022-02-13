@@ -25,5 +25,10 @@ namespace SmartPlaylist.Domain.Operator.Operators.ListOperators
         {
             return itemValue?.Equals(value) ?? false;
         }
+
+        public override bool Compare(ArrayValue<ListMapValue> itemValues, ListMapValue value)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

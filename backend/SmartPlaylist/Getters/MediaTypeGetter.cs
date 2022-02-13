@@ -1,7 +1,4 @@
 ﻿using System.Linq;
-using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Entities.Audio;
-using MediaBrowser.Controller.Entities.TV;
 using SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions;
 using SmartPlaylist.Domain.Rule;
 using SmartPlaylist.Extensions;

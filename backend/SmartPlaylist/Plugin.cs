@@ -27,7 +27,16 @@ namespace SmartPlaylist
     {
         private readonly ILogger _logger;
         private readonly ISessionManager _sessionManager;
-
+        public SmartPlaylistValidator SmartPlaylistValidator { get; }
+        public IFolderRepository FolderRepository { get; }
+        public override Guid Id => Guid.Parse("3C96F5BC-4182-4B86-B05D-F730F2611E45");
+        public override string Name => "Smart Playlist";
+        public override string Description => "Allow to define smart playlist and collection rules.";
+        public static Plugin Instance { get; private set; }
+        public MessageBus MessageBus { get; }
+        public UpdateSmartPlaylistCommandHandler SmartPlaylistCommandHandler { get; }
+        public ISmartPlaylistStore SmartPlaylistStore { get; }
+        public ILibraryManager LibraryManager { get; }
         public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer,
             IPlaylistManager playlistManager,
             ILibraryManager libraryManager,
@@ -58,6 +67,7 @@ namespace SmartPlaylist
                     FolderRepository, playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater,
                     libraryManager);
 
+            LibraryManager = libraryManager;
             SubscribeMessageHandlers(smartPlaylistProvider, userItemsProvider, FolderRepository,
                 playlistItemsUpdater, smartPlaylistStore, collectionItemsUpdater, libraryManager);
 
@@ -66,21 +76,6 @@ namespace SmartPlaylist
 
             Logger.Instance = new Logger(logger);
         }
-
-        public SmartPlaylistValidator SmartPlaylistValidator { get; }
-        public IFolderRepository FolderRepository { get; }
-
-        public override Guid Id => Guid.Parse("3C96F5BC-4182-4B86-B05D-F730F2611E45");
-
-        public override string Name => "Smart Playlist";
-
-        public override string Description => "Allow to define smart playlist and collection rules.";
-
-        public static Plugin Instance { get; private set; }
-
-        public MessageBus MessageBus { get; }
-        public UpdateSmartPlaylistCommandHandler SmartPlaylistCommandHandler { get; }
-        public ISmartPlaylistStore SmartPlaylistStore { get; }
 
         public Stream GetThumbImage()
         {
