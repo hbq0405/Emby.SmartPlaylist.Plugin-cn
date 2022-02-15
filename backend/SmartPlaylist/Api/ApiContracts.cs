@@ -14,10 +14,11 @@ namespace SmartPlaylist.Api
     {
     }
 
-    [Route("/smartplaylist/{Id}", "DELETE", Summary = "")]
+    [Route("/smartplaylist/{Id}/{Keep}", "DELETE", Summary = "")]
     public class DeleteSmartPlaylist : IReturnVoid
     {
         public string Id { get; set; }
+        public bool Keep { get; set; }
     }
 
     public class GetAppDataResponse

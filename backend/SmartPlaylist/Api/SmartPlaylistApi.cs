@@ -68,7 +68,7 @@ namespace SmartPlaylist.Api
         {
             var user = GetUser();
             var playlist = GetPlaylistFromStore(Guid.Parse(request.Id));
-            if (playlist != null)
+            if (playlist != null && !request.Keep)
                 _folderRepository.Remove(SmartPlaylistAdapter.Adapt(playlist));
             _smartPlaylistStore.Delete(user.Id, request.Id);
         }
