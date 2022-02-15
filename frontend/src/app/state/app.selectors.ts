@@ -63,7 +63,6 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
             return state.confirmation;
         },
         getSourcesFor: (type: string): Source[] => {
-            console.log('Getting:' + type);
             return state.sources.filter(s => s.type === type);
         }
     };

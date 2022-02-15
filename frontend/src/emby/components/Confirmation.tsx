@@ -2,16 +2,31 @@ import * as React from 'react';
 import { Button } from '~/emby/components/Button';
 import './Modal.css';
 import './Confirmation.css'
+import { CheckBox } from './CheckBox';
+import { Playlist } from '~/app/types/playlist';
 
 export type ConfirmationProps = {
     title?: string;
     question: string;
-    data?: any
+    data?: any;
+    control?: React.FC<ControlProps>;
     onYes(data: any): void;
     onNo(data: any): void;
 };
 
+type ControlProps = {
+    raiseStateChanged(d: any);
+}
+
 export const Confirmation: React.FC<ConfirmationProps> = props => {
+    const [state, setData] = React.useState(props.data);
+
+    const inner = React.createElement(props.control, {
+        raiseStateChanged: (d) => {
+            setData({ ...state, ...d });
+        }
+    });
+
     return (
         <>
             <div className="dialogBackdrop dialogBackdropOpened" />
@@ -28,17 +43,18 @@ export const Confirmation: React.FC<ConfirmationProps> = props => {
                     </div>
                     <div className="formDialogContent scrollY">
                         <div className="confirm-text"><span>{props.question}</span></div>
+                        {inner}
                         <div className="confirm-footer">
                             <Button
                                 type="submit"
-                                onClick={_ => props.onYes(props.data)}
+                                onClick={_ => props.onYes(state)}
                                 class="formDialogFooterItem"
                             >
                                 Yes
                             </Button>
                             <Button
                                 type="submit"
-                                onClick={_ => props.onNo(props)}
+                                onClick={_ => props.onNo(state)}
                                 class="formDialogFooterItem"
                             >No
                             </Button>
@@ -49,3 +65,17 @@ export const Confirmation: React.FC<ConfirmationProps> = props => {
         </>
     );
 };
+
+export type DeleteData = { playlist: Playlist, keep: boolean };
+export const ConfirmDeletePlaylist: React.FC<ControlProps> = props => {
+    return (
+        <div className='deletePlaylist'>
+            <CheckBox
+                label='Keep generated Playlist/Collection ?'
+                onChange={(e) => {
+                    props.raiseStateChanged({ keep: e.target.checked });
+                }}
+            />
+        </div>
+    )
+}

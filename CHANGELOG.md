@@ -1,5 +1,10 @@
 # ChangeLog
-
+## Version 2.1.0.3
+- ### Feature
+- Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
+- Added "Genre (List)" Filter Criteria. Display's a drop down list of Genres already in the system, if the Genre does not exist the fall back it to use the already existing "Genre" string filter.
+- Added checkbox on delete confirmation to retain the generated playlist/collection
+- Sorted playlists/collections alphabetically 
 ## Version 2.1.0.2
 - ### Performance
   - Optimized addition and removal of items to a playlist or collection.

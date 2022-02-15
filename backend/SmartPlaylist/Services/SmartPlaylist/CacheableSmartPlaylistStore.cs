@@ -27,7 +27,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         public async Task<SmartPlaylistDto[]> LoadPlaylistsAsync(Guid userId)
         {
             return (await GetAllCachedSmartPlaylistAsync().ConfigureAwait(false)).Where(x => x.UserId == userId)
-                .ToArray();
+            .OrderBy(x => x.Name).ToArray();
         }
 
         public async Task<SmartPlaylistDto[]> GetAllSmartPlaylistsAsync()

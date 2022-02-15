@@ -64,10 +64,10 @@ export const saveAppPlaylist = async (playlist: AppPlaylist): Promise<AppPlaylis
 
 
 
-export const deletePlaylist = async (playlistId: string): Promise<any> => {
+export const deletePlaylist = async (playlistId: string, keep: boolean): Promise<any> => {
     return window.ApiClient.ajax(
         {
-            url: `/smartplaylist/${playlistId}?v=${version}`,
+            url: `/smartplaylist/${playlistId}/${keep}?v=${version}`,
             type: 'DELETE',
         }
     );

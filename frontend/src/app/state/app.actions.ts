@@ -7,6 +7,9 @@ import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
 import { getAppPlaylist, getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { render } from 'react-dom';
+import { ConfirmDeletePlaylist, DeleteData } from '~/emby/components/Confirmation';
+
 toast.configure();
 
 export type AppActions = {
@@ -14,7 +17,7 @@ export type AppActions = {
     editPlaylist(plalist: Playlist): void;
     updatePlaylist(plalist: Playlist): void;
     savePlaylist(): void;
-    deletePlaylist(plalist: Playlist): void;
+    deletePlaylist(plalist: Playlist, keep: boolean): void;
     discardPlaylist(): void;
     loadAppData(appData: AppData): void;
     viewPlaylist(plalist: Playlist): void;
@@ -52,11 +55,12 @@ export const createAppActions = (
                 type: 'app:savePlaylist',
             });
         },
-        deletePlaylist: async (plalist: Playlist) => {
-            await deletePlaylist(plalist.id);
+        deletePlaylist: async (plalist: Playlist, keep: boolean) => {
+            await deletePlaylist(plalist.id, keep);
             dispatcher({
                 type: 'app:removePlaylist',
                 playlist: plalist,
+                keep: keep
             });
         },
         viewPlaylist: async (plalist: Playlist) => {
@@ -79,16 +83,19 @@ export const createAppActions = (
                 type: 'app:confirmDeletePlaylist',
                 confirmationProps: {
                     title: 'Confirm playlist removal',
-                    data: plalist,
-                    question: `Are you sure you want to delete the playlist: "${plalist.name}"`,
+                    data: { playlist: plalist, keep: false } as DeleteData,
+                    question: `Are you sure you want to delete the playlist: "${plalist.name}" ?`,
+                    control: ConfirmDeletePlaylist,
                     onNo: (data => { }),
                     onYes: (data => {
-                        deletePlaylist((data as Playlist).id).finally(() => {
+                        console.log(data);
+                        deletePlaylist(data.playlist.id, data.keep).finally(() => {
                             dispatcher({
                                 type: 'app:removePlaylist',
-                                playlist: data,
+                                playlist: data.playlist,
+                                keep: data.keep
                             })
-                        });
+                        })
                     })
                 }
             })

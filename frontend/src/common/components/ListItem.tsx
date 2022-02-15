@@ -16,7 +16,6 @@ export type ListItemProps = {
 
 export const ListItem: React.FC<ListItemProps> = props => {
     const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled");
-    console.log(props.playList);
     const sub = props.playList.sourceType + (props.playList.sourceType === "Media Items" ? "" : " (" + props.playList.source.name + ")");
 
     return (

@@ -18,7 +18,7 @@ export const saveAppPlaylist = (playlist: AppPlaylist): Promise<AppPlaylists | v
     });
 };
 
-export const deletePlaylist = (playlistId: string): Promise<void> => {
+export const deletePlaylist = (playlistId: string, remove: boolean): Promise<void> => {
     return new Promise<void>(res => {
         res();
     });

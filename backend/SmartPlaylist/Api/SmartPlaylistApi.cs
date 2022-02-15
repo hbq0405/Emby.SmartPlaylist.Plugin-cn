@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections.Specialized;
-using SmartPlaylist.Extensions;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Net;
 using MediaBrowser.Model.Services;
@@ -10,6 +8,7 @@ using SmartPlaylist.Infrastructure.MesssageBus;
 using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Services;
 using SmartPlaylist.Adapters;
+using System.Linq;
 
 namespace SmartPlaylist.Api
 {

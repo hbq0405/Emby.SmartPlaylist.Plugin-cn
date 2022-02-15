@@ -9,3 +9,11 @@
     padding: 10px;
     justify-content: flex-end;
 }
+
+.deletePlaylist {
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    padding: 10px;
+    font-size: smaller;
+}

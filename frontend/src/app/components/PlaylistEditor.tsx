@@ -59,7 +59,6 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             sourceType: newVal,
                             source: sourceItems[0]
                         });
-                        console.log(basicData);
                     }}
                     style={{ width: '150px' }}
                 />

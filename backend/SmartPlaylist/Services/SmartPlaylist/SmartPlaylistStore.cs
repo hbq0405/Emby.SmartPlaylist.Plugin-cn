@@ -32,7 +32,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
             await Task.WhenAll(deserializeTasks).ConfigureAwait(false);
 
-            return deserializeTasks.Select(x => x.Result).ToArray();
+            return deserializeTasks.Select(x => x.Result).OrderBy(x => x.Name).ToArray();
         }
 
         public async Task<SmartPlaylistDto[]> GetAllSmartPlaylistsAsync()
