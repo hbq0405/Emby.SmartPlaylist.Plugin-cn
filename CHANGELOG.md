@@ -7,6 +7,7 @@
 - Sorted playlists/collections alphabetically
 - Added "Tag (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
 - Added "Studio (Tree Crawl)" Criteria. Filters the item on it's studio value or its parents studio value (and so on, all the way to to root).
+- Updating sourcing to navigate to the lowest item in the path.
 ## Version 2.1.0.2
 - ### Performance
   - Optimized addition and removal of items to a playlist or collection.

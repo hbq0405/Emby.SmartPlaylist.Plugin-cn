@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using SmartPlaylist.Domain;
-
+using SmartPlaylist.Extensions;
 namespace SmartPlaylist.Services
 {
     public abstract class IFolderRepository
@@ -182,10 +183,21 @@ namespace SmartPlaylist.Services
 
         public override BaseItem[] GetItemsForFolderId(string folderId, User user)
         {
-            return (_libraryManager.GetItemById(Guid.Parse(folderId)) as Folder).GetChildren(new InternalItemsQuery(user)
+            HashSet<BaseItem> results = new HashSet<BaseItem>();
+            (_libraryManager.GetItemById(Guid.Parse(folderId)) as Folder).GetChildren(new InternalItemsQuery(user)
             {
-                Recursive = true
-            });
+                Recursive = false
+            }).ForEach(b => RecurseToChildren(b, user, results));
+            return results.ToArray();
+        }
+
+        private HashSet<BaseItem> RecurseToChildren(BaseItem item, User user, HashSet<BaseItem> current)
+        {
+            if (item.IsFolder)
+                GetItemsForFolderId(item.Id.ToString(), user).ForEach(b => current.Add(b));
+            else
+                current.Add(item);
+            return current;
         }
     }
 }
