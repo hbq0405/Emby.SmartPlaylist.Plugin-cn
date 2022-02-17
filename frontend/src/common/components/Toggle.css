@@ -29,7 +29,7 @@
     float: left;
     width: 50%;
     padding: 0;
-    color: var(---theme-background);
+    color: var(---theme-text-color);
     font-weight: bold;
     box-sizing: border-box;
 }
@@ -37,20 +37,20 @@
     content: 'On';
     padding-left: 10px;
     background-color: var(--theme-primary-color);
-    color: var(--theme-background);
+    color: var(--theme-text-color);
 }
 .toggle-inner:after {
     content: 'Off';
     padding-right: 10px;
-    background-color: #bbb;
-    color: var(--theme-background);
+    background-color: var(--theme-background);
+    color: var(--theme-text-color);
     text-align: right;
 }
 .toggle-toggle-switch {
     display: block;
     width: 24px;
     margin: 5px;
-    background: var(--theme-background);
+    background: var(--theme-text-color);
     position: absolute;
     top: 0;
     bottom: 0;

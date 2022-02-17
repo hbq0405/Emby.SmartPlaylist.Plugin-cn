@@ -1,16 +1,18 @@
 # ChangeLog
 ## Version 2.1.0.3
 - ### Feature
-- Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
-- Added "Genre (List)" Filter Criteria. Displays a drop down list of Genres already in the system, if the Genre does not exist the fall back it to use the already existing "Genre" string filter.
-- Added checkbox on delete confirmation to retain the generated playlist/collection
-- Sorted playlists/collections alphabetically
-- Added "Tag (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
-- Added "Studio (Tree Crawl)" Criteria. Filters the item on it's studio value or its parents studio value (and so on, all the way to to root).
-- Updating sourcing to navigate to the lowest item in the path.
-- Added new Update types: Daily, Weekly, Monthly, The main difference between this and the shuffle update types is that the shuffle will remove all items in the playlist/collection prior to adding new items, and then shuffle the playlist randomly, where as the scheduled update types will only add any new items to the playlist/collection and NOT shuffle the playlist/collection. Scheduled update types are way better when it comes to performance as there are only small updates to the the backend after the initial populate.
-- Added updateType Icons
-- Added tooltips to buttons and icons
+  - Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
+  - Added "Genre (List)" Filter Criteria. Displays a drop down list of Genres already in the system, if the Genre does not exist the fall back it to use the already existing "Genre" string filter.
+  - Added checkbox on delete confirmation to retain the generated playlist/collection
+  - Sorted playlists/collections alphabetically
+  - Added "Tag (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
+  - Added "Studio (Tree Crawl)" Criteria. Filters the item on it's studio value or its parents studio value (and so on, all the way to to root).
+  - Updating sourcing to navigate to the lowest item in the path.
+  - Added new Update types: Daily, Weekly, Monthly, The main difference between this and the shuffle update types is that the shuffle will remove all items in the playlist/collection prior to adding new items, and then shuffle the playlist randomly, where as the scheduled update types will only add any new items to the playlist/collection and NOT shuffle the playlist/collection. Scheduled update types are way better when it comes to performance as there are only small updates to the the backend after the initial populate.
+  - Added updateType Icons
+  - Added tooltips to buttons and icons
+- ### Bug
+  - Fixed a legacy bug where the next shuffle date was calculated based on the last shuffle date isn't of the current run date. Meaning that if the playlist ran twice the shuffle date would be bumped twice.
 ## Version 2.1.0.2
 - ### Performance
   - Optimized addition and removal of items to a playlist or collection.
