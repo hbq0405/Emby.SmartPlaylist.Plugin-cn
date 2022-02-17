@@ -8,7 +8,10 @@ namespace SmartPlaylist.Domain
         Manual = 2,
         ShuffleDaily = 3,
         ShuffleWeekly = 4,
-        ShuffleMonthly = 5
+        ShuffleMonthly = 5,
+        Daily = 6,
+        Weekly = 7,
+        Monthly = 8
     }
 
     public enum SmartType

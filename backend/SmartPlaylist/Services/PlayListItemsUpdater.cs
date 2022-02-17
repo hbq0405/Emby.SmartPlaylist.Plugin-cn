@@ -4,19 +4,13 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Playlists;
 using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
-using MediaBrowser.Model.Dto;
-using MediaBrowser.Controller.Library;
-using System.Threading;
 using System.Collections.Generic;
 using SmartPlaylist.Extensions;
-using MediaBrowser.Controller.Collections;
-using MediaBrowser.Model.Configuration;
-
 namespace SmartPlaylist.Services
 {
     public interface IFolderItemsUpdater
     {
-        Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
+        Task<(long internalId, string message)> UpdateAsync(Domain.SmartPlaylist smartPlaylist, UserFolder folder, BaseItem[] newItems);
         void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
     }
 
@@ -29,16 +23,16 @@ namespace SmartPlaylist.Services
             _playlistManager = playlistManager;
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(Domain.SmartPlaylist smartPlaylist, UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
-            var playlistItems = folder.GetItems();
+            var currentItems = folder.GetItems();
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                RemoveItems(libraryUserPlaylist, playlistItems, newItems);
-                AddToPlaylist(libraryUserPlaylist, playlistItems, newItems);
-                libraryUserPlaylist.Item.Name = folder.SmartPlaylist.Name;
+                RemoveItems(libraryUserPlaylist, currentItems, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
+                AddToPlaylist(libraryUserPlaylist, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems);
+                libraryUserPlaylist.Item.Name = smartPlaylist.Name;
                 ret = (libraryUserPlaylist.InternalId, $"Completed - (Added {newItems.Count()} to existing playlist)");
             }
             else if (newItems.Any())

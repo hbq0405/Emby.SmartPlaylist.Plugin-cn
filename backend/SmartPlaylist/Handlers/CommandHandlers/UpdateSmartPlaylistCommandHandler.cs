@@ -51,7 +51,9 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             try
             {
                 smartPlaylist.LastSyncDuration = 0;
-                smartPlaylist.Status = "Complete";
+                smartPlaylist.Status = smartPlaylist.Enabled ? "Complete" : "Disabled";
+                if (!smartPlaylist.Enabled)
+                    return;
 
                 var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
@@ -69,7 +71,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 }
 
                 var update = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                   .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+                   .UpdateAsync(smartPlaylist, playlist, newItems).ConfigureAwait(false);
 
                 smartPlaylist.Status = update.message;
 
@@ -83,9 +85,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 smartPlaylist.LastSync = DateTime.Now;
                 smartPlaylist.SyncCount++;
 
-                if (smartPlaylist.IsShuffleUpdateType)
+                if (smartPlaylist.IsShuffleUpdateType || smartPlaylist.IsScheduledType)
                     smartPlaylist.UpdateLastShuffleTime();
-
             }
             catch (Exception ex)
             {

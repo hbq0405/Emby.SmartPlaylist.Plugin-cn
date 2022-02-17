@@ -22,14 +22,15 @@ namespace SmartPlaylist.Services
             _libraryManager = libraryManager;
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(Domain.SmartPlaylist smartPlaylist, UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 var currentItems = libraryUserCollection.GetItems();
-                RemoveItems(libraryUserCollection, currentItems, newItems);
-                await AddItemsToCollection(libraryUserCollection, new List<BaseItem>(currentItems), new List<BaseItem>(newItems)).ConfigureAwait(false);
+                RemoveItems(libraryUserCollection, currentItems, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
+                await AddItemsToCollection(libraryUserCollection, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
+                libraryUserCollection.Item.Name = smartPlaylist.Name;
                 ret = (libraryUserCollection.InternalId, $"Completed - (Added {newItems.Count()} to existing collection)");
 
             }
@@ -65,7 +66,7 @@ namespace SmartPlaylist.Services
             }
         }
 
-        private async Task AddItemsToCollection(LibraryUserFolder<Folder> collection, List<BaseItem> currentItems, List<BaseItem> newItems)
+        private async Task AddItemsToCollection(LibraryUserFolder<Folder> collection, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (c, n) => c.InternalId == n.InternalId));
             toAdd.ForEach<BaseItem>((BaseItem item) =>

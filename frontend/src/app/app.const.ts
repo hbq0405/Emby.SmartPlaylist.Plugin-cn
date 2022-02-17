@@ -18,6 +18,9 @@ export const UpdateTypes = [
     'ShuffleDaily',
     'ShuffleWeekly',
     'ShuffleMonthly',
+    'Daily',
+    'Weekly',
+    'Monthly'
 ] as const;
 
 export const SmartTypes = [

@@ -24,7 +24,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             <InfoRow InfoItems={[
                 { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? (playlist.collectionMode ? playlist.collectionMode : 'Item') : 'N/A' },
                 { label: 'Update: ', text: playlist.updateType },
-                { label: 'Next Shuffle: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A' },
+                { label: 'Next Update: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A' },
                 { label: 'Last Edited: ', text: playlist.lastUpdated ? playlist.lastUpdated.toLocaleString() : 'N/A' },
 
             ]} />

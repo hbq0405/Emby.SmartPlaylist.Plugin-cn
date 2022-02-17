@@ -72,11 +72,14 @@ namespace SmartPlaylist.Domain
         public string Status { get; set; }
         public bool CanUpdatePlaylist => CheckIfCanUpdatePlaylist();
 
+        public bool IsScheduledType => UpdateType == UpdateType.Daily ||
+                                        UpdateType == UpdateType.Weekly ||
+                                        UpdateType == UpdateType.Monthly;
         public bool IsShuffleUpdateType => UpdateType == UpdateType.ShuffleDaily ||
                                            UpdateType == UpdateType.ShuffleMonthly ||
                                            UpdateType == UpdateType.ShuffleWeekly;
 
-        public bool CanUpdatePlaylistWithNewItems => (IsRandomSort || !Limit.HasLimit) && !IsShuffleUpdateType;
+        public bool CanUpdatePlaylistWithNewItems => (IsRandomSort || !Limit.HasLimit) && !IsShuffleUpdateType && !IsScheduledType;
         public bool IsRandomSort => Limit.OrderBy is RandomLimitOrder;
         public string MediaType { get; }
 
@@ -87,16 +90,19 @@ namespace SmartPlaylist.Domain
         {
             if (UpdateType == UpdateType.Manual) return false;
 
-            if (LastShuffleUpdate.HasValue && IsShuffleUpdateType)
+            if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType))
             {
                 var now = DateTimeOffset.UtcNow;
                 switch (UpdateType)
                 {
                     case UpdateType.ShuffleDaily:
+                    case UpdateType.Daily:
                         return now >= LastShuffleUpdate.Value.AddDays(1);
                     case UpdateType.ShuffleWeekly:
+                    case UpdateType.Weekly:
                         return now >= LastShuffleUpdate.Value.AddDays(7);
                     case UpdateType.ShuffleMonthly:
+                    case UpdateType.Monthly:
                         return now >= LastShuffleUpdate.Value.AddMonths(1);
                 }
             }
@@ -163,18 +169,21 @@ namespace SmartPlaylist.Domain
 
         public void UpdateLastShuffleTime()
         {
-            var lastShuffleUpdate = LastShuffleUpdate.GetValueOrDefault(DateTimeOffset.UtcNow.Date);
+            var now = DateTime.UtcNow.Date;
 
             switch (UpdateType)
             {
                 case UpdateType.ShuffleDaily:
-                    LastShuffleUpdate = lastShuffleUpdate.AddDays(1);
+                case UpdateType.Daily:
+                    LastShuffleUpdate = now.AddDays(1);
                     break;
                 case UpdateType.ShuffleWeekly:
-                    LastShuffleUpdate = lastShuffleUpdate.AddDays(7);
+                case UpdateType.Weekly:
+                    LastShuffleUpdate = now.AddDays(7);
                     break;
                 case UpdateType.ShuffleMonthly:
-                    LastShuffleUpdate = lastShuffleUpdate.AddMonths(1);
+                case UpdateType.Monthly:
+                    LastShuffleUpdate = now.AddMonths(1);
                     break;
             }
         }
