@@ -9,6 +9,8 @@
 - Added "Studio (Tree Crawl)" Criteria. Filters the item on it's studio value or its parents studio value (and so on, all the way to to root).
 - Updating sourcing to navigate to the lowest item in the path.
 - Added new Update types: Daily, Weekly, Monthly, The main difference between this and the shuffle update types is that the shuffle will remove all items in the playlist/collection prior to adding new items, and then shuffle the playlist randomly, where as the scheduled update types will only add any new items to the playlist/collection and NOT shuffle the playlist/collection. Scheduled update types are way better when it comes to performance as there are only small updates to the the backend after the initial populate.
+- Added updateType Icons
+- Added tooltips to buttons and icons
 ## Version 2.1.0.2
 - ### Performance
   - Optimized addition and removal of items to a playlist or collection.
