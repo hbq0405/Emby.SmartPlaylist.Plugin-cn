@@ -65,3 +65,25 @@ export const isShuffleUpdateType = (updateType: UpdateType) => {
         updateType === 'ShuffleWeekly'
     );
 };
+
+export const getIconsForPlayList = (playList: Playlist) => {
+    var icons: string[] = []
+
+    icons.push(playList.smartType == 'Collection' ? 'video_library' : 'featured_play_list');
+
+    if (playList.updateType == 'Daily' || playList.updateType == 'ShuffleDaily')
+        icons.push('today');
+    else if (playList.updateType == 'Weekly' || playList.updateType == 'ShuffleWeekly')
+        icons.push('date_range');
+    else if (playList.updateType == 'Monthly' || playList.updateType == 'ShuffleMonthly')
+        icons.push('event_note');
+    else if (playList.updateType == 'Live')
+        icons.push('directions_run');
+    else if (playList.updateType == 'Manual')
+        icons.push('accessibility')
+
+    if (isShuffleUpdateType(playList.updateType))
+        icons.push('shuffle');
+
+    return icons.join('');
+}

@@ -7,6 +7,7 @@ export type ToggleProps = {
     label?: string,
     switchStyle?: React.CSSProperties,
     containerStyle?: React.CSSProperties,
+    title?: string,
     onToggled(change: boolean): void,
 
 } & BaseProps;
@@ -20,7 +21,7 @@ export const Toggle: React.FC<ToggleProps> = props => {
     }
 
     const main = <div className="toggle-container" style={props.containerStyle}>
-        <div className="toggle-switch">
+        <div className="toggle-switch" title={props.title}>
             <input
                 type="checkbox"
                 className="toggle-checkbox"

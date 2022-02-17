@@ -67,3 +67,13 @@
     border: 1px solid rgba(255, 0, 0, 0.2) !important;
     background-color: rgba(255, 0, 0, 0.1);
 }
+
+.plist-icon-container {
+    display: flex;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+
+.plist-icon {
+    font-size: 120%;
+}
