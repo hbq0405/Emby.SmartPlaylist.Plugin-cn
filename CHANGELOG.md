@@ -5,7 +5,7 @@
 - ### Bug
   - Schedule task was not executing scheduled lists correctly.
   - Renaming a playlist. If the Name field is locked the smartplaylist name will be reverted so that the playlist and smartplaylist names stay in sync.
-   Version 2.1.0.3
+## Version 2.1.0.3
 - ### Feature
   - Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
   - Added "Genre (List)" Filter Criteria. Displays a drop down list of Genres already in the system, if the Genre does not exist the fall back it to use the already existing "Genre" string filter.
