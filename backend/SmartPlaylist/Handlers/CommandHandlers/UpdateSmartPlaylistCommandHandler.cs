@@ -71,7 +71,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 }
 
                 var update = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                   .UpdateAsync(smartPlaylist, playlist, newItems).ConfigureAwait(false);
+                   .UpdateAsync(playlist, newItems).ConfigureAwait(false);
 
                 smartPlaylist.Status = update.message;
 

@@ -25,13 +25,13 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(Domain.SmartPlaylist smartPlaylist, UserFolder playlist, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(UserFolder playlist, BaseItem[] newItems)
         {
             using (PerfLogger.Create("UpdatePlaylistItems",
                 () => new { playlistName = playlist.SmartPlaylist.Name, newItemsCount = newItems.Length }))
 
             {
-                return await _decorated.UpdateAsync(smartPlaylist, playlist, newItems).ConfigureAwait(false);
+                return await _decorated.UpdateAsync(playlist, newItems).ConfigureAwait(false);
             }
         }
     }

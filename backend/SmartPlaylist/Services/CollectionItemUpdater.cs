@@ -22,15 +22,15 @@ namespace SmartPlaylist.Services
             _libraryManager = libraryManager;
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(Domain.SmartPlaylist smartPlaylist, UserFolder folder, BaseItem[] newItems)
+        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 var currentItems = libraryUserCollection.GetItems();
-                RemoveItems(libraryUserCollection, currentItems, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
-                await AddItemsToCollection(libraryUserCollection, smartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
-                libraryUserCollection.Item.Name = smartPlaylist.Name;
+                RemoveItems(libraryUserCollection, currentItems, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
+                await AddItemsToCollection(libraryUserCollection, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
+                libraryUserCollection.DynamicUpdate();
                 ret = (libraryUserCollection.InternalId, $"Completed - (Added {newItems.Count()} to existing collection)");
 
             }
@@ -117,7 +117,7 @@ namespace SmartPlaylist.Services
                     if (newEntry == null)
                         newEntry = AddCollection(itemById, options.Name);
                     else if (itemById.AddCollection(newEntry))
-                        itemById.UpdateToRepository(ItemUpdateType.MetadataEdit);
+                        itemById.UpdateToRepository(ItemUpdateType.None);
                 }
             }
             return newEntry;

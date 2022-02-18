@@ -68,7 +68,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             }
 
             await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                .UpdateAsync(smartPlaylist, playlist, newItems).ConfigureAwait(false);
+                .UpdateAsync(playlist, newItems).ConfigureAwait(false);
         }
 
 

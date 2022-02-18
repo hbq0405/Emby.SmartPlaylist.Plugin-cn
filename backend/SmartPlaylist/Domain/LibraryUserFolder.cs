@@ -19,5 +19,23 @@ namespace SmartPlaylist.Domain
         {
             return _item.GetChildren(User).ToArray();
         }
+
+        public void DynamicUpdate()
+        {
+            bool update = false;
+            if (!Item.Name.Equals(SmartPlaylist.Name))
+            {
+                if (Item.LockedFields.Any(x => x == MediaBrowser.Model.Entities.MetadataFields.Name))
+                    SmartPlaylist.Name = Item.Name;
+                else
+                {
+                    Item.Name = SmartPlaylist.Name;
+                    update = true;
+                }
+
+            }
+            if (update)
+                Item.UpdateToRepository(MediaBrowser.Controller.Library.ItemUpdateType.MetadataDownload);
+        }
     }
 }

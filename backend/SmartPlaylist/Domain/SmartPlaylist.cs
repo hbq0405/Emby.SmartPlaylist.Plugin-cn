@@ -14,7 +14,7 @@ namespace SmartPlaylist.Domain
     {
         private readonly SmartPlaylistDto _dto;
         private long _internalid = 0;
-
+        private string _name = string.Empty;
         public SmartPlaylist(SmartPlaylistDto dto)
         {
             _dto = dto;
@@ -44,7 +44,7 @@ namespace SmartPlaylist.Domain
         }
 
         public Guid Id { get; }
-        public string Name { get; }
+        public string Name { get { return _name; } set { _name = value; } }
         public Guid UserId { get; }
         public RuleBase[] Rules { get; }
         public SmartPlaylistLimit Limit { get; }
@@ -91,21 +91,7 @@ namespace SmartPlaylist.Domain
             if (UpdateType == UpdateType.Manual) return false;
 
             if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType))
-            {
-                var now = DateTimeOffset.UtcNow;
-                switch (UpdateType)
-                {
-                    case UpdateType.ShuffleDaily:
-                    case UpdateType.Daily:
-                        return now >= LastShuffleUpdate.Value.AddDays(1);
-                    case UpdateType.ShuffleWeekly:
-                    case UpdateType.Weekly:
-                        return now >= LastShuffleUpdate.Value.AddDays(7);
-                    case UpdateType.ShuffleMonthly:
-                    case UpdateType.Monthly:
-                        return now >= LastShuffleUpdate.Value.AddMonths(1);
-                }
-            }
+                return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
 
             return true;
         }
@@ -187,6 +173,7 @@ namespace SmartPlaylist.Domain
                     break;
             }
         }
+
         public SmartPlaylistDto ToDto()
         {
             return new SmartPlaylistDto
