@@ -98,7 +98,7 @@ namespace SmartPlaylist.Domain
 
         public IEnumerable<BaseItem> FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
         {
-            var playlistItems = userPlaylist.GetItems();
+            var playlistItems = SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase) ? userPlaylist.GetItems() : new BaseItem[] { };
             var newItems = FilterItems(playlistItems, items, userPlaylist.User);
             newItems = RemoveMissingEpisodes(newItems);
             if (SmartType == SmartType.Collection && CollectionMode != CollectionMode.Item)
