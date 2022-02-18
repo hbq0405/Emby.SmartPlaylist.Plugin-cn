@@ -1,4 +1,8 @@
 # ChangeLog
+## Version 2.2.0.0
+  - ## Feature
+    - Made plugin compatible with Emby > 4.7.0.0 
+  
 ## Version 2.1.0.4
 - ## Feature
   - Added "Genre (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
