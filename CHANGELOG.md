@@ -3,7 +3,7 @@
 - ### Performance
   - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
   - ## Feature
-    - Made plugin compatible with Emby > 4.7.0.0
+    - Made plugin compatible with Emby > 4.7.0.0 (Backward compatible with current release 4.6)
     - Added 'Rating' criteria for:
       - Community
       - Critic

@@ -29,33 +29,25 @@
     float: left;
     width: 50%;
     padding: 0;
-    color: var(---theme-text-color);
+    background-color: black;
+    color: white;
     font-weight: bold;
     box-sizing: border-box;
 }
 .toggle-inner:before {
     content: 'On';
     padding-left: 10px;
-    background-color: var(--theme-primary-color);
-    color: var(--theme-text-color);
 }
 .toggle-inner:after {
     content: 'Off';
     padding-right: 10px;
-    background-color: var(--button-background);
-    color: var(--theme-text-color);
     text-align: right;
 }
 .toggle-toggle-switch {
     display: block;
     width: 24px;
     margin: 5px;
-    background: hsla(
-        var(--theme-text-color-hue),
-        var(--theme-text-color-saturation),
-        var(--theme-text-color-lightness),
-        var(--theme-text-color-alpha)
-    );
+    background-color: white;
     position: absolute;
     top: 0;
     bottom: 0;
