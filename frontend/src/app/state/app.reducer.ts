@@ -17,6 +17,7 @@ export type AppPlaylistState = {
 
 export type AppState = {
     appId: string;
+    loadedPlaylist: boolean,
     playlists: AppPlaylistState;
     rulesCriteriaDefinitions: RuleCriteriaDefinition[];
     limitOrdersBy: string[];
@@ -29,6 +30,7 @@ export type AppState = {
 
 export const initAppState: AppState = {
     appId: '',
+    loadedPlaylist: false,
     playlists: {
         byId: {},
         names: [],
@@ -62,6 +64,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
 
             return {
                 ...action.settings,
+                loadedPlaylist: true,
                 playlists: {
                     byId: normalizeArray(playlists, 'id'),
                     names: playlists.map(x => x.id),

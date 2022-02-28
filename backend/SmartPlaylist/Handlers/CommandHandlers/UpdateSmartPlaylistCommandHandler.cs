@@ -55,23 +55,17 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 if (!smartPlaylist.Enabled)
                     return;
 
-                var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
-
-                BaseItem[] items = null;
-                if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
-                    items = _folderRepository.GetItemsForFolderId(smartPlaylist.Source.Id, playlist.User);
-                else
-                    items = _userItemsProvider.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray();
+                (UserFolder user, BaseItem[] baseItems) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
 
                 BaseItem[] newItems;
                 using (PerfLogger.Create("FilterPlaylistItems",
-                    () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
+                    () => new { playlistName = folder.user.SmartPlaylist.Name, itemsCount = folder.baseItems.Length }))
                 {
-                    newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
+                    newItems = smartPlaylist.FilterPlaylistItems(folder.user, folder.baseItems).ToArray();
                 }
 
                 var update = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                   .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+                   .UpdateAsync(folder.user, newItems).ConfigureAwait(false);
 
                 smartPlaylist.Status = update.message;
 

@@ -16,6 +16,7 @@ namespace SmartPlaylist.Infrastructure.Queue
         private Timer _absoluteTimer;
         private Timer _timer;
 
+        public List<T> Items => _items;
         public AutoDequeueQueue(Action<IEnumerable<T>> onDequeue, AutoDequeueQueueConfig config)
         {
             _onDequeue = onDequeue;
@@ -34,7 +35,6 @@ namespace SmartPlaylist.Infrastructure.Queue
                 if (_items.Count < _config.MaxItemsLimit)
                 {
                     StartOrUpdateTimer();
-
                     _items.Add(item);
                 }
                 else

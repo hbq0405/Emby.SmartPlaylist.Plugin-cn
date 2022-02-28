@@ -12,7 +12,7 @@ import { PlaylistDetail } from '~/app/components/PlaylistDetail';
 import './App.css';
 import { Confirmation } from '~/emby/components/Confirmation';
 import { Modal } from '~/emby/components/Modal';
-
+import BeatLoader from "react-spinners/BeatLoader"
 export type AppProps = {
     appId: string;
 };
@@ -37,12 +37,14 @@ export const App: React.FC<AppProps> = props => {
         getEditedPlaylist,
         isNewPlaylist,
         getViewPlaylist,
-        getConfirmation
+        getConfirmation,
+        isLoaded
     } = appContext;
 
     const editedPlaylist = getEditedPlaylist();
     const viewPlaylistInfo = getViewPlaylist();
     const confirmation = getConfirmation();
+    const loaded = isLoaded()
 
     return (
         <>
@@ -52,6 +54,12 @@ export const App: React.FC<AppProps> = props => {
                         onClick={() => addNewPlaylist()}
                         label="Add Smart Playlist" />
                 </div>
+
+                {!isLoaded && (
+                    <div className='app-container'>
+                        <BeatLoader loading={true} color='green' />
+                    </div>
+                )}
 
                 <div className="verticalSection verticalSection-extrabottompadding app-container">
                     <PlaylistList />

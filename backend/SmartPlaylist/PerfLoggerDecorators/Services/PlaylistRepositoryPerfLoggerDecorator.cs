@@ -106,5 +106,21 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
                 return _decorated.GetItemsForFolderId(folderId, user);
             }
         }
+
+        public override BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user)
+        {
+            using (PerfLogger.Create("GetItemsForFolderSmartPlayList", () => new { smartPlaylist }))
+            {
+                return _decorated.GetItemsForFolderId(smartPlaylist, user);
+            }
+        }
+
+        public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
+        {
+            using (PerfLogger.Create("GetItemsForSmartPlayList", () => new { smartPlaylist }))
+            {
+                return _decorated.GetBaseItemsForSmartPlayList(smartPlaylist, userItemsProvider);
+            }
+        }
     }
 }

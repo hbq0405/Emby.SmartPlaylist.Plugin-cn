@@ -1,4 +1,16 @@
 # ChangeLog
+## Version 2.1.0.5
+- ### Performance
+  - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
+  - ## Feature
+    - Added 'Rating' criteria for:
+      - Community
+      - Critic
+      - Custom
+    - Added loader to management screen while loading large amounts of smartplaylists.
+  - ## Bug
+    - Fixed a bug on number input where the value would only be updated blur, meaning that the spinners are rendered useless.
+  
 ## Version 2.1.0.4
 - ## Feature
   - Added "Genre (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
@@ -10,7 +22,7 @@
   - Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
   - Added "Genre (List)" Filter Criteria. Displays a drop down list of Genres already in the system, if the Genre does not exist the fall back it to use the already existing "Genre" string filter.
   - Added checkbox on delete confirmation to retain the generated playlist/collection
-  - Sorted playlists/collections alphabetically
+  - Sorted smartplaylist manager playlists/collections alphabetically
   - Added "Tag (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).
   - Added "Studio (Tree Crawl)" Criteria. Filters the item on it's studio value or its parents studio value (and so on, all the way to to root).
   - Updating sourcing to navigate to the lowest item in the path.

@@ -30,8 +30,8 @@ namespace SmartPlaylist.Services
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                RemoveItems(libraryUserPlaylist, currentItems, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
-                AddToPlaylist(libraryUserPlaylist, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems);
+                RemoveItems(libraryUserPlaylist, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
+                AddToPlaylist(libraryUserPlaylist, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems);
                 libraryUserPlaylist.DynamicUpdate();
                 ret = (libraryUserPlaylist.InternalId, $"Completed - (Added {newItems.Count()} to existing playlist)");
             }

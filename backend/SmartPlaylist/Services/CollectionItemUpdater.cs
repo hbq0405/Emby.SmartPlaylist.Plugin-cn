@@ -28,8 +28,8 @@ namespace SmartPlaylist.Services
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 var currentItems = libraryUserCollection.GetItems();
-                RemoveItems(libraryUserCollection, currentItems, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : newItems);
-                await AddItemsToCollection(libraryUserCollection, folder.SmartPlaylist.IsShuffleUpdateType ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
+                RemoveItems(libraryUserCollection, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
+                await AddItemsToCollection(libraryUserCollection, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
                 libraryUserCollection.DynamicUpdate();
                 ret = (libraryUserCollection.InternalId, $"Completed - (Added {newItems.Count()} to existing collection)");
 

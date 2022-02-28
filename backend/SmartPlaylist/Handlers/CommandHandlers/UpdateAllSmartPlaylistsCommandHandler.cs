@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
+using SmartPlaylist.Domain;
 using SmartPlaylist.Handlers.Commands;
 using SmartPlaylist.Infrastructure;
 using SmartPlaylist.Infrastructure.MesssageBus;
@@ -47,7 +49,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             UpdateAllSmartPlaylistsCommand message, Domain.SmartPlaylist[] smartPlaylists)
         {
             return message.HasItems
-                ? smartPlaylists.Where(x => x.CanUpdatePlaylistWithNewItems).ToArray()
+                ? smartPlaylists.Where(x => x.UpdateType == Domain.UpdateType.Live).ToArray()
                 : new Domain.SmartPlaylist[0];
         }
 
@@ -60,15 +62,17 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         private async Task GetTasks(Domain.SmartPlaylist smartPlaylist, BaseItem[] items)
         {
             BaseItem[] newItems;
-            var playlist = _folderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
+            (UserFolder user, BaseItem[] items) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, null);
+            BaseItem[] processItems = folder.items.Union(items).ToArray();
+
             using (PerfLogger.Create("FilterPlaylistItems",
-                () => new { playlistName = playlist.SmartPlaylist.Name, itemsCount = items.Length }))
+                () => new { playlistName = folder.user.SmartPlaylist.Name, itemsCount = processItems.Length }))
             {
-                newItems = smartPlaylist.FilterPlaylistItems(playlist, items).ToArray();
+                newItems = smartPlaylist.FilterPlaylistItems(folder.user, processItems).ToArray();
             }
 
             await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                .UpdateAsync(playlist, newItems).ConfigureAwait(false);
+                .UpdateAsync(folder.user, newItems).ConfigureAwait(false);
         }
 
 

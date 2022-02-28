@@ -23,6 +23,7 @@ export type AppSelectors = {
     getViewPlaylist(): PlaylistInfo;
     getConfirmation(): ConfirmationProps;
     getSourcesFor(type: string): Source[];
+    isLoaded(): boolean;
 };
 
 export const createAppSelectors = (state: AppState): AppSelectors => {
@@ -64,6 +65,9 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         },
         getSourcesFor: (type: string): Source[] => {
             return state.sources.filter(s => s.type === type);
+        },
+        isLoaded: (): boolean => {
+            return state.loadedPlaylist
         }
     };
 };

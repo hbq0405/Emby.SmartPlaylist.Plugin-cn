@@ -88,7 +88,6 @@ export const createAppActions = (
                     control: ConfirmDeletePlaylist,
                     onNo: (data => { }),
                     onYes: (data => {
-                        console.log(data);
                         deletePlaylist(data.playlist.id, data.keep).finally(() => {
                             dispatcher({
                                 type: 'app:removePlaylist',

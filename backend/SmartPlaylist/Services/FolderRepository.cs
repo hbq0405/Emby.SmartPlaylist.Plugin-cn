@@ -43,6 +43,9 @@ namespace SmartPlaylist.Services
         public abstract BaseItem[] GetAllPlaylists();
         public abstract BaseItem[] GetAllCollections();
         public abstract BaseItem[] GetItemsForFolderId(string folderId, User user);
+        public abstract BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user);
+
+        public abstract (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider);
     }
 
     public class FolderRepository : IFolderRepository
@@ -198,6 +201,29 @@ namespace SmartPlaylist.Services
             else
                 current.Add(item);
             return current;
+        }
+
+        public override BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user)
+        {
+            string id = smartPlaylist.SmartType == SmartType.Playlist ?
+                FindPlaylistFolder(smartPlaylist, smartPlaylist.Name).Id.ToString() :
+                FindCollectionFolder(smartPlaylist, smartPlaylist.Name).Id.ToString();
+
+            return GetItemsForFolderId(id, user);
+        }
+
+        public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
+        {
+            var playlist = GetUserPlaylistOrCollectionFolder(smartPlaylist);
+
+            if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
+                return (playlist, GetItemsForFolderId(smartPlaylist.Source.Id, playlist.User));
+            else
+            {
+                return smartPlaylist.UpdateType == UpdateType.Live ?
+                    (playlist, GetItemsForFolderId(smartPlaylist, playlist.User)) :
+                    (playlist, userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
+            }
         }
     }
 }

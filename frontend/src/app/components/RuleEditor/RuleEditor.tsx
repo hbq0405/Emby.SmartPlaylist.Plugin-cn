@@ -37,7 +37,9 @@ export const RuleEditor: React.FC<RuleProps> = props => {
                 type={criteria.operator.type}
                 value={criteria.value}
                 values={criteriaDef.values}
-                onChange={newVal => playlistContext.updateCriteriaValue(rule, newVal)}
+                onChange={newVal => {
+                    playlistContext.updateCriteriaValue(rule, newVal)
+                }}
             />
         </>
     );

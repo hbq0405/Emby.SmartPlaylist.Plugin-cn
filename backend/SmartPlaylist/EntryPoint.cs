@@ -52,16 +52,18 @@ namespace SmartPlaylist
 
         private void libraryManager_ItemAdded(object sender, ItemChangeEventArgs e)
         {
-            if (Const.ListenForChangeItemTypes.Contains(e.Item.GetType()))
+            if (Const.ListenForChangeItemTypes.Contains(e.Item.GetType()) &&
+                !_updatedItemsQueue.Items.Any(x => x.InternalId == e.Item.InternalId))
                 _updatedItemsQueue.Enqueue(e.Item);
         }
 
 
         private void libraryManager_ItemUpdated(object sender, ItemChangeEventArgs e)
         {
-            if (Const.ListenForChangeItemTypes.Contains(e.Item.GetType())) _updatedItemsQueue.Enqueue(e.Item);
+            if (Const.ListenForChangeItemTypes.Contains(e.Item.GetType()) &&
+                !_updatedItemsQueue.Items.Any(x => x.InternalId == e.Item.InternalId))
+                _updatedItemsQueue.Enqueue(e.Item);
         }
-
 
         private void _userDataManager_UserDataSaved(object sender, UserDataSaveEventArgs e)
         {
