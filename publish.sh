@@ -1,5 +1,5 @@
 #!/bin/bash
-version=2.1.0.5
+version=2.2.0.1
 cd frontend
 yarn install
 yarn build

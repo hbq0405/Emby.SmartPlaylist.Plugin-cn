@@ -1,8 +1,9 @@
 # ChangeLog
-## Version 2.1.0.5
+## Version 2.2.0.1
 - ### Performance
   - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
   - ## Feature
+    - Made plugin compatible with Emby > 4.7.0.0
     - Added 'Rating' criteria for:
       - Community
       - Critic
@@ -10,6 +11,7 @@
     - Added loader to management screen while loading large amounts of smartplaylists.
   - ## Bug
     - Fixed a bug on number input where the value would only be updated blur, meaning that the spinners are rendered useless.
+    - Fixed a bug where there was no Genres in the system the editor would fail to load.
   
 ## Version 2.1.0.4
 - ## Feature
