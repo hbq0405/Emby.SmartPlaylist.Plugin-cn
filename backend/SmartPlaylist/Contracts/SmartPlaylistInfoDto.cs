@@ -20,7 +20,7 @@ namespace SmartPlaylist.Contracts
                     desProp.SetValue(infoDto, srcProp.GetValue(smartPlaylist));
             }
 
-            infoDto.LastDurationStr = TimeSpan.FromTicks(smartPlaylist.LastSyncDuration).ToString("c");
+            infoDto.LastDurationStr = String.Format("{0:%h} hours {0:%m} minutes and {0:%s} seconds", TimeSpan.FromTicks(smartPlaylist.LastSyncDuration));
             infoDto.RuleCount = smartPlaylist.RulesTree.Length;
 
 
