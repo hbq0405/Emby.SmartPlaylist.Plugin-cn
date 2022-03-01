@@ -48,7 +48,7 @@ namespace SmartPlaylist.Services
                 ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
             }
             else
-                ret = (-1, "Completed - (No new items found)");
+                ret = (-1, "Completed - (Playlist not created, No new items found)");
 
             return ret;
         }

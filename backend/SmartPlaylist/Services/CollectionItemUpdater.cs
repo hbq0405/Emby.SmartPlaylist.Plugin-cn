@@ -46,7 +46,7 @@ namespace SmartPlaylist.Services
 
             }
             else
-                ret = (-1, "Completed - (No new items found)");
+                ret = (-1, "Completed - (Collection not created, no items found to add)");
 
             return ret;
         }

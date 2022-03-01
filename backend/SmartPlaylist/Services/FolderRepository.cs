@@ -220,7 +220,7 @@ namespace SmartPlaylist.Services
                 return (playlist, GetItemsForFolderId(smartPlaylist.Source.Id, playlist.User));
             else
             {
-                return smartPlaylist.UpdateType == UpdateType.Live ?
+                return smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 ?
                     (playlist, GetItemsForFolderId(smartPlaylist, playlist.User)) :
                     (playlist, userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
             }
