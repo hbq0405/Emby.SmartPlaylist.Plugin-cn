@@ -2,6 +2,8 @@
 ## Version 2.2.0.2
 - ## Bug
   - Fixed newly introduced bug when Update type is live and the playlist or collection does not exist yet.
+  - Fixed info window duration format.
+  - Fixed playlist stats for live update type.
 ## Version 2.2.0.1
 - ### Performance
   - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
