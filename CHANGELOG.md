@@ -1,18 +1,21 @@
 # ChangeLog
+## Version 2.2.0.2
+- ## Bug
+  - Fixed newly introduced bug when Update type is live and the playlist or collection does not exist yet.
 ## Version 2.2.0.1
 - ### Performance
   - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
-  - ## Feature
-    - Made plugin compatible with Emby > 4.7.0.0 (Backward compatible with current release 4.6)
-    - Added 'Rating' criteria for:
-      - Community
-      - Critic
-      - Custom
-    - Added loader to management screen while loading large amounts of smartplaylists.
-  - ## Bug
-    - Fixed a bug on number input where the value would only be updated blur, meaning that the spinners are rendered useless.
-    - Fixed a bug where there was no Genres in the system the editor would fail to load.
-  
+- ## Feature
+  - Made plugin compatible with Emby > 4.7.0.0 (Backward compatible with current release 4.6)
+  - Added 'Rating' criteria for:
+    - Community
+    - Critic
+    - Custom
+  - Added loader to management screen while loading large amounts of smartplaylists.
+- ## Bug
+  - Fixed a bug on number input where the value would only be updated blur, meaning that the spinners are rendered useless.
+  - Fixed a bug where there was no Genres in the system the editor would fail to load.
+
 ## Version 2.1.0.4
 - ## Feature
   - Added "Genre (Tree Crawl)" Criteria. Filters the item on tag or its parents tags (and so on, all the way to to root).

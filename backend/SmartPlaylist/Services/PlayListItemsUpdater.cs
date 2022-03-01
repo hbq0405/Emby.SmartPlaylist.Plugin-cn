@@ -11,7 +11,7 @@ namespace SmartPlaylist.Services
     public interface IFolderItemsUpdater
     {
         Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
-        void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
+        int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
     }
 
     public class PlayListItemsUpdater : IFolderItemsUpdater
@@ -30,10 +30,10 @@ namespace SmartPlaylist.Services
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                RemoveItems(libraryUserPlaylist, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
-                AddToPlaylist(libraryUserPlaylist, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems);
+                int removed = RemoveItems(libraryUserPlaylist, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
+                int added = AddToPlaylist(libraryUserPlaylist, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems);
                 libraryUserPlaylist.DynamicUpdate();
-                ret = (libraryUserPlaylist.InternalId, $"Completed - (Added {newItems.Count()} to existing playlist)");
+                ret = (libraryUserPlaylist.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing playlist)");
             }
             else if (newItems.Any())
             {
@@ -48,20 +48,21 @@ namespace SmartPlaylist.Services
                 ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
             }
             else
-                ret = (-1, "Completed - (Playlist not created, No new items found)");
+                ret = (-1, "Completed - (Playlist not created, no items found to add)");
 
             return ret;
         }
 
-        private void AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
+        private int AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
             if (toAdd.Any())
                 _playlistManager.AddToPlaylist(playlist.InternalId,
                     toAdd.Select(x => x.InternalId).ToArray(), playlist.User);
+            return toAdd.Count;
         }
 
-        public void RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
@@ -69,6 +70,8 @@ namespace SmartPlaylist.Services
                 _playlistManager.RemoveFromPlaylist(playlist.InternalId,
                     toRemove.Select(x => x.ListItemEntryId).ToArray());
             }
+
+            return toRemove.Count;
         }
 
         public void DynamicUpdate()

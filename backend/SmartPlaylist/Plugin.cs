@@ -94,20 +94,20 @@ namespace SmartPlaylist
             {
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.1.html",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.1.html",
+                    Name = "smartplaylist.2.2.0.2.html",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.html",
                     EnableInMainMenu = true,
                     MenuIcon = "subscriptions"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.1.css",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.1.css"
+                    Name = "smartplaylist.2.2.0.2.css",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.css"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.1.js",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.1.js"
+                    Name = "smartplaylist.2.2.0.2.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.js"
                 }
 
             };
@@ -120,7 +120,7 @@ namespace SmartPlaylist
         {
             var updateAllSmartPlaylistsWithItemsCommandHandler =
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
-                    folderRepository, playlistItemsUpdater, collectionItemsUpdater);
+                    folderRepository, playlistItemsUpdater, collectionItemsUpdater, smartPlaylistStore);
 
             MessageBus.Subscribe(Decorate(SmartPlaylistCommandHandler));
             MessageBus.Subscribe(Decorate(updateAllSmartPlaylistsWithItemsCommandHandler));
