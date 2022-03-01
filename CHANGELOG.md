@@ -2,11 +2,11 @@
 ## Version 2.2.0.2
 - ## Bug
   - Fixed newly introduced bug when Update type is live and the playlist or collection does not exist yet.
-  - Fixed info window duration format.
+  - Fixed info window duration format. (Playlist will need to execute once to rectify)
   - Fixed playlist stats for live update type.
 ## Version 2.2.0.1
 - ### Performance
-  - Optimized Live mode by not pulling all items to compare against, only new items and previous added. (Hopefully this makes things a little better.)
+  - Optimized Live mode by not pulling all items to compare against, only new items and previous added. git(Hopefully this makes things a little better.)
 - ## Feature
   - Made plugin compatible with Emby > 4.7.0.0 (Backward compatible with current release 4.6)
   - Added 'Rating' criteria for:

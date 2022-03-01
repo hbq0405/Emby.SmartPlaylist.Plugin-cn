@@ -107,7 +107,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             finally
             {
                 sw.Stop();
-                smartPlaylist.LastSyncDuration = sw.ElapsedTicks;
+                smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
                 _smartPlaylistStore.Save(smartPlaylist.ToDto());
             }
         }
