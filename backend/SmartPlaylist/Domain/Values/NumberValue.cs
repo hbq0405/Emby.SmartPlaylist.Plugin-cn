@@ -1,6 +1,6 @@
 ﻿namespace SmartPlaylist.Domain.Values
 {
-    public class NumberValue : Value
+    public class NumberValue : EmptableValue
     {
         public static readonly NumberValue Default = new NumberValue(0);
 
@@ -12,6 +12,8 @@
         public override string Kind => "number";
 
         public float Value { get; }
+
+        internal override bool IsEmpty => IsNone || Value == 0f;
 
         public static NumberValue Create(float value)
         {
@@ -28,7 +30,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((NumberValue) obj);
+            return Equals((NumberValue)obj);
         }
 
         public override int GetHashCode()

@@ -41,4 +41,6 @@ namespace SmartPlaylist.Domain.Operator
             return !value.IsNone && (itemValue.IsType(typeof(T1)) || itemValue.IsType(typeof(ArrayValue<T1>))) && value.IsType(typeof(T2));
         }
     }
+
+
 }

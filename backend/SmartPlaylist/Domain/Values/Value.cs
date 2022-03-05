@@ -15,4 +15,9 @@ namespace SmartPlaylist.Domain.Values
             return GetType() == type;
         }
     }
+
+    public abstract class EmptableValue : Value
+    {
+        internal abstract bool IsEmpty { get; }
+    }
 }

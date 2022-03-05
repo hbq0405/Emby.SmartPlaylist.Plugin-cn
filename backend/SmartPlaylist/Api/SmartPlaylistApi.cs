@@ -35,26 +35,33 @@ namespace SmartPlaylist.Api
 
         public void Post(SaveSmartPlaylist request)
         {
-            var playlist = request;
-            var user = GetUser();
-
-            playlist.UserId = user.Id;
-            playlist.LastShuffleUpdate = DateTimeOffset.UtcNow.Date;
-
-            _smartPlaylistValidator.Validate(playlist);
-
-            var lastPlaylist = GetPlaylistFromStore(Guid.Parse(playlist.Id));
-            if (lastPlaylist != null)
+            try
             {
-                playlist.InternalId = lastPlaylist.InternalId;
-                playlist.ForceCreate = !string.Equals(lastPlaylist.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
-                playlist.OriginalSmartType = lastPlaylist.SmartType;
+                var playlist = request;
+                var user = GetUser();
+
+                playlist.UserId = user.Id;
+                playlist.LastShuffleUpdate = DateTimeOffset.UtcNow.Date;
+
+                _smartPlaylistValidator.Validate(playlist);
+
+                var lastPlaylist = GetPlaylistFromStore(Guid.Parse(playlist.Id));
+                if (lastPlaylist != null)
+                {
+                    playlist.InternalId = lastPlaylist.InternalId;
+                    playlist.ForceCreate = !string.Equals(lastPlaylist.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
+                    playlist.OriginalSmartType = lastPlaylist.SmartType;
+                }
+
+                playlist.LastUpdated = DateTime.Now;
+                _smartPlaylistStore.Save(playlist);
+
+                _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
             }
-
-            playlist.LastUpdated = DateTime.Now;
-            _smartPlaylistStore.Save(playlist);
-
-            _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
+            catch (Exception ex)
+            {
+                Plugin.Instance.Logger.Error($"Error saving smart playlist: {ex.Message}", request);
+            }
         }
 
         private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)
@@ -65,11 +72,18 @@ namespace SmartPlaylist.Api
 
         public void Delete(DeleteSmartPlaylist request)
         {
-            var user = GetUser();
-            var playlist = GetPlaylistFromStore(Guid.Parse(request.Id));
-            if (playlist != null && !request.Keep)
-                _folderRepository.Remove(SmartPlaylistAdapter.Adapt(playlist));
-            _smartPlaylistStore.Delete(user.Id, request.Id);
+            try
+            {
+                var user = GetUser();
+                var playlist = GetPlaylistFromStore(Guid.Parse(request.Id));
+                if (playlist != null && !request.Keep)
+                    _folderRepository.Remove(SmartPlaylistAdapter.Adapt(playlist));
+                _smartPlaylistStore.Delete(user.Id, request.Id);
+            }
+            catch (Exception ex)
+            {
+                Plugin.Instance.Logger.Error($"Error deleting smart playlist: {ex.Message}", request);
+            }
         }
 
         public async Task<object> Get(GetAppData request)

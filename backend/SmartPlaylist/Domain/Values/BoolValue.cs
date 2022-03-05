@@ -1,6 +1,6 @@
 ﻿namespace SmartPlaylist.Domain.Values
 {
-    public class BoolValue : Value
+    public class BoolValue : EmptableValue
     {
         public static readonly BoolValue Default = new BoolValue(false);
 
@@ -13,6 +13,8 @@
         public override string Kind => "bool";
 
         public bool Value { get; }
+
+        internal override bool IsEmpty => IsNone;
 
         public static Value Create(bool value)
         {
@@ -29,7 +31,7 @@
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((BoolValue) obj);
+            return Equals((BoolValue)obj);
         }
 
         public override int GetHashCode()

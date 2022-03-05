@@ -102,6 +102,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             catch (Exception ex)
             {
                 smartPlaylist.Status = $"Error {ex.Message}";
+                Plugin.Instance.Logger.Error($"Error executing smart playlist: {ex.Message}", smartPlaylist);
                 throw ex;
             }
             finally

@@ -2,7 +2,7 @@
 
 namespace SmartPlaylist.Domain.Values
 {
-    public class DateValue : Value
+    public class DateValue : EmptableValue
     {
         public static readonly DateValue Default = new DateValue(DateTimeOffset.UtcNow);
 
@@ -15,6 +15,8 @@ namespace SmartPlaylist.Domain.Values
 
         public DateTimeOffset Value { get; }
 
+        internal override bool IsEmpty => IsNone;
+
         protected bool Equals(DateValue other)
         {
             return Value.Equals(other.Value);
@@ -25,7 +27,7 @@ namespace SmartPlaylist.Domain.Values
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((DateValue) obj);
+            return Equals((DateValue)obj);
         }
 
         public override int GetHashCode()

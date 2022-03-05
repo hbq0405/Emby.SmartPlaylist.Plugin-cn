@@ -25,7 +25,7 @@ namespace SmartPlaylist
 {
     public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IHasThumbImage
     {
-        private readonly ILogger _logger;
+        public readonly ILogger Logger;
         private readonly ISessionManager _sessionManager;
         public SmartPlaylistValidator SmartPlaylistValidator { get; }
         public IFolderRepository FolderRepository { get; }
@@ -44,7 +44,7 @@ namespace SmartPlaylist
             IServerApplicationPaths serverApplicationPaths, ISessionManager sessionManager)
             : base(applicationPaths, xmlSerializer)
         {
-            _logger = logger;
+            Logger = logger;
             _sessionManager = sessionManager;
             Instance = this;
             var smartPlaylistFileSystem =
@@ -74,7 +74,7 @@ namespace SmartPlaylist
             SmartPlaylistStore = smartPlaylistStore;
             SmartPlaylistValidator = new SmartPlaylistValidator();
 
-            Logger.Instance = new Logger(logger);
+            SmartPlaylist.Logger.Instance = new Logger(logger);
         }
 
         public Stream GetThumbImage()
@@ -94,20 +94,20 @@ namespace SmartPlaylist
             {
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.2.html",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.html",
+                    Name = "smartplaylist.2.2.0.3.html",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.3.html",
                     EnableInMainMenu = true,
                     MenuIcon = "subscriptions"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.2.css",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.css"
+                    Name = "smartplaylist.2.2.0.3.css",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.3.css"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.2.0.2.js",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.2.js"
+                    Name = "smartplaylist.2.2.0.3.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.2.0.3.js"
                 }
 
             };
@@ -128,7 +128,7 @@ namespace SmartPlaylist
 
         private IMessageHandler<T> Decorate<T>(IMessageHandler<T> messageHandler) where T : IMessage
         {
-            return new SuppressExceptionDecorator<T>(messageHandler, _logger);
+            return new SuppressExceptionDecorator<T>(messageHandler, Logger);
         }
 
         private IMessageHandlerAsync<T> Decorate<T>(IMessageHandlerAsync<T> messageHandler) where T : IMessage
@@ -138,9 +138,9 @@ namespace SmartPlaylist
                 new DebugShowErrorMessageDecorator<T>(
                     new DebugShowDurationMessageDecorator<T>(new PerLoggerMessageDecorator<T>(messageHandler),
                         _sessionManager), _sessionManager),
-                _logger);
+                Logger);
 #else
-            return new SuppressAsyncExceptionDecorator<T>(new PerLoggerMessageDecorator<T>(messageHandler), _logger);
+            return new SuppressAsyncExceptionDecorator<T>(new PerLoggerMessageDecorator<T>(messageHandler), Logger);
 
 #endif
         }

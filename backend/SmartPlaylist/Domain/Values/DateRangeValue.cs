@@ -2,7 +2,7 @@
 
 namespace SmartPlaylist.Domain.Values
 {
-    public class DateRangeValue : Value
+    public class DateRangeValue : EmptableValue
     {
         public static readonly DateRangeValue Default =
             new DateRangeValue(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddMonths(1));
@@ -17,6 +17,8 @@ namespace SmartPlaylist.Domain.Values
 
         public DateTimeOffset From { get; }
         public DateTimeOffset To { get; }
+
+        internal override bool IsEmpty => IsNone;
 
         public static DateRangeValue Create(DateTimeOffset from, DateTimeOffset to)
         {
@@ -33,7 +35,7 @@ namespace SmartPlaylist.Domain.Values
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((DateRangeValue) obj);
+            return Equals((DateRangeValue)obj);
         }
 
         public override int GetHashCode()
