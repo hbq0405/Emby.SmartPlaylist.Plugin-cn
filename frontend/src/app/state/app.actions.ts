@@ -15,6 +15,7 @@ toast.configure();
 export type AppActions = {
     addNewPlaylist(): void;
     editPlaylist(plalist: Playlist): void;
+    editSortJob(plalist: Playlist): void;
     updatePlaylist(plalist: Playlist): void;
     savePlaylist(): void;
     deletePlaylist(plalist: Playlist, keep: boolean): void;
@@ -39,6 +40,12 @@ export const createAppActions = (
         editPlaylist: (playlist: Playlist) => {
             dispatcher({
                 type: 'app:editPlaylist',
+                playlist: playlist,
+            });
+        },
+        editSortJob: (playlist: Playlist) => {
+            dispatcher({
+                type: 'app:editSortJob',
                 playlist: playlist,
             });
         },

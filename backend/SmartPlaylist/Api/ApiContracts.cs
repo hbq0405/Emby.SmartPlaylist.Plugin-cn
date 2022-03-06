@@ -27,7 +27,7 @@ namespace SmartPlaylist.Api
 
         public CriteriaDefinition[] RulesCriteriaDefinitions => DefinedCriteriaDefinitions.All;
 
-        public string[] LimitOrdersBy => DefinedLimitOrders.AllNames;
+        public string[] LimitOrdersBy => DefinedOrders.AllNames;
 
         public SourceDto[] Sources => SourceDto.All;
     }

@@ -11,7 +11,8 @@ import {
     defaultUpdateType,
     defaultSmartType,
     defaultCollectionMode,
-    defaultNewItemOrder
+    defaultNewItemOrder,
+    defaultSortJob
 } from '~/app/app.const';
 import { PlaylistInfo } from './types/playlist';
 
@@ -54,6 +55,7 @@ export const demoAppPlaylists: AppPlaylist[] = [
                 level: 1,
             }),
         ],
+        sortJob: defaultSortJob
     },
 ];
 
@@ -74,7 +76,8 @@ export const demoAppPlaylistView: PlaylistInfo = {
     rulesTree: {
         byId: {},
         rootIds: []
-    }
+    },
+    sortJob: defaultSortJob
 }
 
 export const demoLimitOrdersBy = ['Album', 'Artist'];

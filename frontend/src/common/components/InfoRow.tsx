@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EmbyProps } from '~/emby/components/embyProps';
+import { InfoLabel } from './InfoLabel';
 import { Inline } from './Inline';
 
 export type InfoItem = {
@@ -16,10 +17,11 @@ export const InfoRow: React.FC<InfoRowProps> = props => {
     return (
         <Inline {...props}>
             {props.InfoItems.map((i, key) =>
-                <div className='info-row' key={key}>
-                    <div className='info-row-label'>{i.label}</div>
-                    <div className='info-row-text'>{i.text}</div>
-                </div>
+                <InfoLabel
+                    key={key}
+                    label={i.label}
+                    text={i.text}
+                />
             )}
         </Inline>
     );

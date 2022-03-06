@@ -6,6 +6,7 @@ import { Toggle } from './Toggle';
 
 export type ListItemProps = {
     onEditClick(): void;
+    onSortJobClick(): void;
     onDeleteClick(): void;
     onViewClick(): void;
     onExecuteClick(): void;
@@ -41,6 +42,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
                 <button type="button" title='Execute' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onExecuteClick()}><i className="md-icon sp-icon">play_arrow</i></button>
                 <button type="button" title='Details' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onViewClick()}><i className="md-icon sp-icon">info</i></button>
                 <button type="button" title='Edit' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onEditClick()}><i className="md-icon sp-icon">edit</i></button>
+                <button type="button" title='Edit Sort Job' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onSortJobClick()}><i className="md-icon sp-icon">sort_by_alpha</i></button>
                 <button type="button" title='Delete' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon sp-icon">delete</i></button>
             </div>
         </a >

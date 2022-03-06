@@ -18,7 +18,8 @@ export type PlaylistBasicData = {
     enabled: boolean;
     newItemOrder: NewItemOrder;
     sourceType: SourceType,
-    source: Source | undefined
+    source: Source | undefined,
+    sortJob: SortJob
 };
 
 export type PlaylistLimit = {
@@ -30,6 +31,12 @@ export type PlaylistLimit = {
 export type NewItemOrder = {
     hasSort: boolean;
     orderBy: string;
+}
+
+export type SortJob = {
+    enabled: boolean;
+    updateType: UpdateType;
+    orderBy: string
 }
 
 export type PlaylistViewData = PlaylistBasicData & {

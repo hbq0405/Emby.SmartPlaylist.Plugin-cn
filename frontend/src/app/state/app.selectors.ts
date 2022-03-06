@@ -14,12 +14,13 @@ import { ConfirmationProps } from '~/emby/components/Confirmation';
 export type AppSelectors = {
     getPlaylists(): Playlist[];
     getEditedPlaylist(): Playlist;
+    getSortJobPlaylist(): Playlist;
     isNewPlaylist(id: string): boolean;
     getRuleCriteriaOperators(criteriaName: string): RuleCriteriaOperator[];
     getRulesCriteriaDefinitions(): RuleCriteriaDefinition[];
     getRulesCriteriaDefinition(criteriaName: string): RuleCriteriaDefinition;
     getAppData(): AppData;
-    getLimitOrdersBy(): string[];
+    getOrdersBy(): string[];
     getViewPlaylist(): PlaylistInfo;
     getConfirmation(): ConfirmationProps;
     getSourcesFor(type: string): Source[];
@@ -36,6 +37,9 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         },
         getEditedPlaylist: (): Playlist => {
             return state.editedPlaylist;
+        },
+        getSortJobPlaylist: (): Playlist => {
+            return state.sortJobPlaylist;
         },
         isNewPlaylist: (id: string): boolean => {
             return !Object.keys(state.playlists.byId).includes(id);
@@ -57,7 +61,7 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         getAppData: (): AppData => {
             return getAppData(state);
         },
-        getLimitOrdersBy: (): string[] => {
+        getOrdersBy: (): string[] => {
             return state.limitOrdersBy;
         },
         getConfirmation: (): ConfirmationProps => {

@@ -1,5 +1,6 @@
 
 import { PlaylistEditor } from '~/app/components/PlaylistEditor';
+import { SortJobEditor } from '~/app/components/SortJobEditor';
 import * as React from 'react';
 import { createPlaylistContextValue, PlaylistContext } from '~/app/state/playlist/playlist.context';
 import { appReducer, initAppState } from '~/app/state/app.reducer';
@@ -38,14 +39,16 @@ export const App: React.FC<AppProps> = props => {
         isNewPlaylist,
         getViewPlaylist,
         getConfirmation,
-        isLoaded
+        isLoaded,
+        getSortJobPlaylist
     } = appContext;
 
     const editedPlaylist = getEditedPlaylist();
     const viewPlaylistInfo = getViewPlaylist();
     const confirmation = getConfirmation();
     const loaded = isLoaded()
-
+    const sortJobPlaylist = getSortJobPlaylist();
+    console.log(sortJobPlaylist)
     return (
         <>
             <AppContext.Provider value={appContext}>
@@ -55,7 +58,7 @@ export const App: React.FC<AppProps> = props => {
                         label="Add Smart Playlist" />
                 </div>
 
-                {!isLoaded && (
+                {!loaded && (
                     <div className='app-container'>
                         <BeatLoader loading={true} color='green' />
                     </div>
@@ -94,6 +97,25 @@ export const App: React.FC<AppProps> = props => {
                         <PlaylistDetail
                             playlist={viewPlaylistInfo}
                         />
+                    </Modal>
+                )}
+
+                {sortJobPlaylist && (
+                    <Modal
+                        confirmLabel="Save"
+                        onClose={() => discardPlaylist()}
+                        title='Edit Sort Job'
+                        onConfirm={() => savePlaylist()}
+                    >
+                        <PlaylistContext.Provider
+                            value={createPlaylistContextValue(
+                                sortJobPlaylist,
+                                appDispatcher,
+                                appContext,
+                            )}
+                        >
+                            <SortJobEditor />
+                        </PlaylistContext.Provider>
                     </Modal>
                 )}
 

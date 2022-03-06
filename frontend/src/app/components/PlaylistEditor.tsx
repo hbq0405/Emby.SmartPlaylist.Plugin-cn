@@ -21,7 +21,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const { updateBasicData, changeExpand, isShuffleUpdateType } = playlistContext;
     const rulesTree = playlistContext.getRulesTree();
     const basicData = playlistContext.getBasicData();
-    const limitOrdersBy = appContext.getLimitOrdersBy();
+    const limitOrdersBy = appContext.getOrdersBy();
     var sourceItems = appContext.getSourcesFor(basicData.sourceType);
 
     return (

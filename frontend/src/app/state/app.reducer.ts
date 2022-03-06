@@ -24,7 +24,8 @@ export type AppState = {
     editedPlaylist?: Playlist;
     viewPlaylist?: PlaylistInfo,
     confirmation?: ConfirmationProps,
-    sources: Source[]
+    sources: Source[],
+    sortJobPlaylist?: Playlist
 
 };
 
@@ -39,13 +40,15 @@ export const initAppState: AppState = {
     limitOrdersBy: [],
     editedPlaylist: undefined,
     viewPlaylist: undefined,
-    sources: []
+    sources: [],
+    sortJobPlaylist: undefined
 };
 
 export type AppAction =
     | { type: 'app:loadSettings'; settings: AppData }
     | { type: 'app:addNewPlaylist'; playlist: Playlist }
     | { type: 'app:editPlaylist'; playlist: Playlist }
+    | { type: 'app:editSortJob'; playlist: Playlist }
     | { type: 'app:discardPlaylist' }
     | { type: 'app:updatePlaylist'; playlist: Playlist }
     | { type: 'app:savePlaylist' }
@@ -76,7 +79,8 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 ...state,
                 editedPlaylist: { ...action.playlist },
                 viewPlaylist: undefined,
-                confirmation: undefined
+                confirmation: undefined,
+                sortJobPlaylist: undefined
             };
         }
         case 'app:editPlaylist': {
@@ -84,7 +88,17 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 ...state,
                 editedPlaylist: { ...state.playlists.byId[action.playlist.id] },
                 viewPlaylist: undefined,
-                confirmation: undefined
+                confirmation: undefined,
+                sortJobPlaylist: undefined
+            };
+        }
+        case 'app:editSortJob': {
+            return {
+                ...state,
+                editedPlaylist: undefined,
+                viewPlaylist: undefined,
+                confirmation: undefined,
+                sortJobPlaylist: { ...state.playlists.byId[action.playlist.id] }
             };
         }
         case 'app:discardPlaylist': {
@@ -92,7 +106,8 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 ...state,
                 editedPlaylist: undefined,
                 viewPlaylist: undefined,
-                confirmation: undefined
+                confirmation: undefined,
+                sortJobPlaylist: undefined
             };
         }
         case 'app:removePlaylist': {
@@ -102,6 +117,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                 editedPlaylist: undefined,
                 viewPlaylist: undefined,
                 confirmation: undefined,
+                sortJobPlaylist: undefined,
                 playlists: {
                     ...state.playlists,
                     byId: byId,

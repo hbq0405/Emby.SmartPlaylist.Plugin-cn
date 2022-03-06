@@ -41,6 +41,7 @@ namespace SmartPlaylist.Domain
             SourceType = dto.SourceType;
             if (dto.Source != null)
                 Source = new Source(dto.Source);
+            SortJob = new SortJob(dto.SortJob);
         }
 
         public Guid Id { get; }
@@ -80,11 +81,12 @@ namespace SmartPlaylist.Domain
                                            UpdateType == UpdateType.ShuffleWeekly;
 
         public bool CanUpdatePlaylistWithNewItems => (IsRandomSort || !Limit.HasLimit) && !IsShuffleUpdateType && !IsScheduledType;
-        public bool IsRandomSort => Limit.OrderBy is RandomLimitOrder;
+        public bool IsRandomSort => Limit.OrderBy is OrderRandom;
         public string MediaType { get; }
-
         public String SourceType { get; }
         public Source Source { get; }
+
+        public SortJob SortJob { get; }
 
         private bool CheckIfCanUpdatePlaylist()
         {

@@ -16,38 +16,36 @@ namespace SmartPlaylist.Domain
         public SmartPlaylistLimit(SmartPlaylistLimitDto dto)
         {
             MaxItems = dto.HasLimit ? dto.MaxItems : 100000;
-            OrderBy = dto.HasLimit ? DefinedLimitOrders.All.FirstOrDefault(x =>
-                                string.Equals(x.Name, dto.OrderBy, StringComparison.CurrentCultureIgnoreCase)) ??
-                          SmartPlaylistLimit.None.OrderBy : new NoneLimitOrder();
+            OrderBy = dto.HasLimit ? IOrder.GetOrderFromString(dto.OrderBy) : new OrderNone();
         }
 
         public static readonly SmartPlaylistLimit None = new SmartPlaylistLimit
         {
             MaxItems = 100000,
-            OrderBy = new NoneLimitOrder()
+            OrderBy = new OrderNone()
         };
 
         public int MaxItems { get; set; }
 
-        public LimitOrder OrderBy { get; set; }
+        public IOrder OrderBy { get; set; }
 
-        public bool HasLimit => !(OrderBy is NoneLimitOrder);
+        public bool HasLimit => !(OrderBy is OrderNone);
     }
 
-    public class NoneLimitOrder : LimitOrder
+    public class OrderNone : IOrder
     {
         public override string Name => "None";
     }
 
-    public static class DefinedLimitOrders
+    public static class DefinedOrders
     {
-        public static readonly LimitOrder[] All = typeof(LimitOrder).Assembly.FindAndCreateDerivedTypes<LimitOrder>()
+        public static readonly IOrder[] All = typeof(IOrder).Assembly.FindAndCreateDerivedTypes<IOrder>()
             .Where(x => x.GetType() != SmartPlaylistLimit.None.OrderBy.GetType()).ToArray();
 
         public static readonly string[] AllNames = All.Select(x => x.Name).ToArray();
     }
 
-    public abstract class LimitOrder
+    public abstract class IOrder
     {
         public abstract string Name { get; }
 
@@ -57,9 +55,16 @@ namespace SmartPlaylist.Domain
         {
             return items;
         }
+
+        public static IOrder GetOrderFromString(string orderBy)
+        {
+            return DefinedOrders.All.FirstOrDefault(x =>
+                                string.Equals(x.Name, orderBy, StringComparison.CurrentCultureIgnoreCase)) ??
+                          SmartPlaylistLimit.None.OrderBy;
+        }
     }
 
-    public class RandomLimitOrder : LimitOrder
+    public class OrderRandom : IOrder
     {
         public override string Name => "Random";
 
@@ -72,7 +77,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class AlbumLimitOrder : LimitOrder
+    public class OrderAlbum : IOrder
     {
         public override string Name => "Album";
 
@@ -86,7 +91,7 @@ namespace SmartPlaylist.Domain
     }
 
 
-    public class ArtistLimitOrder : LimitOrder
+    public class OrderArtist : IOrder
     {
         public override string Name => "Artist";
 
@@ -99,7 +104,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class AlbumArtistLimitOrder : LimitOrder
+    public class OrderAlbumArtist : IOrder
     {
         public override string Name => "Album artist";
 
@@ -112,7 +117,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class MostFavoriteLimitOrder : LimitOrder
+    public class OrderMostFavorite : IOrder
     {
         public override string Name => "Most favorite";
 
@@ -125,7 +130,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class LessFavoriteLimitOrder : LimitOrder
+    public class OrderLessFavorite : IOrder
     {
         public override string Name => "Less favorite";
 
@@ -139,7 +144,7 @@ namespace SmartPlaylist.Domain
     }
 
 
-    public class AddedDateDescLimitOrder : LimitOrder
+    public class OrderAddedDateDesc : IOrder
     {
         public override string Name => "Added date desc";
 
@@ -152,7 +157,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class AddedDateAscLimitOrder : LimitOrder
+    public class OrderAddedDateAsc : IOrder
     {
         public override string Name => "Added date asc";
 
@@ -165,7 +170,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class MostPlayedLimitOrder : LimitOrder
+    public class OrderMostPlayed : IOrder
     {
         public override string Name => "Most played";
 
@@ -178,7 +183,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class LeastPlayedLimitOrder : LimitOrder
+    public class OrderLeastPlayed : IOrder
     {
         public override string Name => "Least played";
 
@@ -191,7 +196,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class PlayedDateDescLimitOrder : LimitOrder
+    public class OrderPlayedDateDesc : IOrder
     {
         public override string Name => "Played date desc";
 
@@ -204,7 +209,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class PlayedDateAscLimitOrder : LimitOrder
+    public class OrderPlayedDateAsc : IOrder
     {
         public override string Name => "Played date asc";
 
@@ -217,7 +222,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class NameLimitOrder : LimitOrder
+    public class OrderName : IOrder
     {
         public override string Name => "Name";
 
@@ -230,7 +235,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class EpisodeLimitOrder : LimitOrder
+    public class OrderEpisode : IOrder
     {
         public override string Name => "Episode";
 
@@ -243,7 +248,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class SortNameLimitOrder : LimitOrder
+    public class OrderSortName : IOrder
     {
         public override string Name => "SortName asc";
 
@@ -256,7 +261,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class SortNameDescLimitOrder : LimitOrder
+    public class OrderSortNameDesc : IOrder
     {
         public override string Name => "SortName desc";
 
@@ -269,7 +274,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class ReleaseDateLimitOrder : LimitOrder
+    public class OrderReleaseDate : IOrder
     {
         public override string Name => "Release date asc";
 
@@ -282,7 +287,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class ReleaseDateDescLimitOrder : LimitOrder
+    public class OrderReleaseDateDesc : IOrder
     {
         public override string Name => "Release date desc";
 
@@ -295,7 +300,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class RuntimeLimitOrder : LimitOrder
+    public class OrderRuntime : IOrder
     {
         public override string Name => "Runtime asc";
 
@@ -308,7 +313,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class RuntimeDescLimitOrder : LimitOrder
+    public class OrderRuntimeDesc : IOrder
     {
         public override string Name => "Runtime desc";
 
@@ -321,7 +326,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class CommunityRatingLimitOrder : LimitOrder
+    public class OrderCommunityRating : IOrder
     {
         public override string Name => "Community rating asc";
 
@@ -334,7 +339,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class CommunityRatingDescLimitOrder : LimitOrder
+    public class OrderCommunityRatingDesc : IOrder
     {
         public override string Name => "Community rating desc";
 
@@ -347,7 +352,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class ParentalRatingLimitOrder : LimitOrder
+    public class OrderParentalRating : IOrder
     {
         public override string Name => "Parental rating asc";
 
@@ -360,7 +365,7 @@ namespace SmartPlaylist.Domain
         }
     }
 
-    public class ParentalRatingDescLimitOrder : LimitOrder
+    public class OrderParentalRatingDesc : IOrder
     {
         public override string Name => "Parental rating desc";
 
