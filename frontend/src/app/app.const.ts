@@ -1,6 +1,7 @@
 import {
     DateRangeValue,
     DateValue,
+    EmptyValue,
     GroupMatchMode,
     LastPeriodValue,
     RuleCriteriaDefinition,
@@ -64,6 +65,11 @@ export const defaultDateRange: DateRangeValue = {
     to: new Date(),
 };
 
+export const defaultEmpty: EmptyValue = {
+    kind: 'empty',
+    value: 'empty'
+}
+
 export const stringCriteriaDefinitionType: RuleCriteriaDefinitionType = {
     name: 'string',
     operators: [
@@ -73,6 +79,7 @@ export const stringCriteriaDefinitionType: RuleCriteriaDefinitionType = {
         { name: 'is not', type: 'string', defaultValue: defaultString },
         { name: 'starts with', type: 'string', defaultValue: defaultString },
         { name: 'ends with', type: 'string', defaultValue: defaultString },
+        { name: 'is empty', type: 'empty', defaultValue: defaultEmpty },
     ],
 };
 
@@ -98,6 +105,11 @@ export const dateCriteriaDefinitionType: RuleCriteriaDefinitionType = {
             type: 'dateRange',
             defaultValue: defaultDateRange,
         },
+        {
+            name: "is empty",
+            type: 'empty',
+            defaultValue: defaultEmpty
+        }
     ],
 };
 

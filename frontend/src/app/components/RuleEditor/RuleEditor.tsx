@@ -19,7 +19,8 @@ export const RuleEditor: React.FC<RuleProps> = props => {
     const criteriaNames = criteriaDefs.map(x => x.name);
     const operators = appContext.getRuleCriteriaOperators(criteria.name);
     const criteriaDef = appContext.getRulesCriteriaDefinition(criteria.name);
-
+    console.log(criteria.operator.type)
+    console.log(criteria.value)
     return (
         <>
             <Select

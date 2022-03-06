@@ -1,4 +1,10 @@
 # ChangeLog
+## Version 2.2.0.3
+- ## Feature
+  - Added the 'Is Empty' operator
+- ## Bug
+  - Removed duplicate criteria: Community Rating. (Existing is: Rating (Community))
+   
 ## Version 2.2.0.2
 - ## Bug
   - Fixed newly introduced bug when Update type is live and the playlist or collection does not exist yet.

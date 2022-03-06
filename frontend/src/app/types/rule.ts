@@ -14,7 +14,7 @@ export type RuleGroup = {
 
 export type RuleOrRuleGroup = Rule | RuleGroup;
 
-export type CrtieriaValue =
+export type CriteriaValue =
     | StringValue
     | DateValue
     | LastPeriodValue
@@ -23,27 +23,28 @@ export type CrtieriaValue =
     | ListMapValue
     | NumberValue
     | NumberRangeValue
-    | ListValueRange;
+    | ListValueRange
+    | EmptyValue;
 
 export type RuleCriteriaValue = {
     name: string;
     operator: RuleCriteriaOperator;
-    value: CrtieriaValue;
+    value: CriteriaValue;
 };
 
 export type RuleCriteriaDefinition = {
     name: string;
     type: RuleCriteriaDefinitionType;
-    values: CrtieriaValue[];
+    values: CriteriaValue[];
 };
 
 export type RuleCriteriaOperator = {
     name: string;
     type: OperatorType;
-    defaultValue: CrtieriaValue;
+    defaultValue: CriteriaValue;
 };
 
-export type CriteriaType = 'string' | 'date' | 'number' | 'listValue' | 'bool';
+export type CriteriaType = 'string' | 'date' | 'number' | 'listValue' | 'bool' | 'empty';
 export type OperatorType =
     | 'string'
     | 'date'
@@ -54,7 +55,8 @@ export type OperatorType =
     | 'number'
     | 'numberRange'
     | 'listValueRange'
-    | 'bool';
+    | 'bool'
+    | 'empty';
 
 export type RuleCriteriaDefinitionType = {
     name: CriteriaType;
@@ -111,6 +113,11 @@ export type BoolValue = {
     kind: 'bool';
     value: boolean;
 };
+
+export type EmptyValue = {
+    kind: 'empty';
+    value: any
+}
 
 export type ListValueRange = {
     kind: 'listValueRange';

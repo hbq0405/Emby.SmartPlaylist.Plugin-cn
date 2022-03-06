@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-    CrtieriaValue,
+    CriteriaValue,
     DateRangeValue,
     DateValue,
     LastPeriodValue,
@@ -11,6 +11,7 @@ import {
     NumberValue,
     OperatorType,
     StringValue,
+    EmptyValue
 } from '~/app/types/rule';
 import { SingleDate } from '~/app/components/RuleEditor/ValueInputs/SingleDate';
 import { LastPeriod } from '~/app/components/RuleEditor/ValueInputs/LastPeriod';
@@ -24,9 +25,9 @@ import { ListMapValueInput } from '~/app/components/RuleEditor/ValueInputs/ListM
 
 type ValueInputProps = {
     type: OperatorType;
-    value: CrtieriaValue;
-    values: CrtieriaValue[];
-    onChange(value: CrtieriaValue): void;
+    value: CriteriaValue;
+    values: CriteriaValue[];
+    onChange(value: CriteriaValue): void;
 };
 
 export const ValueInput: React.FC<ValueInputProps> = props => {
