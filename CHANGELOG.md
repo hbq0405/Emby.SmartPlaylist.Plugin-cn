@@ -1,7 +1,9 @@
 # ChangeLog
 ## Version 2.3.0.0
 - ## Feature
-  - Added the 'Is Empty' operator
+  - Added an 'Is Empty' operator
+  - Added better error handling and server/client communication
+  - Added Sort Job and Sort Scheduled Task
 - ## Bug
   - Removed duplicate criteria: Community Rating. (Existing is: Rating (Community))
    

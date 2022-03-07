@@ -33,7 +33,7 @@ namespace SmartPlaylist.Api
 
         public IRequest Request { get; set; }
 
-        public async Task<Contracts.SmartPlaylistResponseDto> Post(SaveSortJobPlaylist request)
+        public Contracts.SmartPlaylistResponseDto Post(SaveSortJobPlaylist request)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace SmartPlaylist.Api
                 };
             }
         }
-        public async Task<Contracts.SmartPlaylistResponseDto> Post(SaveSmartPlaylist request)
+        public Contracts.SmartPlaylistResponseDto Post(SaveSmartPlaylist request)
         {
             try
             {
