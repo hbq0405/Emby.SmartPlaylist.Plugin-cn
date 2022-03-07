@@ -199,7 +199,8 @@ namespace SmartPlaylist.Domain
                 Status = Status,
                 Enabled = Enabled,
                 SourceType = SourceType,
-                Source = _dto.Source
+                Source = _dto.Source,
+                SortJob = _dto.SortJob
             };
         }
     }

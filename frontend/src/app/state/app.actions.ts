@@ -29,7 +29,6 @@ export type AppActions = {
 };
 
 export function handleSaveResponse(response: ServerResponse, dis) {
-    console.log(response)
     if (response.success) {
         dis({
             type: 'app:savePlaylist',

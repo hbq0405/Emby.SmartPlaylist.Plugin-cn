@@ -86,7 +86,6 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             };
         }
         case 'app:editPlaylist': {
-            console.log(state);
             return {
                 ...state,
                 editedPlaylist: { ...state.playlists.byId[action.playlist.id] },
@@ -155,7 +154,6 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             };
         }
         case 'app:savePlaylist': {
-            console.log(action.playlist)
             return refreshPlaylist(action.playlist);
         }
         case 'app:confirmDeletePlaylist': {

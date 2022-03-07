@@ -31,7 +31,7 @@ namespace SmartPlaylist.ScheduleTasks
 
         public string Name => "Refresh all Smart Playlists and Collections";
 
-        public string Description => "Refresh all Smart Playlists and Collections";
+        public string Description => "Refresh all Enabled Smart Playlists and Collections";
 
         public string Category => "Library";
     }
