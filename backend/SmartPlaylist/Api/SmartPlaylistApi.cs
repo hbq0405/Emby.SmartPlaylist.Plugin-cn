@@ -45,7 +45,7 @@ namespace SmartPlaylist.Api
                 return new Contracts.SmartPlaylistResponseDto()
                 {
                     Success = true,
-                    Playlist = GetPlaylistFromStore(Guid.Parse(playlist.Id))
+                    Playlist = playlist
                 };
             }
             catch (Exception ex)
@@ -86,7 +86,7 @@ namespace SmartPlaylist.Api
                 return new Contracts.SmartPlaylistResponseDto()
                 {
                     Success = true,
-                    Playlist = GetPlaylistFromStore(Guid.Parse(playlist.Id))
+                    Playlist = playlist
                 };
             }
             catch (Exception ex)

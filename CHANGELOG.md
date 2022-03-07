@@ -1,5 +1,5 @@
 # ChangeLog
-## Version 2.2.0.3
+## Version 2.3.0.0
 - ## Feature
   - Added the 'Is Empty' operator
 - ## Bug
