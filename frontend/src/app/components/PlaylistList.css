@@ -43,6 +43,10 @@
     justify-content: center;
 }
 
+.plist-row .popper button {
+    margin: 0px !important;
+}
+
 .plist-row:hover .popper {
     visibility: visible;
 }

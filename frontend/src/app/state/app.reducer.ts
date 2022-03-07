@@ -7,6 +7,8 @@ import { createTreeViewData } from '~/common/components/TreeView/types/tree.fact
 import { AppData, Source } from '~/app/types/appData';
 import { defaultPlaylistLimit } from '~/app/app.const';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
+import { getAppPlaylistForPlaylist } from './app.selectors';
+import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 
 export type AppPlaylistState = {
     byId: {
@@ -51,7 +53,7 @@ export type AppAction =
     | { type: 'app:editSortJob'; playlist: Playlist }
     | { type: 'app:discardPlaylist' }
     | { type: 'app:updatePlaylist'; playlist: Playlist }
-    | { type: 'app:savePlaylist' }
+    | { type: 'app:savePlaylist'; playlist: Playlist }
     | { type: 'app:removePlaylist'; playlist: Playlist, keep: boolean }
     | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo }
     | { type: 'app:confirmDeletePlaylist'; confirmationProps: ConfirmationProps };
@@ -152,24 +154,8 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
             };
         }
         case 'app:savePlaylist': {
-            let names = state.playlists.names;
-            if (!names.includes(state.editedPlaylist.id)) {
-                names = [...names, state.editedPlaylist.id];
-            }
-            return {
-                ...state,
-                playlists: {
-                    ...state.playlists,
-                    byId: {
-                        ...state.playlists.byId,
-                        [state.editedPlaylist.id]: {
-                            ...state.editedPlaylist,
-                        },
-                    },
-                    names: names,
-                },
-                editedPlaylist: undefined,
-            };
+            console.log(action.playlist)
+            return refreshPlaylist(action.playlist);
         }
         case 'app:confirmDeletePlaylist': {
             return {
@@ -179,13 +165,53 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
         }
 
         default: {
-            return {
-                ...state,
-                editedPlaylist: {
-                    ...state.editedPlaylist,
-                    ...playlistReducer(state.editedPlaylist, action as PlaylistAction),
-                },
-            };
+            return state.editedPlaylist ?
+                {
+                    ...state,
+                    editedPlaylist: {
+                        ...state.editedPlaylist,
+                        ...playlistReducer(state.editedPlaylist, action as PlaylistAction)
+                    },
+                    sortJobPlaylist: undefined
+                } :
+                state.sortJobPlaylist ? {
+                    ...state,
+                    editedPlaylist: undefined,
+                    sortJobPlaylist: {
+                        ...state.sortJobPlaylist,
+                        ...playlistReducer(state.sortJobPlaylist, action as PlaylistAction)
+                    }
+
+                } : {
+                    ...state
+                };
         }
+
+            function refreshPlaylist(playlist: Playlist) {
+                let names = state.playlists.names;
+                if (!names.includes(playlist.id)) {
+                    names = [...names, playlist.id];
+                }
+
+                if (playlist.rulesTree instanceof Array) {
+                    playlist.rulesTree = createTreeViewData(playlist.rulesTree as TreeNodeData[])
+                }
+
+                return {
+                    ...state,
+                    playlists: {
+                        ...state.playlists,
+                        byId: {
+                            ...state.playlists.byId,
+                            [playlist.id]: {
+                                ...playlist,
+                            },
+                        },
+                        names: names,
+                    },
+                    editedPlaylist: undefined,
+                    sortJobPlaylist: undefined
+                };
+            }
     }
 };

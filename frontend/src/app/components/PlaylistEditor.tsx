@@ -21,7 +21,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const { updateBasicData, changeExpand, isShuffleUpdateType } = playlistContext;
     const rulesTree = playlistContext.getRulesTree();
     const basicData = playlistContext.getBasicData();
-    const limitOrdersBy = appContext.getOrdersBy();
+    const ordersBy = appContext.getOrdersBy();
     var sourceItems = appContext.getSourcesFor(basicData.sourceType);
 
     return (
@@ -119,7 +119,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     label='Sort newly added items by:'
                     disabled={!basicData.newItemOrder.hasSort}
                     maxWidth={true}
-                    values={limitOrdersBy}
+                    values={ordersBy}
                     value={basicData.newItemOrder.orderBy}
                     onChange={newVal =>
                         updateBasicData({
@@ -170,7 +170,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                 <Select
                     disabled={!basicData.limit.hasLimit || isShuffleUpdateType()}
                     maxWidth={true}
-                    values={limitOrdersBy}
+                    values={ordersBy}
                     label="Sort by:"
                     value={basicData.limit.orderBy}
                     onChange={newVal =>

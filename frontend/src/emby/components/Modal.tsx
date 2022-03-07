@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ToastContainer } from 'react-toastify';
 import { Button } from '~/emby/components/Button';
 import './Modal.css';
 
@@ -12,8 +13,10 @@ export type ModalProps = {
 export const Modal: React.FC<ModalProps> = props => {
     return (
         <>
+
             <div className="dialogBackdrop dialogBackdropOpened" />
             <div className="dialogContainer">
+                <ToastContainer containerId="modalToast" />
                 <div
                     className="focuscontainer dialog dialog-fixedSize dialog-medium-tall formDialog opened"
                     data-lockscroll="true"

@@ -19,7 +19,7 @@ export type PlaylistBasicData = {
     newItemOrder: NewItemOrder;
     sourceType: SourceType,
     source: Source | undefined,
-    sortJob: SortJob
+    sortJob: SortJob | undefined
 };
 
 export type PlaylistLimit = {
@@ -36,7 +36,14 @@ export type NewItemOrder = {
 export type SortJob = {
     enabled: boolean;
     updateType: UpdateType;
-    orderBy: string
+    orderBy: string,
+    syncCount?: number,
+    lastSyncDuration?: number,
+    status?: string,
+    nextUpdate?: Date,
+    lastUpdated?: Date,
+    lastRan?: Date,
+    lastDurationStr?: string
 }
 
 export type PlaylistViewData = PlaylistBasicData & {
@@ -64,6 +71,12 @@ export type LimitOrderBy = typeof LimitOrderByValues[number];
 export type SmartType = typeof SmartTypes[number];
 
 export type CollectionMode = typeof CollectionModes[number];
+
+export type ServerResponse = {
+    success: boolean;
+    error?: string;
+    playlist: Playlist
+}
 
 export const isShuffleUpdateType = (updateType: UpdateType) => {
     return (

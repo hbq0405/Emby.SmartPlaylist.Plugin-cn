@@ -10,9 +10,13 @@ using SmartPlaylist.Handlers.Commands;
 namespace SmartPlaylist.Api
 {
     [Route("/smartplaylist", "POST", Summary = "")]
-    public class SaveSmartPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistDto>
+    public class SaveSmartPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistResponseDto>
     {
     }
+
+    [Route("/smartplaylist/sort", "POST", Summary = "")]
+    public class SaveSortJobPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistResponseDto>
+    { }
 
     [Route("/smartplaylist/{Id}/{Keep}", "DELETE", Summary = "")]
     public class DeleteSmartPlaylist : IReturnVoid

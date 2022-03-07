@@ -1,5 +1,5 @@
-import React from "react";
-import { InfoLabel } from "~/common/components/InfoLabel";
+import * as React from 'react';
+import { InfoRow } from "~/common/components/InfoRow";
 import { Inline } from "~/common/components/Inline";
 import { Select } from "~/common/components/Select";
 import { Toggle } from "~/common/components/Toggle";
@@ -16,13 +16,8 @@ export const SortJobEditor: React.FC<SortJobEditorProps> = () => {
     const basicData = playlistContext.getBasicData();
     const OrdersBy = appContext.getOrdersBy();
 
-    console.log(playlistContext);
-    console.log(basicData)
     return (
         <>
-            <Inline>
-                <InfoLabel label="Name" text={basicData.name} />
-            </Inline>
             <Inline>
                 <Toggle
                     id="Sort-Enabled"
@@ -35,9 +30,10 @@ export const SortJobEditor: React.FC<SortJobEditorProps> = () => {
                                 enabled: c
                             }
                         })
+
                     }} />
                 <Select
-                    label='Sort  by:'
+                    label='Sort by:'
                     disabled={!basicData.sortJob.enabled}
                     maxWidth={true}
                     values={OrdersBy}
@@ -67,6 +63,23 @@ export const SortJobEditor: React.FC<SortJobEditorProps> = () => {
                     style={{ width: '120px' }}
                 />
             </Inline>
+            {basicData.sortJob.enabled && (
+                <>
+                    <InfoRow InfoItems={[
+                        { label: 'Last Run Duration: ', text: basicData.sortJob.lastDurationStr ? basicData.sortJob.lastDurationStr : 'N/A' },
+                        { label: 'Runs: ', text: basicData.sortJob.syncCount ? basicData.sortJob.syncCount.toString() : 'N/A' },
+                        { label: 'Last Updated: ', text: basicData.sortJob.lastUpdated ? basicData.sortJob.lastUpdated.toLocaleString() : 'N/A' }
+                    ]} />
+                    <InfoRow InfoItems={[
+                        { label: 'Last Ran: ', text: basicData.sortJob.lastRan ? basicData.sortJob.lastRan.toLocaleString() : 'N/A' },
+                        { label: 'Next Run: ', text: basicData.sortJob.nextUpdate ? basicData.sortJob.nextUpdate.toLocaleString() : 'N/A' }
+
+                    ]} />
+                    <InfoRow InfoItems={[
+                        { label: 'Status: ', text: basicData.sortJob.status ? basicData.sortJob.status : 'N/A' }
+                    ]} />
+                </>
+            )}
         </>
     )
 }

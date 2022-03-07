@@ -105,7 +105,6 @@ export const createPlaylistActions = (
                     };
                 }
             }
-
             dispatcher({
                 type: 'playlist:updateData',
                 data: playlistBasicData,

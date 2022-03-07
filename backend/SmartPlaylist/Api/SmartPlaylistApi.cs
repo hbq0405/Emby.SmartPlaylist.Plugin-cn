@@ -33,7 +33,32 @@ namespace SmartPlaylist.Api
 
         public IRequest Request { get; set; }
 
-        public void Post(SaveSmartPlaylist request)
+        public async Task<Contracts.SmartPlaylistResponseDto> Post(SaveSortJobPlaylist request)
+        {
+            try
+            {
+                var playlist = request;
+                _smartPlaylistValidator.Validate(playlist);
+                playlist.SortJob.LastUpdated = DateTime.Now;
+                _smartPlaylistStore.Save(playlist);
+
+                return new Contracts.SmartPlaylistResponseDto()
+                {
+                    Success = true,
+                    Playlist = GetPlaylistFromStore(Guid.Parse(playlist.Id))
+                };
+            }
+            catch (Exception ex)
+            {
+                Plugin.Instance.Logger.Error($"Error saving smart playlist: {ex.Message}", request);
+                return new Contracts.SmartPlaylistResponseDto()
+                {
+                    Success = false,
+                    Error = ex.Message
+                };
+            }
+        }
+        public async Task<Contracts.SmartPlaylistResponseDto> Post(SaveSmartPlaylist request)
         {
             try
             {
@@ -57,11 +82,23 @@ namespace SmartPlaylist.Api
                 _smartPlaylistStore.Save(playlist);
 
                 _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
+
+                return new Contracts.SmartPlaylistResponseDto()
+                {
+                    Success = true,
+                    Playlist = GetPlaylistFromStore(Guid.Parse(playlist.Id))
+                };
             }
             catch (Exception ex)
             {
                 Plugin.Instance.Logger.Error($"Error saving smart playlist: {ex.Message}", request);
+                return new Contracts.SmartPlaylistResponseDto()
+                {
+                    Success = false,
+                    Error = ex.Message
+                };
             }
+
         }
 
         private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)

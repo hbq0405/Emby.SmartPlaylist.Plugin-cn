@@ -35,6 +35,7 @@ export const App: React.FC<AppProps> = props => {
         addNewPlaylist,
         discardPlaylist,
         savePlaylist,
+        saveSortJob,
         getEditedPlaylist,
         isNewPlaylist,
         getViewPlaylist,
@@ -48,7 +49,7 @@ export const App: React.FC<AppProps> = props => {
     const confirmation = getConfirmation();
     const loaded = isLoaded()
     const sortJobPlaylist = getSortJobPlaylist();
-    console.log(sortJobPlaylist)
+
     return (
         <>
             <AppContext.Provider value={appContext}>
@@ -104,8 +105,8 @@ export const App: React.FC<AppProps> = props => {
                     <Modal
                         confirmLabel="Save"
                         onClose={() => discardPlaylist()}
-                        title='Edit Sort Job'
-                        onConfirm={() => savePlaylist()}
+                        title={`Edit Sort Job for ${sortJobPlaylist.name}`}
+                        onConfirm={() => saveSortJob()}
                     >
                         <PlaylistContext.Provider
                             value={createPlaylistContextValue(

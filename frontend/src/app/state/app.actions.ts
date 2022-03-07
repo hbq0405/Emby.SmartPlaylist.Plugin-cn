@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Playlist } from '~/app/types/playlist';
+import { Playlist, ServerResponse } from '~/app/types/playlist';
 import { createPlaylist } from '~/app/types/playlist.factory';
 import { AppAction, AppState } from '~/app/state/app.reducer';
-import { AppData } from '~/app/types/appData';
+import { AppData, AppPlaylist } from '~/app/types/appData';
 import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
-import { getAppPlaylist, getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
+import { getAppEditPlaylist, getAppPlaylistForPlaylist, getAppSortJobPlaylist } from '~/app/state/app.selectors';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { render } from 'react-dom';
 import { ConfirmDeletePlaylist, DeleteData } from '~/emby/components/Confirmation';
+import { response } from 'express';
 
 toast.configure();
 
@@ -18,6 +19,7 @@ export type AppActions = {
     editSortJob(plalist: Playlist): void;
     updatePlaylist(plalist: Playlist): void;
     savePlaylist(): void;
+    saveSortJob(): void;
     deletePlaylist(plalist: Playlist, keep: boolean): void;
     discardPlaylist(): void;
     loadAppData(appData: AppData): void;
@@ -25,6 +27,26 @@ export type AppActions = {
     executePlaylist(plalist: Playlist): void;
     confirmDeletePlaylist(plalist: Playlist): void;
 };
+
+export function handleSaveResponse(response: ServerResponse, dis) {
+    console.log(response)
+    if (response.success) {
+        dis({
+            type: 'app:savePlaylist',
+            playlist: response.playlist
+        });
+    }
+    else {
+        toast.error(`Error saving playlist: ${response.error}`, {
+            containerId: "modalToast",
+            autoClose: false,
+            position: 'top-center',
+            bodyStyle: {
+                zIndex: 1000
+            }
+        });
+    }
+}
 
 export const createAppActions = (
     dispatcher: React.Dispatch<AppAction>,
@@ -50,18 +72,20 @@ export const createAppActions = (
             });
         },
         updatePlaylist: async (playlist: Playlist) => {
-            await saveAppPlaylist(getAppPlaylistForPlaylist(playlist));
+            await saveAppPlaylist(getAppPlaylistForPlaylist(playlist), false);
             dispatcher({
                 type: 'app:updatePlaylist',
                 playlist: playlist
             });
         },
         savePlaylist: async () => {
-            await saveAppPlaylist(getAppPlaylist(state));
-            dispatcher({
-                type: 'app:savePlaylist',
-            });
+            handleSaveResponse(await saveAppPlaylist(getAppEditPlaylist(state), false) as ServerResponse, dispatcher);
+
         },
+        saveSortJob: async () => {
+            handleSaveResponse(await saveAppPlaylist(getAppSortJobPlaylist(state), true) as ServerResponse, dispatcher);
+        },
+
         deletePlaylist: async (plalist: Playlist, keep: boolean) => {
             await deletePlaylist(plalist.id, keep);
             dispatcher({

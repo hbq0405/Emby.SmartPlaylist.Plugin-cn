@@ -2,7 +2,7 @@ import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
 import camelcaseKeys = require('camelcase-keys');
 import { parseDate } from '~/common/helpers/date';
 import { convertObjectPropValues } from '~/common/helpers/object';
-import { PlaylistInfo, PlaylistViewData } from '~/app/types/playlist';
+import { Playlist, PlaylistInfo, PlaylistViewData, ServerResponse } from '~/app/types/playlist';
 
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;
@@ -20,6 +20,15 @@ declare global {
     }
 }
 
+export function convertResponse<T>(data: T): T {
+    data = camelcaseKeys(data, {
+        deep: true,
+    }) as T;
+
+    convertObjectPropValues(data, o => parseDate(o));
+    return data;
+}
+
 export const loadAppData = async (appId: string): Promise<AppData> => {
     let appData = await window.ApiClient.ajax<AppData>(
         {
@@ -34,35 +43,32 @@ export const loadAppData = async (appId: string): Promise<AppData> => {
         }
     );
 
-    appData = camelcaseKeys(appData, {
-        deep: true,
-    }) as AppData;
-
-    convertObjectPropValues(appData, o => parseDate(o));
-
     return new Promise<AppData>(res => {
         res({
             appId: appId,
-            ...appData,
+            ...convertResponse<AppData>(appData),
         });
     });
 };
 
-export const saveAppPlaylist = async (playlist: AppPlaylist): Promise<AppPlaylists> => {
-    return window.ApiClient.ajax(
+export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolean): Promise<ServerResponse> => {
+    let response = await window.ApiClient.ajax<ServerResponse>(
         {
-            url: `/smartplaylist?v=${version}`,
+            url: `/smartplaylist${sortJobSave ? "/sort" : ""}?v=${version}`,
             type: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             data: JSON.stringify(playlist),
+            contentType: 'application/json',
+            dataType: 'json',
         }
     );
+    return new Promise<ServerResponse>(res => {
+        res(convertResponse<ServerResponse>(response))
+    })
 };
-
-
 
 export const deletePlaylist = async (playlistId: string, keep: boolean): Promise<any> => {
     return window.ApiClient.ajax(
@@ -87,13 +93,7 @@ export const viewPlaylist = async (playlistId: string, execute: boolean): Promis
         }
     );
 
-    playlistInfo = camelcaseKeys(playlistInfo, {
-        deep: true,
-    }) as PlaylistInfo;
-
-    convertObjectPropValues(playlistInfo, o => parseDate(o));
-
     return new Promise<PlaylistInfo>(res => {
-        res(playlistInfo);
+        res(convertResponse<PlaylistInfo>(playlistInfo));
     });
 };

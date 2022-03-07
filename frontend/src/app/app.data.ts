@@ -1,6 +1,6 @@
 import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
 import { demoAppData, demoAppPlaylistView } from '~/app/app.demo';
-import { PlaylistInfo } from './types/playlist';
+import { Playlist, PlaylistInfo, ServerResponse } from './types/playlist';
 
 export const loadAppData = (appId: string): Promise<AppData> => {
     return new Promise<AppData>(res => {
@@ -11,9 +11,9 @@ export const loadAppData = (appId: string): Promise<AppData> => {
     });
 };
 
-export const saveAppPlaylist = (playlist: AppPlaylist): Promise<AppPlaylists | void> => {
+export const saveAppPlaylist = (playlist: AppPlaylist, saveSortJob: boolean): Promise<ServerResponse | void> => {
     // tslint:disable-next-line:no-console
-    return new Promise<AppPlaylists | void>(res => {
+    return new Promise<ServerResponse | void>(res => {
         res();
     });
 };

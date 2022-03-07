@@ -84,9 +84,13 @@ export const getAppData = (state: AppState): AppData => {
     };
 };
 
-export const getAppPlaylist = (state: AppState): AppPlaylist => {
+export const getAppEditPlaylist = (state: AppState): AppPlaylist => {
     return getAppPlaylistForPlaylist(state.editedPlaylist);
 };
+
+export const getAppSortJobPlaylist = (state: AppState): AppPlaylist => {
+    return getAppPlaylistForPlaylist(state.sortJobPlaylist);
+}
 
 export const getAppPlaylistForPlaylist = (playlist: Playlist): AppPlaylist => {
     return {

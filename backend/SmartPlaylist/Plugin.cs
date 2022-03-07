@@ -80,9 +80,6 @@ namespace SmartPlaylist
         public Stream GetThumbImage()
         {
             Type type = GetType();
-            string[] test3 = type.Assembly.GetManifestResourceNames();
-            Console.WriteLine(String.Join(",", test3));
-
             return type.Assembly.GetManifestResourceStream(type.Namespace + ".Configuration.thumb.png");
         }
 
