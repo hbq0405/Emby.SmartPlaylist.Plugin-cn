@@ -31,5 +31,44 @@ namespace SmartPlaylist.Domain
             LastUpdated = dto.LastUpdated;
             LastRan = dto.LastRan;
         }
+
+        public SortJobDto ToDto()
+        {
+            return new SortJobDto()
+            {
+                Enabled = Enabled,
+                UpdateType = UpdateType.ToString(),
+                OrderBy = OrderBy.Name,
+                SyncCount = SyncCount,
+                LastSyncDuration = LastSyncDuration,
+                Status = Status,
+                NextUpdate = NextUpdate,
+                LastUpdated = LastUpdated,
+                LastRan = LastRan
+            };
+        }
+
+        public void UpdateNextUpdate()
+        {
+            var now = DateTime.UtcNow.Date;
+
+            switch (UpdateType)
+            {
+                case UpdateType.Daily:
+                    NextUpdate = now.AddDays(1);
+                    break;
+                case UpdateType.Weekly:
+                    NextUpdate = now.AddDays(7);
+                    break;
+                case UpdateType.Monthly:
+                    NextUpdate = now.AddMonths(1);
+                    break;
+            }
+        }
+
+        public bool AvailableToSort()
+        {
+            return Enabled && (DateTimeOffset.UtcNow > NextUpdate.Value);
+        }
     }
 }

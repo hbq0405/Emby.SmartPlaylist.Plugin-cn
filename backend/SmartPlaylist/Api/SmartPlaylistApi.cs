@@ -39,13 +39,22 @@ namespace SmartPlaylist.Api
             {
                 var playlist = request;
                 _smartPlaylistValidator.Validate(playlist);
-                playlist.SortJob.LastUpdated = DateTime.Now;
-                _smartPlaylistStore.Save(playlist);
+
+                Domain.SmartPlaylist smartPlaylist = new Domain.SmartPlaylist(playlist);
+                smartPlaylist.SortJob.LastUpdated = DateTime.Now;
+
+                if (smartPlaylist.SortJob.Enabled)
+                {
+                    if (smartPlaylist.SortJob.NextUpdate == null)
+                        smartPlaylist.SortJob.UpdateNextUpdate();
+                }
+                Contracts.SmartPlaylistDto dto = smartPlaylist.ToDto();
+                _smartPlaylistStore.Save(dto);
 
                 return new Contracts.SmartPlaylistResponseDto()
                 {
                     Success = true,
-                    Playlist = playlist
+                    Playlist = dto
                 };
             }
             catch (Exception ex)

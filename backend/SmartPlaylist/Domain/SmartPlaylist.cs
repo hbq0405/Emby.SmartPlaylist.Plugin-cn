@@ -182,8 +182,8 @@ namespace SmartPlaylist.Domain
             {
                 Id = Id.ToString(),
                 LastShuffleUpdate = LastShuffleUpdate,
-                Limit = _dto.Limit,
-                NewItemOrder = _dto.NewItemOrder,
+                Limit = Limit.ToDto(),
+                NewItemOrder = NewItemOrder.ToDto(),
                 Name = Name,
                 RulesTree = _dto.RulesTree,
                 UpdateType = _dto.UpdateType,
@@ -200,7 +200,7 @@ namespace SmartPlaylist.Domain
                 Enabled = Enabled,
                 SourceType = SourceType,
                 Source = _dto.Source,
-                SortJob = _dto.SortJob
+                SortJob = SortJob.ToDto()
             };
         }
     }

@@ -15,5 +15,14 @@ namespace SmartPlaylist.Domain
         {
             OrderBy = dto.HasSort ? IOrder.GetOrderFromString(dto.OrderBy) : new OrderNone();
         }
+
+        public SmartPlaylistNewItemOrderDto ToDto()
+        {
+            return new SmartPlaylistNewItemOrderDto()
+            {
+                HasSort = HasSort,
+                OrderBy = OrderBy.Name
+            };
+        }
     }
 }

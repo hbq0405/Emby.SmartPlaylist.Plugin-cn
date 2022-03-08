@@ -30,6 +30,16 @@ namespace SmartPlaylist.Domain
         public IOrder OrderBy { get; set; }
 
         public bool HasLimit => !(OrderBy is OrderNone);
+
+        public SmartPlaylistLimitDto ToDto()
+        {
+            return new SmartPlaylistLimitDto()
+            {
+                HasLimit = HasLimit,
+                MaxItems = MaxItems,
+                OrderBy = OrderBy.Name
+            };
+        }
     }
 
     public class OrderNone : IOrder

@@ -119,8 +119,14 @@ namespace SmartPlaylist
                 new UpdateAllSmartPlaylistsCommandHandler(MessageBus, smartPlaylistProvider,
                     folderRepository, playlistItemsUpdater, collectionItemsUpdater, smartPlaylistStore);
 
+            var sortAllSmartPlaylistsCommandHandler =
+            new SortAllSmartPlaylistsCommandHandler(smartPlaylistProvider, folderRepository, userItemsProvider,
+                    collectionItemsUpdater, playlistItemsUpdater, smartPlaylistStore);
+
             MessageBus.Subscribe(Decorate(SmartPlaylistCommandHandler));
             MessageBus.Subscribe(Decorate(updateAllSmartPlaylistsWithItemsCommandHandler));
+            MessageBus.Subscribe(Decorate(sortAllSmartPlaylistsCommandHandler));
+
         }
 
         private IMessageHandler<T> Decorate<T>(IMessageHandler<T> messageHandler) where T : IMessage

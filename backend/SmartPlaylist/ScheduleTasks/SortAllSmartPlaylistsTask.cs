@@ -28,7 +28,8 @@ namespace SmartPlaylist.ScheduleTasks
 
         public Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
         {
-            throw new NotImplementedException();
+            Plugin.Instance.MessageBus.Publish(new SortAllSmartPlaylistsCommand());
+            return Task.CompletedTask;
         }
 
         public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
