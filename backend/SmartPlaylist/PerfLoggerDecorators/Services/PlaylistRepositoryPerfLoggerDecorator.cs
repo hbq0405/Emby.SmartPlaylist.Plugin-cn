@@ -99,7 +99,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public override BaseItem[] GetItemsForFolderId(string folderId, User user)
+        public override BaseItem[] GetItemsForFolderId(Guid folderId, User user)
         {
             using (PerfLogger.Create("GetItemsForFolderId", () => new { folderId }))
             {
@@ -120,6 +120,22 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             using (PerfLogger.Create("GetItemsForSmartPlayList", () => new { smartPlaylist }))
             {
                 return _decorated.GetBaseItemsForSmartPlayList(smartPlaylist, userItemsProvider);
+            }
+        }
+
+        public override long[] GetItemsIdsForFolderId(Guid folderId, User user)
+        {
+            using (PerfLogger.Create("GetItemsIdsForFolderId", () => new { folderId }))
+            {
+                return _decorated.GetItemsIdsForFolderId(folderId, user);
+            }
+        }
+
+        public override Folder GetFolder(Domain.SmartPlaylist smartPlaylist)
+        {
+            using (PerfLogger.Create("GetFolder", () => new { smartPlaylist }))
+            {
+                return _decorated.GetFolder(smartPlaylist);
             }
         }
     }

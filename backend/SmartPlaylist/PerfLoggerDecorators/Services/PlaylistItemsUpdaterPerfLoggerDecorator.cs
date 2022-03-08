@@ -15,7 +15,17 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             _decorated = decorated;
         }
 
-        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public Task<int> ClearPlaylist(UserFolder folder)
+        {
+            using (PerfLogger.Create("ClearPlaylist",
+                () => new { folder }))
+
+            {
+                return _decorated.ClearPlaylist(folder);
+            }
+        }
+
+        public Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             using (PerfLogger.Create("RemoveItems",
                 () => new { playlistName = folder.SmartPlaylist.Name, newItemsCount = currentItems.Length }))

@@ -36,7 +36,7 @@ namespace SmartPlaylist.Domain
             return new SmartPlaylistLimitDto()
             {
                 HasLimit = HasLimit,
-                MaxItems = MaxItems,
+                MaxItems = HasLimit ? MaxItems : 0,
                 OrderBy = OrderBy.Name
             };
         }

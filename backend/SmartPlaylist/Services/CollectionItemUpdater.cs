@@ -28,7 +28,7 @@ namespace SmartPlaylist.Services
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 var currentItems = libraryUserCollection.GetItems();
-                int removed = RemoveItems(libraryUserCollection, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
+                int removed = await RemoveItems(libraryUserCollection, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
                 int added = await AddItemsToCollection(libraryUserCollection, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
                 libraryUserCollection.DynamicUpdate();
                 ret = (libraryUserCollection.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing collection)");
@@ -51,7 +51,7 @@ namespace SmartPlaylist.Services
             return ret;
         }
 
-        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
 
@@ -65,7 +65,7 @@ namespace SmartPlaylist.Services
                 UpdateItems(collectionFolder.Item, toRemove);
             }
 
-            return toRemove.Count;
+            return Task.FromResult<int>(toRemove.Count);
         }
 
         private async Task<int> AddItemsToCollection(LibraryUserFolder<Folder> collection, BaseItem[] currentItems, BaseItem[] newItems)
@@ -154,6 +154,20 @@ namespace SmartPlaylist.Services
             return (BoxSet)this._libraryManager.GetItemById(linkedItemInfo.Id);
         }
 
+        public Task<int> ClearPlaylist(UserFolder folder)
+        {
+            if (folder is LibraryUserFolder<Folder> collectionFolder)
+            {
+                BaseItem[] items = collectionFolder.GetItems();
+                items.ForEach<BaseItem>((BaseItem item) =>
+                   {
+                       item.RemoveCollection(collectionFolder.InternalId);
+                   });
 
+                UpdateItems(collectionFolder.Item, new List<BaseItem>(items));
+                return Task.FromResult<int>(items.Length);
+            }
+            return Task.FromResult<int>(0);
+        }
     }
 }

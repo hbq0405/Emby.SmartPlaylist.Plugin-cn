@@ -42,8 +42,10 @@ namespace SmartPlaylist.Services
         public abstract void Remove(Domain.SmartPlaylist smartPlaylist);
         public abstract BaseItem[] GetAllPlaylists();
         public abstract BaseItem[] GetAllCollections();
-        public abstract BaseItem[] GetItemsForFolderId(string folderId, User user);
+        public abstract long[] GetItemsIdsForFolderId(Guid folderId, User user);
+        public abstract BaseItem[] GetItemsForFolderId(Guid folderId, User user);
         public abstract BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user);
+        public abstract Folder GetFolder(Domain.SmartPlaylist smartPlaylist);
 
         public abstract (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider);
     }
@@ -184,20 +186,28 @@ namespace SmartPlaylist.Services
             }).Items.ToArray();
         }
 
-        public override BaseItem[] GetItemsForFolderId(string folderId, User user)
+        public override BaseItem[] GetItemsForFolderId(Guid folderId, User user)
         {
             HashSet<BaseItem> results = new HashSet<BaseItem>();
-            (_libraryManager.GetItemById(Guid.Parse(folderId)) as Folder).GetChildren(new InternalItemsQuery(user)
+            (_libraryManager.GetItemById(folderId) as Folder).GetChildren(new InternalItemsQuery(user)
             {
                 Recursive = false
             }).ForEach(b => RecurseToChildren(b, user, results));
             return results.ToArray();
         }
 
+        public override long[] GetItemsIdsForFolderId(Guid folderId, User user)
+        {
+            return (_libraryManager.GetItemById(folderId) as Folder).GetChildrenIds(new InternalItemsQuery(user)
+            {
+                Recursive = false
+            });
+        }
+
         private HashSet<BaseItem> RecurseToChildren(BaseItem item, User user, HashSet<BaseItem> current)
         {
             if (item.IsFolder)
-                GetItemsForFolderId(item.Id.ToString(), user).ForEach(b => current.Add(b));
+                GetItemsForFolderId(item.Id, user).ForEach(b => current.Add(b));
             else
                 current.Add(item);
             return current;
@@ -205,11 +215,7 @@ namespace SmartPlaylist.Services
 
         public override BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user)
         {
-            string id = smartPlaylist.SmartType == SmartType.Playlist ?
-                FindPlaylistFolder(smartPlaylist, smartPlaylist.Name).Id.ToString() :
-                FindCollectionFolder(smartPlaylist, smartPlaylist.Name).Id.ToString();
-
-            return GetItemsForFolderId(id, user);
+            return GetItemsForFolderId(GetFolder(smartPlaylist).Id, user);
         }
 
         public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
@@ -217,13 +223,20 @@ namespace SmartPlaylist.Services
             var playlist = GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
             if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
-                return (playlist, GetItemsForFolderId(smartPlaylist.Source.Id, playlist.User));
+                return (playlist, GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), playlist.User));
             else
             {
                 return smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 ?
                     (playlist, GetItemsForFolderId(smartPlaylist, playlist.User)) :
                     (playlist, userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
             }
+        }
+
+        public override Folder GetFolder(Domain.SmartPlaylist smartPlaylist)
+        {
+            return smartPlaylist.SmartType == SmartType.Playlist ?
+                FindPlaylistFolder(smartPlaylist, smartPlaylist.Name) :
+                FindCollectionFolder(smartPlaylist, smartPlaylist.Name);
         }
     }
 }

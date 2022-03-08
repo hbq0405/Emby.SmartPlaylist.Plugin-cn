@@ -6,12 +6,17 @@ using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
 using System.Collections.Generic;
 using SmartPlaylist.Extensions;
+using System;
+
 namespace SmartPlaylist.Services
 {
     public interface IFolderItemsUpdater
     {
         Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
-        int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
+        Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
+
+        Task<int> ClearPlaylist(UserFolder folder);
+
     }
 
     public class PlayListItemsUpdater : IFolderItemsUpdater
@@ -26,12 +31,15 @@ namespace SmartPlaylist.Services
         public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
+            if (folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit)
+                await ClearPlaylist(folder);
+
             var currentItems = folder.GetItems();
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                int removed = RemoveItems(libraryUserPlaylist, currentItems, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
-                int added = AddToPlaylist(libraryUserPlaylist, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems);
+                int removed = await RemoveItems(libraryUserPlaylist, currentItems, newItems);
+                int added = AddToPlaylist(libraryUserPlaylist, currentItems, newItems);
                 libraryUserPlaylist.DynamicUpdate();
                 ret = (libraryUserPlaylist.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing playlist)");
             }
@@ -57,18 +65,23 @@ namespace SmartPlaylist.Services
         {
             List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
             if (toAdd.Any())
-                _playlistManager.AddToPlaylist(playlist.InternalId,
-                    toAdd.Select(x => x.InternalId).ToArray(), playlist.User);
+                foreach (var chunk in toAdd.Partition(100))
+                {
+                    _playlistManager.AddToPlaylist(playlist.InternalId,
+                        chunk.Select(x => x.InternalId).ToArray(), playlist.User);
+                }
             return toAdd.Count;
         }
 
-        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public async Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
-                _playlistManager.RemoveFromPlaylist(playlist.InternalId,
-                    toRemove.Select(x => x.ListItemEntryId).ToArray());
+
+                await _playlistManager.RemoveFromPlaylist(playlist.InternalId,
+                  toRemove.Select(x => x.ListItemEntryId).ToArray()).ConfigureAwait(false);
+
             }
 
             return toRemove.Count;
@@ -77,6 +90,17 @@ namespace SmartPlaylist.Services
         public void DynamicUpdate()
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<int> ClearPlaylist(UserFolder folder)
+        {
+            if (folder is LibraryUserFolder<Playlist> playlist)
+            {
+                BaseItem[] items = playlist.Item.GetChildren(folder.User);
+                await _playlistManager.RemoveFromPlaylist(playlist.InternalId, items.Select(c => c.ListItemEntryId).ToArray());
+                return items.Length;
+            }
+            return 0;
         }
     }
 }
