@@ -8,18 +8,9 @@ namespace SmartPlaylist.Contracts
         public SmartPlaylistDto()
         {
             Enabled = true;
-            NewItemOrder = new SmartPlaylistNewItemOrderDto()
-            {
-                HasSort = false,
-                OrderBy = "None"
-            };
+            NewItemOrder = SmartPlaylistNewItemOrderDto.Default;
             SourceType = "Media Items";
-            SortJob = new SortJobDto()
-            {
-                Enabled = false,
-                OrderBy = "Name",
-                UpdateType = "Daily"
-            };
+            SortJob = SortJobDto.Default;
         }
 
         public string Id { get; set; }

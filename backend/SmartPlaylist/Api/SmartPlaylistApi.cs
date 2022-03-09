@@ -48,6 +48,7 @@ namespace SmartPlaylist.Api
                     if (smartPlaylist.SortJob.NextUpdate == null)
                         smartPlaylist.SortJob.UpdateNextUpdate();
                 }
+
                 Contracts.SmartPlaylistDto dto = smartPlaylist.ToDto();
                 _smartPlaylistStore.Save(dto);
 

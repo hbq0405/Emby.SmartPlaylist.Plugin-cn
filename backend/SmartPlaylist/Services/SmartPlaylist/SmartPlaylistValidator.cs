@@ -20,6 +20,12 @@ namespace SmartPlaylist.Services.SmartPlaylist
             if (errorProps.Any())
                 throw new Exception(
                     $"Validation of {nameof(SmartPlaylistDto)} failed for: {string.Join(",", errorProps)}");
+
+            if (smartPlaylist.SmartType.Equals("collection", StringComparison.OrdinalIgnoreCase))
+            {
+                smartPlaylist.SortJob = Contracts.SortJobDto.Default;
+                smartPlaylist.NewItemOrder = Contracts.SmartPlaylistNewItemOrderDto.Default;
+            }
         }
 
         private static bool ValidateMaxItemsLimit(SmartPlaylistDto smartPlaylist)
@@ -30,7 +36,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         private static bool ValidateCriteriaValue(SmartPlaylistDto smartPlaylist)
         {
             return smartPlaylist.RulesTree.Select(x => x.Data)
-                .Where(x => x.Criteria != null).All(x => !((Value) x.Criteria.Value).IsNone);
+                .Where(x => x.Criteria != null).All(x => !((Value)x.Criteria.Value).IsNone);
         }
 
         private static bool ValidateName(SmartPlaylistDto smartPlaylist)

@@ -3,7 +3,8 @@
 - ## Feature
   - Added an 'Is Empty' operator
   - Added better error handling and server/client communication
-  - Added Sort Job and Sort Scheduled Task
+  - Added Sort Job and Sort Scheduled Task for Playlists (Collections do not support sorting, even by adding and removing in order)
+  - Removed "Sort newly Added Items" for Collections as Collections cannot be sorted. 
 - ## Bug
   - Removed duplicate criteria: Community Rating. (Existing is: Rating (Community))
    

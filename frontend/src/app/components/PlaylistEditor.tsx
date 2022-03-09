@@ -5,7 +5,7 @@ import { RuleTreeNodeContent } from '~/app/components/RuleTreeNodeContent';
 import { Input } from '~/common/components/Input';
 import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes, SourceTypes } from '~/app/app.const';
+import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes, SourceTypes, defaultNewItemOrder, defaultSortJob } from '~/app/app.const';
 import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
@@ -33,7 +33,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     value={basicData.smartType}
                     onChange={newVal => {
                         updateBasicData({
-                            smartType: newVal,
+                            smartType: newVal
                         })
                     }}
                     style={{ width: '120px' }}
@@ -94,42 +94,46 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             </Inline>
 
             <Inline>
-                <Toggle
-                    id="Toggle-Sort"
-                    label='Sort'
-                    checked={basicData.newItemOrder.hasSort}
-                    onToggled={c => {
-                        updateBasicData({
-                            newItemOrder: {
-                                ...basicData.newItemOrder,
-                                hasSort: c
-                            }
-                        })
-                        if (c)
-                            updateBasicData({
-                                limit: {
-                                    ...basicData.limit,
-                                    hasLimit: false
-                                }
-                            })
+                {basicData.smartType == "Playlist" && (
+                    <>
+                        <Toggle
+                            id="Toggle-Sort"
+                            label='Sort'
+                            checked={basicData.newItemOrder.hasSort}
+                            onToggled={c => {
+                                updateBasicData({
+                                    newItemOrder: {
+                                        ...basicData.newItemOrder,
+                                        hasSort: c
+                                    }
+                                })
+                                if (c)
+                                    updateBasicData({
+                                        limit: {
+                                            ...basicData.limit,
+                                            hasLimit: false
+                                        }
+                                    })
 
-                    }}
-                />
-                <Select
-                    label='Sort newly added items by:'
-                    disabled={!basicData.newItemOrder.hasSort}
-                    maxWidth={true}
-                    values={ordersBy}
-                    value={basicData.newItemOrder.orderBy}
-                    onChange={newVal =>
-                        updateBasicData({
-                            newItemOrder: {
-                                ...basicData.newItemOrder,
-                                orderBy: newVal,
-                            },
-                        })
-                    }
-                />
+                            }}
+                        />
+                        <Select
+                            label='Sort newly added items by:'
+                            disabled={!basicData.newItemOrder.hasSort}
+                            maxWidth={true}
+                            values={ordersBy}
+                            value={basicData.newItemOrder.orderBy}
+                            onChange={newVal =>
+                                updateBasicData({
+                                    newItemOrder: {
+                                        ...basicData.newItemOrder,
+                                        orderBy: newVal,
+                                    },
+                                })
+                            }
+                        />
+                    </>
+                )}
                 <Toggle
                     id="Toggle-Limit"
                     label='Limited:'

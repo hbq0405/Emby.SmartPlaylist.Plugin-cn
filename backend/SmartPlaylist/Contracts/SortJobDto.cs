@@ -4,6 +4,12 @@ namespace SmartPlaylist.Contracts
 {
     public class SortJobDto
     {
+        public static SortJobDto Default => new SortJobDto()
+        {
+            Enabled = false,
+            OrderBy = "Name",
+            UpdateType = "Daily"
+        };
         public bool Enabled { get; set; }
         public string UpdateType { get; set; }
         public string OrderBy { get; set; }

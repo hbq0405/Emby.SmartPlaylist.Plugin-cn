@@ -2,7 +2,7 @@ import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
 import camelcaseKeys = require('camelcase-keys');
 import { parseDate } from '~/common/helpers/date';
 import { convertObjectPropValues } from '~/common/helpers/object';
-import { Playlist, PlaylistInfo, PlaylistViewData, ServerResponse } from '~/app/types/playlist';
+import { PlaylistInfo, ServerResponse } from '~/app/types/playlist';
 
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;

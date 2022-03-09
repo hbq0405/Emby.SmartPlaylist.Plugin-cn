@@ -7,6 +7,13 @@ namespace SmartPlaylist.Domain
 {
     public class SortJob
     {
+        public static SortJob Default = new SortJob()
+        {
+            Enabled = false,
+            OrderBy = new Domain.OrderName(),
+            UpdateType = Domain.UpdateType.Daily
+        };
+
         public bool Enabled { get; set; }
         public UpdateType UpdateType { get; set; }
         public IOrder OrderBy { get; set; }
@@ -70,5 +77,7 @@ namespace SmartPlaylist.Domain
         {
             return Enabled && (DateTimeOffset.UtcNow > NextUpdate.Value);
         }
+
+
     }
 }

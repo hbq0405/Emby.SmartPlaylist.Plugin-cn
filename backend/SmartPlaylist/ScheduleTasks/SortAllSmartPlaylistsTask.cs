@@ -12,11 +12,11 @@ namespace SmartPlaylist.ScheduleTasks
         {
         }
 
-        public string Name => "Sort all Smart Playlists and Collections";
+        public string Name => "Sort all Smart Playlists";
 
         public string Key => typeof(SortAllSmartPlaylistsTask).Name;
 
-        public string Description => "Sort all Enabled Smart Playlists and Collections";
+        public string Description => "Sort all Enabled Smart Playlists";
 
         public string Category => "Library";
 

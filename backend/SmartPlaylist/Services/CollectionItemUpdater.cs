@@ -80,11 +80,7 @@ namespace SmartPlaylist.Services
                     });
                 });
 
-            await Task.Run(() =>
-            {
-                UpdateItems(collection.Item, toAdd);
-
-            }).ConfigureAwait(false);
+            UpdateItems(collection.Item, toAdd);
 
             return toAdd.Count;
         }

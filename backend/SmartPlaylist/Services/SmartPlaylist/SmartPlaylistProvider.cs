@@ -25,7 +25,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         public async Task<Domain.SmartPlaylist[]> GetAllSortableSmartPlaylistsAsync()
         {
             return SmartPlaylistAdapter.Adapt(await _smartPlaylistStore.GetAllSmartPlaylistsAsync().ConfigureAwait(false))
-                                            .Where(x => x.Enabled && x.SortJob.AvailableToSort()).ToArray();
+                                            .Where(x => x.SmartType == Domain.SmartType.Playlist && x.Enabled && x.SortJob.AvailableToSort()).ToArray();
         }
 
         public async Task<Domain.SmartPlaylist[]> GetAllUpdateableSmartPlaylistsAsync()

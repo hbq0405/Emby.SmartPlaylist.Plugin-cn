@@ -109,7 +109,7 @@ namespace SmartPlaylist.Domain
             if (IsShuffleUpdateType)
                 newItems = newItems.Shuffle();
 
-            if (NewItemOrder.HasSort)
+            if (SmartType == SmartType.Playlist && NewItemOrder.HasSort)
                 newItems = OrderNewItems(newItems);
             else if (Limit.HasLimit)
                 newItems = OrderLimitItems(newItems).Take(Limit.MaxItems);
