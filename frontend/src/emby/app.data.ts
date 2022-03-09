@@ -29,10 +29,16 @@ export function convertResponse<T>(data: T): T {
     return data;
 }
 
+function getContextPath() {
+    var ctx = window.location.pathname,
+        path = '/' !== ctx ? ctx.substring(0, ctx.indexOf('/', 1) + 1) : ctx;
+    return path + (/\/$/.test(path) ? '' : '/');
+}
+
 export const loadAppData = async (appId: string): Promise<AppData> => {
     let appData = await window.ApiClient.ajax<AppData>(
         {
-            url: `/smartplaylist/appData?v=${version}`,
+            url: `../smartplaylist/appData?v=${version}`,
             type: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -54,7 +60,7 @@ export const loadAppData = async (appId: string): Promise<AppData> => {
 export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolean): Promise<ServerResponse> => {
     let response = await window.ApiClient.ajax<ServerResponse>(
         {
-            url: `/smartplaylist${sortJobSave ? "/sort" : ""}?v=${version}`,
+            url: `../smartplaylist${sortJobSave ? "/sort" : ""}?v=${version}`,
             type: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -73,7 +79,7 @@ export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolea
 export const deletePlaylist = async (playlistId: string, keep: boolean): Promise<any> => {
     return window.ApiClient.ajax(
         {
-            url: `/smartplaylist/${playlistId}/${keep}?v=${version}`,
+            url: `../smartplaylist/${playlistId}/${keep}?v=${version}`,
             type: 'DELETE',
         }
     );
@@ -82,7 +88,7 @@ export const deletePlaylist = async (playlistId: string, keep: boolean): Promise
 export const viewPlaylist = async (playlistId: string, execute: boolean): Promise<PlaylistInfo> => {
     let playlistInfo = await window.ApiClient.ajax<PlaylistInfo>(
         {
-            url: `/smartplaylist/info/${playlistId}?v=${version}`,
+            url: `../smartplaylist/info/${playlistId}?v=${version}`,
             type: execute ? 'POST' : 'GET',
             headers: {
                 Accept: 'application/json',

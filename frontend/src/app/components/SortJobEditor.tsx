@@ -66,17 +66,17 @@ export const SortJobEditor: React.FC<SortJobEditorProps> = () => {
             {basicData.sortJob.enabled && (
                 <>
                     <InfoRow InfoItems={[
-                        { label: 'Last Run Duration: ', text: basicData.sortJob.lastDurationStr ? basicData.sortJob.lastDurationStr : 'N/A' },
-                        { label: 'Runs: ', text: basicData.sortJob.syncCount ? basicData.sortJob.syncCount.toString() : 'N/A' },
-                        { label: 'Last Updated: ', text: basicData.sortJob.lastUpdated ? basicData.sortJob.lastUpdated.toLocaleString() : 'N/A' }
+                        { label: 'Last Run Duration: ', text: basicData.sortJob.lastDurationStr ? basicData.sortJob.lastDurationStr : 'N/A', visible: true },
+                        { label: 'Runs: ', text: basicData.sortJob.syncCount ? basicData.sortJob.syncCount.toString() : 'N/A', visible: true },
+                        { label: 'Last Updated: ', text: basicData.sortJob.lastUpdated ? basicData.sortJob.lastUpdated.toLocaleString() : 'N/A', visible: true }
                     ]} />
                     <InfoRow InfoItems={[
-                        { label: 'Last Ran: ', text: basicData.sortJob.lastRan ? basicData.sortJob.lastRan.toLocaleString() : 'N/A' },
-                        { label: 'Next Run: ', text: basicData.sortJob.nextUpdate ? basicData.sortJob.nextUpdate.toLocaleString() : 'N/A' }
+                        { label: 'Last Ran: ', text: basicData.sortJob.lastRan ? basicData.sortJob.lastRan.toLocaleString() : 'N/A', visible: true },
+                        { label: 'Next Run: ', text: basicData.sortJob.nextUpdate ? basicData.sortJob.nextUpdate.toLocaleString() : 'N/A', visible: true }
 
                     ]} />
                     <InfoRow InfoItems={[
-                        { label: 'Status: ', text: basicData.sortJob.status ? basicData.sortJob.status : 'N/A' }
+                        { label: 'Status: ', text: basicData.sortJob.status ? basicData.sortJob.status : 'N/A', visible: true }
                     ]} />
                 </>
             )}

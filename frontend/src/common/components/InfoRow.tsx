@@ -5,7 +5,8 @@ import { Inline } from './Inline';
 
 export type InfoItem = {
     label: string,
-    text: string
+    text: string,
+    visible: boolean
 }
 
 export type InfoRowProps = {
@@ -21,6 +22,7 @@ export const InfoRow: React.FC<InfoRowProps> = props => {
                     key={key}
                     label={i.label}
                     text={i.text}
+                    visible={i.visible}
                 />
             )}
         </Inline>

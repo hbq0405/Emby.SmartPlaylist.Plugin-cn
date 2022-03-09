@@ -7,6 +7,7 @@
   - Removed "Sort newly Added Items" for Collections as Collections cannot be sorted. 
 - ## Bug
   - Removed duplicate criteria: Community Rating. (Existing is: Rating (Community))
+  - Moved API calls to use relative paths if URL mapping is a thing.
    
 ## Version 2.2.0.2
 - ## Bug
