@@ -1,6 +1,10 @@
 # ChangeLog
 ## Version 2.3.0.0
 - ## Feature
+  - Removed "Sort newly added items" if the playlist is in "Live" mode
+  - Disabled "Execute" on management ui if the playlist/collection is in "Live" mode
+## Version 2.3.0.0
+- ## Feature
   - Added an 'Is Empty' operator
   - Added better error handling and server/client communication
   - Added Sort Job and Sort Scheduled Task for Playlists (Collections do not support sorting, even by adding and removing in order)

@@ -94,7 +94,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             </Inline>
 
             <Inline>
-                {basicData.smartType == "Playlist" && (
+                {(basicData.smartType === "Playlist" && basicData.updateType !== 'Live') && (
                     <>
                         <Toggle
                             id="Toggle-Sort"

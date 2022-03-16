@@ -91,20 +91,20 @@ namespace SmartPlaylist
             {
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.0.html",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.0.html",
+                    Name = "smartplaylist.2.3.0.1.html",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.html",
                     EnableInMainMenu = true,
                     MenuIcon = "subscriptions"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.0.css",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.0.css"
+                    Name = "smartplaylist.2.3.0.1.css",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.css"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.0.js",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.0.js"
+                    Name = "smartplaylist.2.3.0.1.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.js"
                 }
 
             };

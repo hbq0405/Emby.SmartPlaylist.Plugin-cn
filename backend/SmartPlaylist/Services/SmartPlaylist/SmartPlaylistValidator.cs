@@ -26,6 +26,10 @@ namespace SmartPlaylist.Services.SmartPlaylist
                 smartPlaylist.SortJob = Contracts.SortJobDto.Default;
                 smartPlaylist.NewItemOrder = Contracts.SmartPlaylistNewItemOrderDto.Default;
             }
+            else if (smartPlaylist.UpdateType.Equals("live", StringComparison.OrdinalIgnoreCase))
+            {
+                smartPlaylist.NewItemOrder = Contracts.SmartPlaylistNewItemOrderDto.Default;
+            }
         }
 
         private static bool ValidateMaxItemsLimit(SmartPlaylistDto smartPlaylist)
