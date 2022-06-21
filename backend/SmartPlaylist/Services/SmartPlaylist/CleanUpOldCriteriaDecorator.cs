@@ -106,6 +106,8 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
         private static bool CleanupOldLimit(SmartPlaylistDto dto)
         {
+            if (dto.Limit == null)
+                return true;
             var changed = false;
             if (dto.Limit.HasLimit && !DefinedOrders.AllNames.Contains(dto.Limit.OrderBy))
             {

@@ -17,9 +17,11 @@ namespace SmartPlaylist.Services
     public class CollectionItemUpdater : IFolderItemsUpdater
     {
         private readonly ILibraryManager _libraryManager;
-        public CollectionItemUpdater(ILibraryManager libraryManager)
+        private readonly ICollectionManager _collectionManager;
+        public CollectionItemUpdater(ILibraryManager libraryManager, ICollectionManager collectionManager)
         {
             _libraryManager = libraryManager;
+            _collectionManager = collectionManager;
         }
 
         public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
@@ -32,7 +34,6 @@ namespace SmartPlaylist.Services
                 int added = await AddItemsToCollection(libraryUserCollection, folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
                 libraryUserCollection.DynamicUpdate();
                 ret = (libraryUserCollection.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing collection)");
-
             }
             else if (newItems.Any())
             {
@@ -57,12 +58,7 @@ namespace SmartPlaylist.Services
 
             if (toRemove.Any() && folder is LibraryUserFolder<Folder> collectionFolder)
             {
-                toRemove.ForEach<BaseItem>((BaseItem item) =>
-                   {
-                       item.RemoveCollection(collectionFolder.InternalId);
-                   });
-
-                UpdateItems(collectionFolder.Item, toRemove);
+                _collectionManager.RemoveFromCollection((BoxSet)collectionFolder.Item, toRemove.Select(i => i.InternalId).ToArray());
             }
 
             return Task.FromResult<int>(toRemove.Count);
@@ -71,28 +67,13 @@ namespace SmartPlaylist.Services
         private async Task<int> AddItemsToCollection(LibraryUserFolder<Folder> collection, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (c, n) => c.InternalId == n.InternalId));
-            toAdd.ForEach<BaseItem>((BaseItem item) =>
-                {
-                    item.AddCollectionInfo(new LinkedItemInfo()
-                    {
-                        Id = collection.InternalId,
-                        Name = collection.SmartPlaylist.Name
-                    });
-                });
-
-            UpdateItems(collection.Item, toAdd);
-
+            if (toAdd.Any() && collection is LibraryUserFolder<Folder> collectionFolder)
+            {
+                await _collectionManager.AddToCollection(collectionFolder.InternalId, toAdd.Select(i => i.InternalId).ToArray());
+            }
             return toAdd.Count;
         }
 
-        private void UpdateItems(Folder collection, List<BaseItem> items)
-        {
-            _libraryManager.UpdateItems(
-                            items,
-                            collection,
-                            ItemUpdateType.None,
-                            new CancellationToken(false));
-        }
         private List<Folder> FindFolders() => this._libraryManager.GetUserRootFolder().GetChildren(new InternalItemsQuery()
         {
             IsFolder = new bool?(true)
@@ -106,6 +87,7 @@ namespace SmartPlaylist.Services
 
         public async Task<BoxSet> CreateCollection(CollectionCreationOptions options)
         {
+
             Folder folder = await EnsureLibraryFolder(true).ConfigureAwait(false);
             BoxSet newEntry = null;
 
@@ -155,12 +137,8 @@ namespace SmartPlaylist.Services
             if (folder is LibraryUserFolder<Folder> collectionFolder)
             {
                 BaseItem[] items = collectionFolder.GetItems();
-                items.ForEach<BaseItem>((BaseItem item) =>
-                   {
-                       item.RemoveCollection(collectionFolder.InternalId);
-                   });
+                _collectionManager.RemoveFromCollection((BoxSet)collectionFolder.Item, items.Select(i => i.InternalId).ToArray());
 
-                UpdateItems(collectionFolder.Item, new List<BaseItem>(items));
                 return Task.FromResult<int>(items.Length);
             }
             return Task.FromResult<int>(0);

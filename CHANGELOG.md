@@ -1,8 +1,12 @@
 # ChangeLog
-## Version 2.3.0.0
+## Version 2.3.0.2
 - ## Feature
   - Removed "Sort newly added items" if the playlist is in "Live" mode
   - Disabled "Execute" on management ui if the playlist/collection is in "Live" mode
+- ## Bug
+  - Fixed bug when limit cache clear check is failing as limit is null.
+  - Fixed bug when updating a collection: Error Method not found: 'Void MediaBrowser.Controller.Library.ILibraryManager.UpdateItems(System.Collections.Generic.List`1<MediaBrowser.Controller.Entities.BaseItem>, MediaBrowser.Controller.Entities.BaseItem, MediaBrowser.Controller.Library.ItemUpdateType, System.Threading.CancellationToken)'.
+- 
 ## Version 2.3.0.0
 - ## Feature
   - Added an 'Is Empty' operator

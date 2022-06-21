@@ -4,6 +4,7 @@ using System.IO;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Controller;
+using MediaBrowser.Controller.Collections;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using MediaBrowser.Controller.Session;
@@ -41,7 +42,7 @@ namespace SmartPlaylist
             IPlaylistManager playlistManager,
             ILibraryManager libraryManager,
             ILogger logger, IUserManager userManager, IJsonSerializer jsonSerializer,
-            IServerApplicationPaths serverApplicationPaths, ISessionManager sessionManager)
+            IServerApplicationPaths serverApplicationPaths, ISessionManager sessionManager, ICollectionManager collectionManager)
             : base(applicationPaths, xmlSerializer)
         {
             Logger = logger;
@@ -57,7 +58,7 @@ namespace SmartPlaylist
             var playlistItemsUpdater =
                 new PlaylistItemsUpdaterPerfLoggerDecorator(new PlayListItemsUpdater(playlistManager));
             var collectionItemsUpdater =
-                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager));
+                new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager, collectionManager));
             FolderRepository =
                 new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager, collectionItemsUpdater, playlistItemsUpdater));
 
@@ -91,20 +92,20 @@ namespace SmartPlaylist
             {
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.1.html",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.html",
+                    Name = "smartplaylist.2.3.0.2.html",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.2.html",
                     EnableInMainMenu = true,
                     MenuIcon = "subscriptions"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.1.css",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.css"
+                    Name = "smartplaylist.2.3.0.2.css",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.2.css"
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.3.0.1.js",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.1.js"
+                    Name = "smartplaylist.2.3.0.2.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.3.0.2.js"
                 }
 
             };

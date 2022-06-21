@@ -371,7 +371,7 @@ namespace SmartPlaylist.Domain
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
-            return items.OrderBy(x => x.InheritedParentalRatingValue);
+            return items.OrderBy(x => x.GetInheritedParentalRatingValue());
         }
     }
 
@@ -384,7 +384,7 @@ namespace SmartPlaylist.Domain
 
         public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
         {
-            return items.OrderByDescending(x => x.InheritedParentalRatingValue);
+            return items.OrderByDescending(x => x.GetInheritedParentalRatingValue());
         }
     }
 

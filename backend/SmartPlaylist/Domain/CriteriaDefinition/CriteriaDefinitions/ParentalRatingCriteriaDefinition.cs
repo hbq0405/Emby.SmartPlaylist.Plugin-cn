@@ -24,7 +24,7 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
         {
             var ratingListValue =
                 ParentalRatingsListValues.FirstOrDefault(x =>
-                    x.NumValue.Equals(item.Item.InheritedParentalRatingValue));
+                    x.NumValue.Equals(item.Item.GetInheritedParentalRatingValue()));
 
             if (ratingListValue != null) return ratingListValue;
 
