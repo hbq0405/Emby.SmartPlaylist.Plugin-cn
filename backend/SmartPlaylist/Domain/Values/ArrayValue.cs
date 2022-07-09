@@ -1,4 +1,5 @@
-﻿namespace SmartPlaylist.Domain.Values
+﻿using System.Linq;
+namespace SmartPlaylist.Domain.Values
 {
     public class ArrayValue<TValue> : EmptableValue where TValue : Value
     {
@@ -10,6 +11,8 @@
         public TValue[] Values { get; }
 
         public override string Kind => "array";
+
+        internal override string Friendly => $"'{string.Join("', '", Values.Select(x => x.Friendly))}'";
 
         internal override bool IsEmpty => IsNone || Values.Length == 0;
 

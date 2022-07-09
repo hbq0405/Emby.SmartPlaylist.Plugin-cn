@@ -16,6 +16,8 @@
 
         internal override bool IsEmpty => IsNone;
 
+        internal override string Friendly => Value ? "True" : "False";
+
         public static Value Create(bool value)
         {
             return new BoolValue(value);

@@ -16,6 +16,8 @@ namespace SmartPlaylist.Domain.Values
         public DateTimeOffset Value { get; }
 
         internal override bool IsEmpty => IsNone;
+        internal override string Friendly => Value.ToString();
+
 
         protected bool Equals(DateValue other)
         {

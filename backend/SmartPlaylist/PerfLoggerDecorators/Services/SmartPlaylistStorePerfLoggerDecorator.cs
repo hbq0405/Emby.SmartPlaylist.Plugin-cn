@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using SmartPlaylist.Contracts;
 using SmartPlaylist.Infrastructure;
@@ -60,6 +61,30 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
         public bool Exists(Guid userId, string smartPlaylistId)
         {
             return _decorated.Exists(userId, smartPlaylistId);
+        }
+
+        public async Task WriteToLogAsync(Domain.SmartPlaylist smartPlaylist)
+        {
+            using (PerfLogger.Create("WriteLogToFS"))
+            {
+                await _decorated.WriteToLogAsync(smartPlaylist);
+            }
+        }
+
+        public Stream GetLogFileStream(Guid userId, string smartPlaylistId)
+        {
+            using (PerfLogger.Create("ReadLogFromFS"))
+            {
+                return _decorated.GetLogFileStream(userId, smartPlaylistId);
+            }
+        }
+
+        public string GetLogFilePath(Guid userId, string smartPlaylistId)
+        {
+            using (PerfLogger.Create("GetLogFilePath"))
+            {
+                return _decorated.GetLogFilePath(userId, smartPlaylistId);
+            }
         }
     }
 }

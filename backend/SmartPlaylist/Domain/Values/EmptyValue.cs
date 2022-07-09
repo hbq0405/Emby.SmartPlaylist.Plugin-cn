@@ -8,6 +8,9 @@ public class EmptyValue : Value
     }
     public override string Kind { get; } = "empty";
     public string Value { get; }
+
+    internal override string Friendly => "Null";
+
     public static readonly EmptyValue Default = new EmptyValue("empty");
 
     public static Value Create(string value)

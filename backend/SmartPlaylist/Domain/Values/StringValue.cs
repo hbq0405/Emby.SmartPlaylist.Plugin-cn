@@ -18,6 +18,8 @@ namespace SmartPlaylist.Domain.Values
 
         internal override bool IsEmpty => IsNone || string.IsNullOrEmpty(Value);
 
+        internal override string Friendly => Value;
+
         public static StringValue Create(string value)
         {
             return new StringValue(value);

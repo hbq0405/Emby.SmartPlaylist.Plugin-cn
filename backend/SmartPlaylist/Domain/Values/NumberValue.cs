@@ -15,6 +15,8 @@
 
         internal override bool IsEmpty => IsNone || Value == 0f;
 
+        internal override string Friendly => Value.ToString();
+
         public static NumberValue Create(float value)
         {
             return new NumberValue(value);

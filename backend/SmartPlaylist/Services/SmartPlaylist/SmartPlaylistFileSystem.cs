@@ -45,6 +45,12 @@ namespace SmartPlaylist.Services.SmartPlaylist
             return Path.Combine(playlistsPath, $"{playlistId}.json");
         }
 
+        public string GetSmartPlaylistLog(Guid userId, string playlistId)
+        {
+            var playlistsPath = GetOrCreateSmartPlaylistDir(userId);
+            return Path.Combine(playlistsPath, $"{playlistId}.log");
+        }
+
         public bool PlaylistFileExists(Guid userId, string playlistId)
         {
             return File.Exists(GetSmartPlaylistPath(userId, playlistId));

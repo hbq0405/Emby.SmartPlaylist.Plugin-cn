@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartPlaylist.Contracts;
@@ -9,6 +10,7 @@ using SmartPlaylist.Domain.Values;
 namespace SmartPlaylist.Services.SmartPlaylist
 {
     public class CleanupOldCriteriaDecorator : ISmartPlaylistStore
+
     {
         private readonly ISmartPlaylistStore _decorated;
 
@@ -56,6 +58,9 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
         private void CleanupSmartPlaylist(SmartPlaylistDto dto)
         {
+            if (dto == null)
+                return;
+
             var limitChanged = CleanupOldLimit(dto);
             var criteriaChanged = CleanupOldCriteria(dto);
 
@@ -106,8 +111,9 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
         private static bool CleanupOldLimit(SmartPlaylistDto dto)
         {
-            if (dto.Limit == null)
-                return true;
+            if (dto == null || dto.Limit == null)
+                return false;
+
             var changed = false;
             if (dto.Limit.HasLimit && !DefinedOrders.AllNames.Contains(dto.Limit.OrderBy))
             {
@@ -127,6 +133,21 @@ namespace SmartPlaylist.Services.SmartPlaylist
         public bool Exists(Guid userId, string smartPlaylistId)
         {
             return _decorated.Exists(userId, smartPlaylistId);
+        }
+
+        public async Task WriteToLogAsync(Domain.SmartPlaylist smartPlaylist)
+        {
+            await _decorated.WriteToLogAsync(smartPlaylist);
+        }
+
+        public Stream GetLogFileStream(Guid userId, string smartPlaylistId)
+        {
+            return _decorated.GetLogFileStream(userId, smartPlaylistId);
+        }
+
+        public string GetLogFilePath(Guid userId, string smartPlaylistId)
+        {
+            return _decorated.GetLogFilePath(userId, smartPlaylistId);
         }
     }
 }

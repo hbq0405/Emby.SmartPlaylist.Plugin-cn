@@ -20,6 +20,8 @@ namespace SmartPlaylist.Domain.Values
 
         internal override bool IsEmpty => IsNone;
 
+        internal override string Friendly => $"Range: {From.ToString()} to {To.ToString()}";
+
         public static DateRangeValue Create(DateTimeOffset from, DateTimeOffset to)
         {
             return new DateRangeValue(from, to);

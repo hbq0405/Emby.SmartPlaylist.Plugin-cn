@@ -9,10 +9,11 @@ using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Services;
 using SmartPlaylist.Adapters;
 using System.Linq;
+using SmartPlaylist.Domain;
 
 namespace SmartPlaylist.Api
 {
-    public class SmartPlaylistApi : IService, IRequiresRequest
+    public class SmartPlaylistService : IService, IRequiresRequest
     {
         private readonly MessageBus _messageBus;
         private readonly ISessionContext _sessionContext;
@@ -20,7 +21,7 @@ namespace SmartPlaylist.Api
         private readonly SmartPlaylistValidator _smartPlaylistValidator;
         private readonly IFolderRepository _folderRepository;
 
-        public SmartPlaylistApi(ISessionContext sessionContext
+        public SmartPlaylistService(ISessionContext sessionContext
         )
         {
             _sessionContext = sessionContext;
@@ -138,7 +139,7 @@ namespace SmartPlaylist.Api
             var user = GetUser();
             var playlists = await _smartPlaylistStore.LoadPlaylistsAsync(user.Id).ConfigureAwait(false);
 
-            return new GetAppDataResponse
+            return new AppDataResponse
             {
                 Playlists = playlists
             };

@@ -31,3 +31,9 @@ export const viewPlaylist = (playlistId: string, execute: boolean): Promise<Play
         });
     });
 };
+
+export const viewPlaylistLog = (playlistId: string): Promise<string> => {
+    return new Promise<string>(res => {
+        res('');
+    });
+};

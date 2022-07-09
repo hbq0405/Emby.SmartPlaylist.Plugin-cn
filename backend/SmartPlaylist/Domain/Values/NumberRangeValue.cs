@@ -15,6 +15,9 @@
         public float To { get; }
 
         internal override bool IsEmpty => IsNone || (From == 0 && To == 0);
+
+        internal override string Friendly => $"Range: {From} to {To}";
+
         public static NumberRangeValue Create(float from, float to)
         {
             return new NumberRangeValue(from, to);

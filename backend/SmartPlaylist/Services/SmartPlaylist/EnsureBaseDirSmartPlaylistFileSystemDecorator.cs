@@ -58,5 +58,10 @@ namespace SmartPlaylist.Services.SmartPlaylist
         {
             return _decorated.PlaylistFileExists(userId, playlistId);
         }
+
+        public string GetSmartPlaylistLog(Guid userId, string playlistId)
+        {
+            return _decorated.GetSmartPlaylistLog(userId, playlistId);
+        }
     }
 }

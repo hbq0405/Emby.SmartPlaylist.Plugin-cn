@@ -103,3 +103,14 @@ export const viewPlaylist = async (playlistId: string, execute: boolean): Promis
         res(convertResponse<PlaylistInfo>(playlistInfo));
     });
 };
+
+export const viewPlaylistLog = (playlistId: string): Promise<string> => {
+    return window.ApiClient.ajax(
+        {
+            url: `../smartplaylist/log/${playlistId}/?v=${version}`,
+            type: 'GET',
+            contentType: 'text/plain',
+            dataType: 'text'
+        }
+    );
+}

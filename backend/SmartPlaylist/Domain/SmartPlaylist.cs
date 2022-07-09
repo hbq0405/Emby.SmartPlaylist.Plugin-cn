@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
@@ -15,6 +16,7 @@ namespace SmartPlaylist.Domain
         private readonly SmartPlaylistDto _dto;
         private long _internalid = 0;
         private string _name = string.Empty;
+        internal StringCollection _logEntries = new StringCollection();
         public SmartPlaylist(SmartPlaylistDto dto)
         {
             _dto = dto;
@@ -87,6 +89,7 @@ namespace SmartPlaylist.Domain
         public Source Source { get; }
 
         public SortJob SortJob { get; }
+        internal StringCollection LogEntries { get => _logEntries; }
 
         private bool CheckIfCanUpdatePlaylist()
         {
@@ -152,7 +155,13 @@ namespace SmartPlaylist.Domain
 
         private bool IsMatchRules(BaseItem item, User user)
         {
-            return Rules.All(x => x.IsMatch(new UserItem(user, item)));
+            bool result = Rules.All(x => x.IsMatch(new UserItem(user, item, this)));
+
+            Log(result ?
+                $"'{item.Name}' added to playlist/collection!!!!" :
+                $"'{item.Name}' failed to match on criteria.");
+
+            return result;
         }
 
         public void UpdateLastShuffleTime()
@@ -174,6 +183,11 @@ namespace SmartPlaylist.Domain
                     LastShuffleUpdate = now.AddMonths(1);
                     break;
             }
+        }
+
+        public void Log(string message)
+        {
+            _logEntries.Add($"[{DateTime.Now.ToString("dd/mm/yyyy hh:MM:ss")}]: {message}");
         }
 
         public SmartPlaylistDto ToDto()

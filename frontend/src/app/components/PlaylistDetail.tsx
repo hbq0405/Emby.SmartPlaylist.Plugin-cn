@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { PlaylistInfo } from '~/app/types/playlist';
 import './PlaylistDetail.css'
-import { PlaylistContext } from '~/app/state/playlist/playlist.context';
 import { InfoRow } from '~/common/components/InfoRow';
 import { TagList } from '~/common/components/TagList';
+import { Button } from '~/emby/components/Button';
+import { Icon } from '~/emby/components/Icon';
+import { viewPlaylistLog } from '~/emby/app.data';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
 
 export type PlaylistDetailProps = {
     playlist: PlaylistInfo
@@ -11,6 +17,43 @@ export type PlaylistDetailProps = {
 
 export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
     const playlist = props.playlist;
+
+    const handleButton = (btn: HTMLButtonElement, disable: boolean) => {
+        try {
+            btn.disabled = disable;
+            btn.children[0].innerHTML = disable ? 'hourglass_empty' : 'checklist';
+        } catch (e) { }
+    }
+
+    const loadLog = (ev) => {
+        if (ev.target instanceof HTMLButtonElement)
+            handleButton(ev.target, true);
+
+        viewPlaylistLog(playlist.id).then((value: string) => {
+            var w = window.open('', playlist.name + "_log");
+            w.document.writeln("<html><head><title>" + playlist.name + " Log File</title></head>")
+            w.document.writeln('<body><pre>');
+            w.document.writeln(value);
+            w.document.writeln('</pre></body></html>');
+
+        }).catch((reason) => {
+            var msg = reason instanceof Response ? "Log file for playlist does not exist yet" :
+                reason instanceof Error ? reason.message : reason;
+
+            toast.error(`Error loading playlist log: ${msg}`, {
+                containerId: "modalToast",
+                autoClose: false,
+                position: 'top-center',
+                bodyStyle: {
+                    zIndex: 1000
+                }
+            });
+
+        }).finally(() => {
+            if (ev.target instanceof HTMLButtonElement)
+                handleButton(ev.target, false);
+        })
+    }
 
     return (
         <>
@@ -65,6 +108,10 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
 
             <div className='info-row info-row-label'>Items:</div>
             <TagList Items={playlist.items} />
+
+            <Button style={{ position: 'absolute', top: '15px', right: '10px' }} onClick={loadLog}>
+                <Icon type='checklist' />
+            </Button>
         </>
     );
 };

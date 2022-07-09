@@ -3,6 +3,9 @@
     public sealed class NoneValue : EmptableValue
     {
         public override string Kind { get; } = nameof(NoneValue);
+
+        internal override string Friendly => "No Value";
+
         internal override bool IsEmpty => true;
     }
 }

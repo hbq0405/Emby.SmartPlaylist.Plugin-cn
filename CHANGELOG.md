@@ -1,4 +1,9 @@
 # ChangeLog
+## Version 2.3.0.3
+  ## Feature
+  - Added verbose log to info section.
+  ## Bug
+  - If any playlists backend files are corrupt, skips loading the playlist and moves the file to a *.failed file, and continues to load. Currently just crashes out with no notification. 
 ## Version 2.3.0.2
 - ## Feature
   - Removed "Sort newly added items" if the playlist is in "Live" mode

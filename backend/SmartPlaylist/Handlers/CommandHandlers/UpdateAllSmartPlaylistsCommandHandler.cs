@@ -65,6 +65,10 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 
         private async Task GetTasks(Domain.SmartPlaylist smartPlaylist, BaseItem[] items)
         {
+            SmartPlaylistUpdater updater = new SmartPlaylistUpdater(_folderRepository,_playlistItemsUpdater,_collectionItemsUpdater,_smartPlaylistStore);
+            await updater.Update(smartPlaylist, items);
+/*
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -111,6 +115,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
                 _smartPlaylistStore.Save(smartPlaylist.ToDto());
             }
+            */
         }
 
 

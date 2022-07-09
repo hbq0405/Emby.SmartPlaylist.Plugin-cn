@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartPlaylist.Contracts;
@@ -62,6 +63,21 @@ namespace SmartPlaylist.Services.SmartPlaylist
         public bool Exists(Guid userId, string smartPlaylistId)
         {
             return _decorated.Exists(userId, smartPlaylistId);
+        }
+
+        public async Task WriteToLogAsync(Domain.SmartPlaylist smartPlaylist)
+        {
+            await _decorated.WriteToLogAsync(smartPlaylist);
+        }
+
+        public Stream GetLogFileStream(Guid userId, string smartPlaylistId)
+        {
+            return _decorated.GetLogFileStream(userId, smartPlaylistId);
+        }
+
+        public string GetLogFilePath(Guid userId, string smartPlaylistId)
+        {
+            return _decorated.GetLogFilePath(userId, smartPlaylistId);
         }
     }
 }
