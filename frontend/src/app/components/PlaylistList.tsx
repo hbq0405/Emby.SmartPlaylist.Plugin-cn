@@ -22,7 +22,8 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                     onViewClick={() => viewPlaylist(playlist)}
                     onExecuteClick={() => executePlaylist(playlist)}
                     onSortJobClick={() => editSortJob(playlist)}
-                    onUpdateData={(pl: Partial<Playlist>) => {
+                    onOpenClick={() => { window.open('index.html#!/item?id=' + playlist.internalId + "&serverId=" + window.ApiClient.serverId(), playlist.name) }}
+                    onUpdateDataClick={(pl: Partial<Playlist>) => {
                         updatePlaylist({
                             ...playlist,
                             ...pl

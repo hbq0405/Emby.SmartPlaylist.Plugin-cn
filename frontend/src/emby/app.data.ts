@@ -7,6 +7,7 @@ import { PlaylistInfo, ServerResponse } from '~/app/types/playlist';
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;
     updatePluginConfiguration<TConfig>(pluginId: string, config: TConfig): Promise<any>;
+    serverId(): string;
     ajax<T = any>(request: any): Promise<T>;
 };
 

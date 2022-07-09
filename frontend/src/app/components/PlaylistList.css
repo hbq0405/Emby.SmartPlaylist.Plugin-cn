@@ -45,6 +45,7 @@
 
 .plist-row .popper button {
     margin: 0px !important;
+    padding: 5px !important;
 }
 
 .plist-row:hover .popper {

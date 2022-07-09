@@ -10,12 +10,11 @@ export type ListItemProps = {
     onDeleteClick(): void;
     onViewClick(): void;
     onExecuteClick(): void;
-    onUpdateData(playlist: Partial<Playlist>): void;
+    onUpdateDataClick(playlist: Partial<Playlist>): void;
+    onOpenClick(): void;
     playList: Playlist;
 } & React.AllHTMLAttributes<HTMLDivElement> &
     BaseProps;
-
-
 
 export const ListItem: React.FC<ListItemProps> = props => {
     const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled");
@@ -33,7 +32,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
             <div className='popper'>
                 <span className={`tooltiptext`}>
                     <Toggle title='Enabled' id={'toggle-' + props.playList.id} checked={props.playList.enabled} onToggled={(checked: boolean) => {
-                        props.onUpdateData({
+                        props.onUpdateDataClick({
                             enabled: checked
                         });
                     }
@@ -46,6 +45,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
                     <button type="button" title='Edit Sort Job' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onSortJobClick()}><i className="md-icon sp-icon">sort_by_alpha</i></button>
                 )}
                 <button type="button" title='Delete' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onDeleteClick()}><i className="md-icon sp-icon">delete</i></button>
+                <button type="button" title='Open' is="paper-icon-button-light" className="paper-icon-button-light icon-button-conditionalfocuscolor" onClick={() => props.onOpenClick()}><i className="md-icon sp-icon">open_in_new</i></button>
             </div>
         </a >
     )
