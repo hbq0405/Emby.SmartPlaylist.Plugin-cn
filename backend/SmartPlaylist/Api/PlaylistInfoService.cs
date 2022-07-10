@@ -28,11 +28,14 @@ namespace SmartPlaylist.Api
 
         public async Task<object> Post(ExecutePlaylist request)
         {
-            await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(request.Id)));
+            await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(request.Id), ExecutionModes.Manual));
 
-            var lastPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
-            if (lastPlaylist != null)
-                return getInfo(lastPlaylist);
+            var smartPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
+            if (smartPlaylist != null)
+            {
+
+                return getInfo(smartPlaylist);
+            }
 
             return "{}";
         }

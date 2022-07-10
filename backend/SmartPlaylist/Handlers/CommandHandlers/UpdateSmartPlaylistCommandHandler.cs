@@ -43,64 +43,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
 
         public async Task HandleAsync(UpdateSmartPlaylistCommand message)
         {
-            //            Stopwatch sw = new Stopwatch();
-            //            sw.Start();
-            //var smartPlaylist = await _smartPlaylistProvider.GetSmartPlaylistAsync(message.SmartPlaylistId)
-            //    .ConfigureAwait(false);
-
-            SmartPlaylistUpdater updater = new SmartPlaylistUpdater(_folderRepository, _playlistItemsUpdater, _collectionItemsUpdater, _smartPlaylistStore, _userItemsProvider);
+            SmartPlaylistUpdater updater = new SmartPlaylistUpdater(_folderRepository, _playlistItemsUpdater, _collectionItemsUpdater, _smartPlaylistStore, message.ExecutionMode, _userItemsProvider);
             await updater.Update(await _smartPlaylistProvider.GetSmartPlaylistAsync(message.SmartPlaylistId).ConfigureAwait(false));
-            /*
-
-                        try
-                        {
-                            smartPlaylist.LastSyncDuration = 0;
-                            smartPlaylist.Status = smartPlaylist.Enabled ? "Complete" : "Disabled";
-                            if (!smartPlaylist.Enabled)
-                                return;
-
-                            (UserFolder user, BaseItem[] baseItems) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
-
-                            BaseItem[] newItems;
-                            using (PerfLogger.Create("FilterPlaylistItems",
-                                () => new { playlistName = folder.user.SmartPlaylist.Name, itemsCount = folder.baseItems.Length }))
-                            {
-                                newItems = smartPlaylist.FilterPlaylistItems(folder.user, folder.baseItems).ToArray();
-                            }
-
-                            var update = await (smartPlaylist.SmartType == Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                               .UpdateAsync(folder.user, newItems).ConfigureAwait(false);
-
-                            smartPlaylist.Status = update.message;
-
-                            if (smartPlaylist.InternalId != update.internalId)
-                            {
-                                if (smartPlaylist.InternalId > 0)
-                                    _folderRepository.Remove(smartPlaylist);
-
-                                smartPlaylist.InternalId = update.internalId;
-                            }
-                            smartPlaylist.LastSync = DateTime.Now;
-                            smartPlaylist.SyncCount++;
-
-                            if (smartPlaylist.IsShuffleUpdateType || smartPlaylist.IsScheduledType)
-                                smartPlaylist.UpdateLastShuffleTime();
-                        }
-                        catch (Exception ex)
-                        {
-                            smartPlaylist.Status = $"Error {ex.Message}";
-                            Plugin.Instance.Logger.Error($"Error executing smart playlist: {ex.Message}", smartPlaylist);
-                            throw ex;
-                        }
-                        finally
-                        {
-                            sw.Stop();
-                            smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
-                            _smartPlaylistStore.Save(smartPlaylist.ToDto());
-                        }
-                        */
         }
-
-
     }
 }

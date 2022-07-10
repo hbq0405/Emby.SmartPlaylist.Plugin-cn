@@ -105,18 +105,33 @@ namespace SmartPlaylist.Domain
         {
             var playlistItems = SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase) ? userPlaylist.GetItems() : new BaseItem[] { };
             var newItems = FilterItems(playlistItems, items, userPlaylist.User);
+            Log($"Dealing with {newItems.Count()} after filter.");
+
+            Log("Removing missing episodes if any.");
             newItems = RemoveMissingEpisodes(newItems);
+
             if (SmartType == SmartType.Collection && CollectionMode != CollectionMode.Item)
+            {
+                Log($"Rolling up collection to {CollectionMode}");
                 newItems = RollUpTo(newItems);
+            }
 
             if (IsShuffleUpdateType)
+            {
+                Log("Type is shuffles so shuffling items.");
                 newItems = newItems.Shuffle();
+            }
 
             if (SmartType == SmartType.Playlist && NewItemOrder.HasSort)
+            {
+                Log($"Sorting items by: {NewItemOrder.OrderBy.Name}");
                 newItems = OrderNewItems(newItems);
+            }
             else if (Limit.HasLimit)
+            {
+                Log($"Sorting items by: {NewItemOrder.OrderBy.Name} and taking the top {Limit.MaxItems} items");
                 newItems = OrderLimitItems(newItems).Take(Limit.MaxItems);
-
+            }
             return newItems;
         }
 
@@ -183,11 +198,13 @@ namespace SmartPlaylist.Domain
                     LastShuffleUpdate = now.AddMonths(1);
                     break;
             }
+
+            Log($"Updating Shuffle time to: {LastShuffleUpdate}");
         }
 
         public void Log(string message)
         {
-            _logEntries.Add($"[{DateTime.Now.ToString("dd/mm/yyyy hh:MM:ss")}]: {message}");
+            _logEntries.Add($"[{DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")}]: {message}");
         }
 
         public SmartPlaylistDto ToDto()

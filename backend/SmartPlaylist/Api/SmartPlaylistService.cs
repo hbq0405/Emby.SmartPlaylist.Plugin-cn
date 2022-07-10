@@ -42,6 +42,7 @@ namespace SmartPlaylist.Api
                 _smartPlaylistValidator.Validate(playlist);
 
                 Domain.SmartPlaylist smartPlaylist = new Domain.SmartPlaylist(playlist);
+
                 smartPlaylist.SortJob.LastUpdated = DateTime.Now;
 
                 if (smartPlaylist.SortJob.Enabled)
@@ -92,7 +93,7 @@ namespace SmartPlaylist.Api
                 playlist.LastUpdated = DateTime.Now;
                 _smartPlaylistStore.Save(playlist);
 
-                _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id)));
+                _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id), ExecutionModes.OnSave));
 
                 return new Contracts.SmartPlaylistResponseDto()
                 {

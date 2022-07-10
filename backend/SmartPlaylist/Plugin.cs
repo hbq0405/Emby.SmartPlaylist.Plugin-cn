@@ -38,7 +38,9 @@ namespace SmartPlaylist
         public MessageBus MessageBus { get; }
         public UpdateSmartPlaylistCommandHandler SmartPlaylistCommandHandler { get; }
         public ISmartPlaylistStore SmartPlaylistStore { get; }
+        public IUserManager UserManager { get; }
         public ILibraryManager LibraryManager { get; }
+        public Dictionary<object, object> GlobalCache { get; } = new Dictionary<object, object>();
         public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer,
             IPlaylistManager playlistManager,
             ILibraryManager libraryManager,
@@ -48,6 +50,7 @@ namespace SmartPlaylist
         {
             Logger = logger;
             _sessionManager = sessionManager;
+            UserManager = userManager;
             Instance = this;
             var smartPlaylistFileSystem =
                 new EnsureBaseDirSmartPlaylistFileSystemDecorator(new SmartPlaylistFileSystem(serverApplicationPaths));
@@ -83,6 +86,22 @@ namespace SmartPlaylist
         {
             Type type = GetType();
             return type.Assembly.GetManifestResourceStream(type.Namespace + ".Configuration.thumb.png");
+        }
+
+        public T GetOrCreateGlobalCache<T>(object key, Func<T> createFunction)
+        {
+            if (GlobalCache.ContainsKey(key))
+                return (T)GlobalCache[key];
+            else
+            {
+                T item = createFunction();
+                if (item == null)
+                    return default(T);
+
+                GlobalCache.Add(key, item);
+                return item;
+            }
+
         }
 
         public ImageFormat ThumbImageFormat => ImageFormat.Png;

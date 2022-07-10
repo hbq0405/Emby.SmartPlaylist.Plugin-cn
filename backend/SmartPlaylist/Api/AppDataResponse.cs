@@ -13,5 +13,7 @@ namespace SmartPlaylist.Api
         public string[] LimitOrdersBy => DefinedOrders.AllNames;
 
         public SourceDto[] Sources => SourceDto.All;
+
+        public UserDto[] Users => UserDto.All;
     }
 }

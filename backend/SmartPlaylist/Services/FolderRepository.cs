@@ -223,16 +223,26 @@ namespace SmartPlaylist.Services
             var playlist = GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
             if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
+            {
+                smartPlaylist.Log($"Source is {smartPlaylist.Source.Name} [{smartPlaylist.SourceType}] ");
                 return (playlist,
                     playlist is LibraryUserFolder<Playlist> ?
                         GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), playlist.User) :
                         new BaseItem[] { });
+            }
             else
             {
-                return (playlist,
-                    smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && playlist is LibraryUserFolder<Playlist> ?
-                        GetItemsForFolderId(smartPlaylist, playlist.User) :
-                        userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
+
+                if (smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && playlist is LibraryUserFolder<Playlist>)
+                {
+                    smartPlaylist.Log($"Source is {smartPlaylist.Name} [Live]");
+                    return (playlist, GetItemsForFolderId(smartPlaylist, playlist.User));
+                }
+                else
+                {
+                    smartPlaylist.Log($"Source is [{string.Join(", ", Const.SupportedItemTypeNames)}]");
+                    return (playlist, userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
+                }
             }
         }
 

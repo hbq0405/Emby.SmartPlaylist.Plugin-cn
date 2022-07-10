@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using System;
 using SmartPlaylist;
 using SmartPlaylist.Services.SmartPlaylist;
-
+using SmartPlaylist.Handlers.Commands;
+using System.Threading;
 
 namespace SmartPlaylist.Handlers.CommandHandlers
 {
@@ -19,17 +20,19 @@ namespace SmartPlaylist.Handlers.CommandHandlers
         private readonly IFolderItemsUpdater _collectionItemsUpdater;
         private readonly ISmartPlaylistStore _smartPlaylistStore;
         private readonly IUserItemsProvider _userItemsProvider;
-        public SmartPlaylistUpdater(IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater, IFolderItemsUpdater collectionItemsUpdater, ISmartPlaylistStore smartPlaylistStore) :
-        this(folderRepository, playlistItemsUpdater, collectionItemsUpdater, smartPlaylistStore, null)
+        private readonly ExecutionModes _executionMode;
+        public SmartPlaylistUpdater(IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater, IFolderItemsUpdater collectionItemsUpdater, ISmartPlaylistStore smartPlaylistStore, ExecutionModes executionMode) :
+        this(folderRepository, playlistItemsUpdater, collectionItemsUpdater, smartPlaylistStore, executionMode, null)
         { }
 
-        public SmartPlaylistUpdater(IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater, IFolderItemsUpdater collectionItemsUpdater, ISmartPlaylistStore smartPlaylistStore, IUserItemsProvider userItemsProvider)
+        public SmartPlaylistUpdater(IFolderRepository folderRepository, IFolderItemsUpdater playlistItemsUpdater, IFolderItemsUpdater collectionItemsUpdater, ISmartPlaylistStore smartPlaylistStore, ExecutionModes executionMode, IUserItemsProvider userItemsProvider)
         {
             _folderRepository = folderRepository;
             _playlistItemsUpdater = playlistItemsUpdater;
             _collectionItemsUpdater = collectionItemsUpdater;
             _smartPlaylistStore = smartPlaylistStore;
             _userItemsProvider = userItemsProvider;
+            _executionMode = executionMode;
         }
 
         public async Task Update(SmartPlaylist.Domain.SmartPlaylist smartPlaylist)
@@ -47,9 +50,11 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 return;
             try
             {
+                smartPlaylist.Log($"Execution triggered by '{_executionMode}'");
                 (UserFolder user, BaseItem[] items) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
                 BaseItem[] processItems = items == null ? folder.items : folder.items.Union(items).ToArray();
-                smartPlaylist.Log($"Dealing with {processItems.Length} media items from source");
+                smartPlaylist.Log($"Dealing with {processItems.Length} media items from source.");
+
                 BaseItem[] newItems;
                 using (PerfLogger.Create("FilterPlaylistItems",
                     () => new { playlistName = folder.user.SmartPlaylist.Name, itemsCount = processItems.Length }))
@@ -86,7 +91,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 sw.Stop();
                 smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
                 _smartPlaylistStore.Save(smartPlaylist.ToDto());
-                await _smartPlaylistStore.WriteToLogAsync(smartPlaylist);
+                smartPlaylist.Log("Complete");
+                await _smartPlaylistStore.WriteToLogAsync(smartPlaylist).ConfigureAwait(false);
             }
         }
     }

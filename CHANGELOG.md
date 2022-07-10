@@ -2,6 +2,11 @@
 ## Version 2.3.0.3
   ## Feature
   - Added verbose log to info section.
+  - Added user based criteria for following user metadata fields:
+    - Favorite
+    - LastPlayed
+    - Play Count
+    - Played
   ## Bug
   - If any playlists backend files are corrupt, skips loading the playlist and moves the file to a *.failed file, and continues to load. Currently just crashes out with no notification. 
 ## Version 2.3.0.2

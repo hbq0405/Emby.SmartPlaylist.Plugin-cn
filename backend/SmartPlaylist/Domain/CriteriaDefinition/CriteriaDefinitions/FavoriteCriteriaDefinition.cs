@@ -3,7 +3,7 @@ using SmartPlaylist.Domain.Values;
 
 namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 {
-    public class FavoriteCriteriaDefinition : CriteriaDefinition
+    public class FavoriteCriteriaDefinition : UserCriteriaDefinition
     {
         private static readonly ListValue FavoriteListValue = ListValue.Create("Favorite");
         private static readonly ListValue LikedListValue = ListValue.Create("Liked");
