@@ -11,11 +11,17 @@ export type Source = {
     name: string
 }
 
+export type User = {
+    id: string,
+    name: string
+}
+
 export type AppData = {
     appId: string;
     rulesCriteriaDefinitions: RuleCriteriaDefinition[];
     limitOrdersBy: string[];
     sources: Source[],
+    users: User[]
 } & AppPlaylists;
 
 export type AppPlaylists = {

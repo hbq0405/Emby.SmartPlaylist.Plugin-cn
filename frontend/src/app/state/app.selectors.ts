@@ -7,7 +7,7 @@ import {
     ListMapValue
 } from '~/app/types/rule';
 import { AppPlaylistState, AppState } from '~/app/state/app.reducer';
-import { AppData, AppPlaylist, Source } from '~/app/types/appData';
+import { AppData, AppPlaylist, Source, User } from '~/app/types/appData';
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
 
@@ -18,6 +18,7 @@ export type AppSelectors = {
     isNewPlaylist(id: string): boolean;
     getRuleCriteriaOperators(criteriaName: string): RuleCriteriaOperator[];
     getRulesCriteriaDefinitions(): RuleCriteriaDefinition[];
+    getUsers(): User[];
     getRulesCriteriaDefinition(criteriaName: string): RuleCriteriaDefinition;
     getAppData(): AppData;
     getOrdersBy(): string[];
@@ -72,7 +73,10 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         },
         isLoaded: (): boolean => {
             return state.loadedPlaylist
-        }
+        },
+        getUsers: (): User[] => {
+            return state.users;
+        },
     };
 };
 
@@ -80,7 +84,8 @@ export const getAppData = (state: AppState): AppData => {
     return {
         ...state,
         playlists: convertToAppPlaylists(state.playlists),
-        sources: state.sources
+        sources: state.sources,
+        users: state.users
     };
 };
 

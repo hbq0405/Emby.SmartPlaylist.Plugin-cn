@@ -22,11 +22,13 @@ export const demoRulesCritDefinitions: RuleCriteriaDefinition[] = [
         name: 'Artist',
         values: [],
         type: stringCriteriaDefinitionType,
+        isUserSpecific: false
     },
     {
         name: 'DateLastSaved',
         type: dateCriteriaDefinitionType,
         values: [],
+        isUserSpecific: false
     },
 ];
 
@@ -87,5 +89,6 @@ export const demoAppData: AppData = {
     playlists: demoAppPlaylists,
     rulesCriteriaDefinitions: demoRulesCritDefinitions,
     limitOrdersBy: demoLimitOrdersBy,
-    sources: []
+    sources: [],
+    users: []
 };

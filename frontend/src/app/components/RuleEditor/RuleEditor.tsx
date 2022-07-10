@@ -4,7 +4,8 @@ import { Rule } from '~/app/types/rule';
 import { Select } from '~/common/components/Select';
 import { AppContext } from '~/app/state/app.context';
 import { ValueInput } from '~/app/components/RuleEditor/ValueInput';
-
+import { UserListInput } from './ValueInputs/UserList';
+import './RuleEditor.css'
 type RuleProps = {
     value: Rule;
 };
@@ -41,6 +42,24 @@ export const RuleEditor: React.FC<RuleProps> = props => {
                     playlistContext.updateCriteriaValue(rule, newVal)
                 }}
             />
+
+            {
+                criteriaDef.isUserSpecific && (
+                    <>
+                        <div className='selectContainer padding-lr icon-align'>
+                            <div className="md-icon" title='Do the match in the context of the user.'>
+                                account_circle
+                            </div>
+                        </div>
+                        <UserListInput
+                            userId={criteria.userId}
+                            onChange={userId => {
+                                playlistContext.updateCriteriaUser(rule, userId)
+                            }}
+                        />
+                    </>
+                )
+            }
         </>
     );
 };

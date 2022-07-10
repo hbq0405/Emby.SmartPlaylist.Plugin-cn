@@ -109,7 +109,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             <div className='info-row info-row-label'>Items:</div>
             <TagList Items={playlist.items} />
 
-            <Button style={{ position: 'absolute', top: '15px', right: '10px' }} onClick={loadLog}>
+            <Button style={{ position: 'absolute', top: '15px', right: '10px' }} onClick={loadLog} title="View detailed log file.">
                 <Icon type='checklist' />
             </Button>
         </>

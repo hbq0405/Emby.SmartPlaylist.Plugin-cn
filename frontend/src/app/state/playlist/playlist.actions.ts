@@ -18,6 +18,7 @@ export type PlaylistActions = {
     changeCriteriaDef(rule: Rule, criteriaName: string): void;
     changeOperator(rule: Rule, operatorName: string): void;
     updateCriteriaValue(rule: Rule, value: CriteriaValue): void;
+    updateCriteriaUser(rule: Rule, userId: string): void;
 };
 
 export const createPlaylistActions = (
@@ -26,6 +27,15 @@ export const createPlaylistActions = (
     appContext: AppContextProps,
 ): PlaylistActions => {
     return {
+        updateCriteriaUser: (rule: Rule, userId: string): void => {
+            updateCriteriaState(
+                dispatcher,
+                {
+                    userId: userId,
+                },
+                rule,
+            );
+        },
         updateCriteriaValue: (rule: Rule, value: CriteriaValue): void => {
             updateCriteriaState(
                 dispatcher,

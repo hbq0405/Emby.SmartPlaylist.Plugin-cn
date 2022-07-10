@@ -34,6 +34,7 @@ export const ValueInput: React.FC<ValueInputProps> = props => {
     const { value, type, onChange, values } = props;
 
     const renderValueInput = () => {
+
         switch (type) {
             case 'string':
                 return (
@@ -101,6 +102,7 @@ export const ValueInput: React.FC<ValueInputProps> = props => {
             default:
                 return <></>;
         }
+
     };
 
     return <>{renderValueInput()}</>;

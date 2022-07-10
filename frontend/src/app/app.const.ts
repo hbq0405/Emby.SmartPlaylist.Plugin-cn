@@ -117,6 +117,7 @@ export const defaultRuleCriteriaDefinition: RuleCriteriaDefinition = {
     name: 'Album',
     values: [],
     type: stringCriteriaDefinitionType,
+    isUserSpecific: false
 };
 
 export const randomLimitOrderBy: LimitOrderBy = 'Random';

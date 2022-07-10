@@ -4,7 +4,7 @@ import { RuleCriteriaDefinition } from '~/app/types/rule';
 import { PlaylistAction, playlistReducer } from '~/app/state/playlist/playlist.reducer';
 import { normalizeArray } from '~/common/helpers/array';
 import { createTreeViewData } from '~/common/components/TreeView/types/tree.factory';
-import { AppData, Source } from '~/app/types/appData';
+import { AppData, Source, User } from '~/app/types/appData';
 import { defaultPlaylistLimit } from '~/app/app.const';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
 import { getAppPlaylistForPlaylist } from './app.selectors';
@@ -27,7 +27,8 @@ export type AppState = {
     viewPlaylist?: PlaylistInfo,
     confirmation?: ConfirmationProps,
     sources: Source[],
-    sortJobPlaylist?: Playlist
+    sortJobPlaylist?: Playlist,
+    users: User[]
 
 };
 
@@ -43,6 +44,7 @@ export const initAppState: AppState = {
     editedPlaylist: undefined,
     viewPlaylist: undefined,
     sources: [],
+    users: [],
     sortJobPlaylist: undefined
 };
 

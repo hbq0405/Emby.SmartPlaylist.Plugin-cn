@@ -30,12 +30,15 @@ export type RuleCriteriaValue = {
     name: string;
     operator: RuleCriteriaOperator;
     value: CriteriaValue;
+    userId: string;
 };
 
 export type RuleCriteriaDefinition = {
     name: string;
     type: RuleCriteriaDefinitionType;
     values: CriteriaValue[];
+    isUserSpecific: boolean;
+    userId?: string;
 };
 
 export type RuleCriteriaOperator = {
