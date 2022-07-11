@@ -26,7 +26,7 @@ export type PlaylistBasicData = {
 export type PlaylistLimit = {
     hasLimit: boolean;
     maxItems: number;
-    orderBy: LimitOrderBy;
+    orderBy: string;
 };
 
 export type NewItemOrder = {
@@ -44,7 +44,8 @@ export type SortJob = {
     nextUpdate?: Date,
     lastUpdated?: Date,
     lastRan?: Date,
-    lastDurationStr?: string
+    lastDurationStr?: string,
+    thenBys?: string[];
 }
 
 export type PlaylistViewData = PlaylistBasicData & {

@@ -104,7 +104,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                                 updateBasicData({
                                     newItemOrder: {
                                         ...basicData.newItemOrder,
-                                        hasSort: c
+                                        hasSort: c,
+                                        orderBy: ordersBy[0]
                                     }
                                 })
                                 if (c)
@@ -142,7 +143,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                         updateBasicData({
                             limit: {
                                 ...basicData.limit,
-                                hasLimit: c
+                                hasLimit: c,
+                                orderBy: ordersBy[0]
                             }
                         })
 
