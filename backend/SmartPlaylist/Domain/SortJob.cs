@@ -23,6 +23,7 @@ namespace SmartPlaylist.Domain
         public DateTimeOffset? NextUpdate { get; set; } = null;
         public DateTime? LastUpdated { get; set; } = null;
         public DateTime? LastRan { get; set; } = null;
+        public IOrder[] ThenBys { get; set; }
 
         public SortJob() { }
 
@@ -37,6 +38,8 @@ namespace SmartPlaylist.Domain
             NextUpdate = dto.NextUpdate;
             LastUpdated = dto.LastUpdated;
             LastRan = dto.LastRan;
+            if (dto.ThenBys != null)
+                ThenBys = dto.ThenBys.Select(x => IOrder.GetOrderFromString(x)).ToArray();
         }
 
         public SortJobDto ToDto()
@@ -51,7 +54,8 @@ namespace SmartPlaylist.Domain
                 Status = Status,
                 NextUpdate = NextUpdate,
                 LastUpdated = LastUpdated,
-                LastRan = LastRan
+                LastRan = LastRan,
+                ThenBys = ThenBys.Select(x => x.Name).ToArray()
             };
         }
 
@@ -78,6 +82,17 @@ namespace SmartPlaylist.Domain
             return Enabled && (DateTimeOffset.UtcNow > NextUpdate.Value);
         }
 
+        public IOrder[] GetOrders()
+        {
+            if (ThenBys == null)
+                return new IOrder[] { OrderBy };
+
+            IOrder[] orders = new IOrder[ThenBys.Length + 1];
+            Array.Copy(ThenBys, 0, orders, 1, orders.Length - 1);
+            orders[0] = OrderBy;
+
+            return orders;
+        }
 
     }
 }

@@ -189,10 +189,17 @@ namespace SmartPlaylist.Services
         public override BaseItem[] GetItemsForFolderId(Guid folderId, User user)
         {
             HashSet<BaseItem> results = new HashSet<BaseItem>();
-            (_libraryManager.GetItemById(folderId) as Folder).GetChildren(new InternalItemsQuery(user)
+
+            var folder = _libraryManager.GetItemById(folderId);
+
+            if (folder is Folder f)
             {
-                Recursive = false
-            }).ForEach(b => RecurseToChildren(b, user, results));
+                f.GetChildren(new InternalItemsQuery(user)
+                {
+                    Recursive = false
+                }).ForEach(b => RecurseToChildren(b, user, results));
+            }
+
             return results.ToArray();
         }
 
@@ -215,7 +222,8 @@ namespace SmartPlaylist.Services
 
         public override BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user)
         {
-            return GetItemsForFolderId(GetFolder(smartPlaylist).Id, user);
+            Folder folder = GetFolder(smartPlaylist);
+            return folder == null ? new BaseItem[] { } : GetItemsForFolderId(folder.Id, user);
         }
 
         public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)

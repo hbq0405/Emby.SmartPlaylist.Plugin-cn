@@ -10,6 +10,34 @@ using SmartPlaylist.Extensions;
 
 namespace SmartPlaylist.Domain
 {
+    public static class Sorter
+    {
+
+        public static BaseItem[] Sort(BaseItem[] items, params IOrder[] orders)
+        {
+
+            if (orders.Any(x => x.IsShuffle))
+                return items.Shuffle();
+
+            if (orders.Length == 0)
+                return items;
+
+            var orderedEnumerator = orders[0].Direction == SortOrder.Ascending
+                ? orders[0].Comparer == null ? items.OrderBy(orders[0].Function) : items.OrderBy(x => x, orders[0].Comparer)
+                : orders[0].Comparer == null ? items.OrderByDescending(orders[0].Function) : items.OrderByDescending(x => x, orders[0].Comparer);
+
+
+            if (orders.Length > 1)
+            {
+                orderedEnumerator = orders.Skip(1).Aggregate(orderedEnumerator, (current, thenBy) => thenBy.Direction == SortOrder.Ascending
+                 ? thenBy.Comparer == null ? current.ThenBy(thenBy.Function) : current.ThenBy(x => x, thenBy.Comparer)
+                 : thenBy.Comparer == null ? current.ThenByDescending(thenBy.Function) : current.ThenByDescending(x => x, thenBy.Comparer));
+            }
+
+            return orderedEnumerator.ToArray();
+
+        }
+    }
     public class SmartPlaylistLimit
     {
         public SmartPlaylistLimit() { }
@@ -58,334 +86,174 @@ namespace SmartPlaylist.Domain
     public abstract class IOrder
     {
         public abstract string Name { get; }
-
-        public virtual ValueTuple<string, SortOrder>[] OrderBy => new (string, SortOrder)[0];
-
-        public virtual BaseItem[] Order(BaseItem[] items)
-        {
-            return items;
-        }
-
         public static IOrder GetOrderFromString(string orderBy)
         {
             return DefinedOrders.All.FirstOrDefault(x =>
                                 string.Equals(x.Name, orderBy, StringComparison.CurrentCultureIgnoreCase)) ??
                           SmartPlaylistLimit.None.OrderBy;
         }
+
+        public virtual bool IsShuffle => false;
+        public virtual Func<BaseItem, IComparable> Function => x => (IComparable)x;
+        public virtual IComparer<BaseItem> Comparer { get; }
+        public virtual SortOrder Direction => SortOrder.Ascending;
     }
 
     public class OrderRandom : IOrder
     {
         public override string Name => "Random";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.Random, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.Shuffle();
-        }
+        public override bool IsShuffle => true;
     }
 
     public class OrderAlbum : IOrder
     {
         public override string Name => "Album";
 
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.Album, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.Album).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.Album;
     }
 
 
     public class OrderArtist : IOrder
     {
         public override string Name => "Artist";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.Artist, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x, new ArtistsComparer(a => a.Artists)).ToArray();
-        }
+        public override IComparer<BaseItem> Comparer => new ArtistsComparer(a => a.Artists);
     }
 
     public class OrderAlbumArtist : IOrder
     {
         public override string Name => "Album artist";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.AlbumArtist, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x, new ArtistsComparer(a => a.AlbumArtists)).ToArray();
-        }
+        public override IComparer<BaseItem> Comparer => new ArtistsComparer(a => a.AlbumArtists);
     }
 
     public class OrderMostFavorite : IOrder
     {
         public override string Name => "Most favorite";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.IsFavorite, SortOrder.Descending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.IsFavorite).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.IsFavorite;
     }
 
     public class OrderLessFavorite : IOrder
     {
         public override string Name => "Less favorite";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.IsFavorite, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.IsFavorite).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.IsFavorite;
     }
 
 
     public class OrderAddedDateDesc : IOrder
     {
         public override string Name => "Added date desc";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.DateCreated, SortOrder.Descending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.DateCreated).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.DateCreated;
     }
 
     public class OrderAddedDateAsc : IOrder
     {
         public override string Name => "Added date asc";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.DateCreated, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.DateCreated).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.DateCreated;
     }
 
     public class OrderMostPlayed : IOrder
     {
         public override string Name => "Most played";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.PlayCount, SortOrder.Descending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.PlayCount).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.PlayCount;
     }
 
     public class OrderLeastPlayed : IOrder
     {
         public override string Name => "Least played";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.PlayCount, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.PlayCount).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.PlayCount;
     }
 
     public class OrderPlayedDateDesc : IOrder
     {
         public override string Name => "Played date desc";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.DatePlayed, SortOrder.Descending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.LastPlayedDate).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.LastPlayedDate;
     }
 
     public class OrderPlayedDateAsc : IOrder
     {
         public override string Name => "Played date asc";
-
-        public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
-            {(ItemSortBy.DatePlayed, SortOrder.Ascending)};
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.LastPlayedDate).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.LastPlayedDate;
     }
 
     public class OrderName : IOrder
     {
         public override string Name => "Name";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.Name, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.Name).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.Name;
     }
 
     public class OrderEpisode : IOrder
     {
         public override string Name => "Episode";
+        public override IComparer<BaseItem> Comparer => new EpisodeComparer();
 
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.AiredEpisodeOrder, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x, new EpisodeComparer()).ToArray();
-        }
     }
 
     public class OrderSortName : IOrder
     {
         public override string Name => "SortName asc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.SortName).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.SortName;
     }
 
     public class OrderSortNameDesc : IOrder
     {
         public override string Name => "SortName desc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.SortName).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.SortName;
     }
 
     public class OrderReleaseDate : IOrder
     {
         public override string Name => "Release date asc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x, new ReleaseDateComparer()).ToArray();
-        }
+        public override IComparer<BaseItem> Comparer => new ReleaseDateComparer();
     }
 
     public class OrderReleaseDateDesc : IOrder
     {
         public override string Name => "Release date desc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x, new ReleaseDateComparer()).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override IComparer<BaseItem> Comparer => new ReleaseDateComparer();
     }
 
     public class OrderRuntime : IOrder
     {
         public override string Name => "Runtime asc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Ascending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.RunTimeTicks).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.RunTimeTicks;
     }
 
     public class OrderRuntimeDesc : IOrder
     {
         public override string Name => "Runtime desc";
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.RunTimeTicks;
 
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.RunTimeTicks).ToArray();
-        }
     }
 
     public class OrderCommunityRating : IOrder
     {
         public override string Name => "Community rating asc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.CommunityRating, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.CommunityRating).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.CommunityRating;
     }
 
     public class OrderCommunityRatingDesc : IOrder
     {
         public override string Name => "Community rating desc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.CommunityRating, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.CommunityRating).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.CommunityRating;
     }
 
     public class OrderParentalRating : IOrder
     {
         public override string Name => "Parental rating asc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.OfficialRating, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderBy(x => x.GetInheritedParentalRatingValue()).ToArray();
-        }
+        public override Func<BaseItem, IComparable> Function => x => x.GetInheritedParentalRatingValue();
     }
 
     public class OrderParentalRatingDesc : IOrder
     {
         public override string Name => "Parental rating desc";
-
-        public override (string, SortOrder)[] OrderBy =>
-            new (string, SortOrder)[] { (ItemSortBy.OfficialRating, SortOrder.Descending) };
-
-        public override BaseItem[] Order(BaseItem[] items)
-        {
-            return items.OrderByDescending(x => x.GetInheritedParentalRatingValue()).ToArray();
-        }
+        public override SortOrder Direction => SortOrder.Descending;
+        public override Func<BaseItem, IComparable> Function => x => x.GetInheritedParentalRatingValue();
     }
-
 }

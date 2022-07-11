@@ -48,7 +48,7 @@ public class SortAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<SortAllS
                 UserFolder folder = FolderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
                 BaseItem[] currentItems = folder.GetItems();
-                BaseItem[] sortedItems = smartPlaylist.SortJob.OrderBy.Order(currentItems).ToArray();
+                BaseItem[] sortedItems = Sorter.Sort(currentItems, smartPlaylist.SortJob.GetOrders());
 
                 var updater = (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? CollectionUpdater : PlaylistUpdater);
                 await updater.ClearPlaylist(folder);
