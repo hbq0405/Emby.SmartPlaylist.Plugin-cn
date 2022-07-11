@@ -2,6 +2,8 @@
 ## Version 2.3.0.3
   ## Feature
   - Added verbose log to info section.
+  - Added link to open up generated playlist
+  - General optimization and clean up
   - Added user based criteria for following user metadata fields:
     - Favorite
     - LastPlayed
@@ -9,6 +11,7 @@
     - Played
   ## Bug
   - If any playlists backend files are corrupt, skips loading the playlist and moves the file to a *.failed file, and continues to load. Currently just crashes out with no notification. 
+  - Fixed bug when source was playlist or collection not picking up source items.
 ## Version 2.3.0.2
 - ## Feature
   - Removed "Sort newly added items" if the playlist is in "Live" mode

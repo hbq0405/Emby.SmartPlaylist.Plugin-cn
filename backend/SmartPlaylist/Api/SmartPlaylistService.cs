@@ -82,12 +82,12 @@ namespace SmartPlaylist.Api
 
                 _smartPlaylistValidator.Validate(playlist);
 
-                var lastPlaylist = GetPlaylistFromStore(Guid.Parse(playlist.Id));
-                if (lastPlaylist != null)
+                var persistedPlaylist = GetPlaylistFromStore(Guid.Parse(playlist.Id));
+                if (persistedPlaylist != null)
                 {
-                    playlist.InternalId = lastPlaylist.InternalId;
-                    playlist.ForceCreate = !string.Equals(lastPlaylist.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
-                    playlist.OriginalSmartType = lastPlaylist.SmartType;
+                    playlist.InternalId = persistedPlaylist.InternalId;
+                    playlist.ForceCreate = !string.Equals(persistedPlaylist.SmartType, playlist.SmartType, StringComparison.OrdinalIgnoreCase);
+                    playlist.OriginalSmartType = persistedPlaylist.SmartType;
                 }
 
                 playlist.LastUpdated = DateTime.Now;
@@ -115,8 +115,8 @@ namespace SmartPlaylist.Api
 
         private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)
         {
-            var lastPlaylist = _smartPlaylistStore.GetSmartPlaylistAsync(playlistId);
-            return lastPlaylist != null ? ((lastPlaylist.IsFaulted) ? null : lastPlaylist.Result) : null;
+            var persistedPlaylist = _smartPlaylistStore.GetSmartPlaylistAsync(playlistId);
+            return persistedPlaylist != null ? ((persistedPlaylist.IsFaulted) ? null : persistedPlaylist.Result) : null;
         }
 
         public void Delete(DeleteSmartPlaylist request)

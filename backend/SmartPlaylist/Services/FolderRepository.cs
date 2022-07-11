@@ -225,14 +225,10 @@ namespace SmartPlaylist.Services
             if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
             {
                 smartPlaylist.Log($"Source is {smartPlaylist.Source.Name} [{smartPlaylist.SourceType}] ");
-                return (playlist,
-                    playlist is LibraryUserFolder<Playlist> ?
-                        GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), playlist.User) :
-                        new BaseItem[] { });
+                return (playlist, GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), playlist.User));
             }
             else
             {
-
                 if (smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && playlist is LibraryUserFolder<Playlist>)
                 {
                     smartPlaylist.Log($"Source is {smartPlaylist.Name} [Live]");

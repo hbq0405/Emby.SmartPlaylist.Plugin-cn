@@ -61,7 +61,7 @@ namespace SmartPlaylist.Domain
 
         public virtual ValueTuple<string, SortOrder>[] OrderBy => new (string, SortOrder)[0];
 
-        public virtual IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public virtual BaseItem[] Order(BaseItem[] items)
         {
             return items;
         }
@@ -81,7 +81,7 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.Random, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
             return items.Shuffle();
         }
@@ -94,9 +94,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.Album, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.Album);
+            return items.OrderBy(x => x.Album).ToArray();
         }
     }
 
@@ -108,9 +108,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.Artist, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x, new ArtistsComparer(a => a.Artists));
+            return items.OrderBy(x => x, new ArtistsComparer(a => a.Artists)).ToArray();
         }
     }
 
@@ -121,9 +121,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.AlbumArtist, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x, new ArtistsComparer(a => a.AlbumArtists));
+            return items.OrderBy(x => x, new ArtistsComparer(a => a.AlbumArtists)).ToArray();
         }
     }
 
@@ -134,9 +134,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.IsFavorite, SortOrder.Descending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.IsFavorite);
+            return items.OrderByDescending(x => x.IsFavorite).ToArray();
         }
     }
 
@@ -147,9 +147,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.IsFavorite, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.IsFavorite);
+            return items.OrderBy(x => x.IsFavorite).ToArray();
         }
     }
 
@@ -161,9 +161,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.DateCreated, SortOrder.Descending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.DateCreated);
+            return items.OrderByDescending(x => x.DateCreated).ToArray();
         }
     }
 
@@ -174,9 +174,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.DateCreated, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.DateCreated);
+            return items.OrderBy(x => x.DateCreated).ToArray();
         }
     }
 
@@ -187,9 +187,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.PlayCount, SortOrder.Descending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.PlayCount);
+            return items.OrderByDescending(x => x.PlayCount).ToArray();
         }
     }
 
@@ -200,9 +200,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.PlayCount, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.PlayCount);
+            return items.OrderBy(x => x.PlayCount).ToArray();
         }
     }
 
@@ -213,9 +213,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.DatePlayed, SortOrder.Descending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.LastPlayedDate);
+            return items.OrderByDescending(x => x.LastPlayedDate).ToArray();
         }
     }
 
@@ -226,9 +226,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy => new (string, SortOrder)[]
             {(ItemSortBy.DatePlayed, SortOrder.Ascending)};
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.LastPlayedDate);
+            return items.OrderBy(x => x.LastPlayedDate).ToArray();
         }
     }
 
@@ -239,9 +239,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.Name, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.Name);
+            return items.OrderBy(x => x.Name).ToArray();
         }
     }
 
@@ -252,9 +252,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.AiredEpisodeOrder, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x, new EpisodeComparer());
+            return items.OrderBy(x => x, new EpisodeComparer()).ToArray();
         }
     }
 
@@ -265,9 +265,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.SortName);
+            return items.OrderBy(x => x.SortName).ToArray();
         }
     }
 
@@ -278,9 +278,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.SortName, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.SortName);
+            return items.OrderByDescending(x => x.SortName).ToArray();
         }
     }
 
@@ -291,9 +291,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x, new ReleaseDateComparer());
+            return items.OrderBy(x => x, new ReleaseDateComparer()).ToArray();
         }
     }
 
@@ -304,9 +304,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.PremiereDate, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x, new ReleaseDateComparer());
+            return items.OrderByDescending(x => x, new ReleaseDateComparer()).ToArray();
         }
     }
 
@@ -317,9 +317,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Ascending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.RunTimeTicks);
+            return items.OrderBy(x => x.RunTimeTicks).ToArray();
         }
     }
 
@@ -330,9 +330,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.Runtime, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.RunTimeTicks);
+            return items.OrderByDescending(x => x.RunTimeTicks).ToArray();
         }
     }
 
@@ -343,9 +343,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.CommunityRating, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.CommunityRating);
+            return items.OrderBy(x => x.CommunityRating).ToArray();
         }
     }
 
@@ -356,9 +356,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.CommunityRating, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.CommunityRating);
+            return items.OrderByDescending(x => x.CommunityRating).ToArray();
         }
     }
 
@@ -369,9 +369,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.OfficialRating, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderBy(x => x.GetInheritedParentalRatingValue());
+            return items.OrderBy(x => x.GetInheritedParentalRatingValue()).ToArray();
         }
     }
 
@@ -382,9 +382,9 @@ namespace SmartPlaylist.Domain
         public override (string, SortOrder)[] OrderBy =>
             new (string, SortOrder)[] { (ItemSortBy.OfficialRating, SortOrder.Descending) };
 
-        public override IEnumerable<BaseItem> Order(IEnumerable<BaseItem> items)
+        public override BaseItem[] Order(BaseItem[] items)
         {
-            return items.OrderByDescending(x => x.GetInheritedParentalRatingValue());
+            return items.OrderByDescending(x => x.GetInheritedParentalRatingValue()).ToArray();
         }
     }
 

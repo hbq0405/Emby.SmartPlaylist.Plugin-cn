@@ -4,16 +4,16 @@ using MediaBrowser.Model.Services;
 using SmartPlaylist.Contracts;
 using SmartPlaylist.Handlers.Commands;
 using System.Linq;
-
+using System.Threading;
 namespace SmartPlaylist.Api
 {
     public class PlaylistInfoService : IService
     {
         public async Task<object> Get(GetPlaylistItems request)
         {
-            var lastPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
-            if (lastPlaylist != null)
-                return getInfo(lastPlaylist);
+            var persistedPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
+            if (persistedPlaylist != null)
+                return getInfo(persistedPlaylist);
 
             return "{}";
         }
@@ -28,7 +28,10 @@ namespace SmartPlaylist.Api
 
         public async Task<object> Post(ExecutePlaylist request)
         {
-            await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(request.Id), ExecutionModes.Manual));
+            new Thread(new ThreadStart(async () =>
+            {
+                await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(request.Id), ExecutionModes.Manual));
+            })).Start();
 
             var smartPlaylist = await Plugin.Instance.SmartPlaylistStore.GetSmartPlaylistAsync(Guid.Parse(request.Id));
             if (smartPlaylist != null)

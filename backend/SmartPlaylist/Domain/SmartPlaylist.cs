@@ -101,11 +101,13 @@ namespace SmartPlaylist.Domain
             return true;
         }
 
-        public IEnumerable<BaseItem> FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
+        public BaseItem[] FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
         {
             var playlistItems = SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase) ? userPlaylist.GetItems() : new BaseItem[] { };
-            var newItems = FilterItems(playlistItems, items, userPlaylist.User);
-            Log($"Dealing with {newItems.Count()} after filter.");
+            var newItems = FilterItems(playlistItems, items, userPlaylist.User).ToArray();
+            Log($"Dealing with {newItems.Length} after filter.");
+            if (newItems.Length == 0)
+                return newItems;
 
             Log("Removing missing episodes if any.");
             newItems = RemoveMissingEpisodes(newItems);
@@ -130,20 +132,20 @@ namespace SmartPlaylist.Domain
             else if (Limit.HasLimit)
             {
                 Log($"Sorting items by: {NewItemOrder.OrderBy.Name} and taking the top {Limit.MaxItems} items");
-                newItems = OrderLimitItems(newItems).Take(Limit.MaxItems);
+                newItems = OrderLimitItems(newItems).Take(Limit.MaxItems).ToArray();
             }
             return newItems;
         }
 
-        private static IEnumerable<BaseItem> RemoveMissingEpisodes(IEnumerable<BaseItem> items)
+        private static BaseItem[] RemoveMissingEpisodes(BaseItem[] items)
         {
-            return items.Where(x => !(x is Episode episode && episode.IsMissingEpisode));
+            return items.Where(x => !(x is Episode episode && episode.IsMissingEpisode)).ToArray();
         }
 
-        private IEnumerable<BaseItem> RollUpTo(IEnumerable<BaseItem> items)
+        private BaseItem[] RollUpTo(BaseItem[] items)
         {
             EpimodeAttribute rollTo = CollectionMode.GetAttributeOfType<EpimodeAttribute>();
-            return items.Select(x => (x is Episode) ? RollUpToItemType(x, rollTo.MediaType) : x).Distinct();
+            return items.Select(x => (x is Episode) ? RollUpToItemType(x, rollTo.MediaType) : x).Distinct().ToArray();
         }
 
         private BaseItem RollUpToItemType(BaseItem item, Type rollType)
@@ -151,14 +153,14 @@ namespace SmartPlaylist.Domain
             return item.GetType().IsAssignableFrom(rollType) ? item : RollUpToItemType(item.Parent, rollType);
         }
 
-        private IEnumerable<BaseItem> OrderLimitItems(IEnumerable<BaseItem> playlistItems)
+        private BaseItem[] OrderLimitItems(BaseItem[] playlistItems)
         {
-            return Limit.OrderBy.Order(playlistItems);
+            return Limit.OrderBy.Order(playlistItems).ToArray();
         }
 
-        private IEnumerable<BaseItem> OrderNewItems(IEnumerable<BaseItem> playlistItems)
+        private BaseItem[] OrderNewItems(BaseItem[] playlistItems)
         {
-            return NewItemOrder.OrderBy.Order(playlistItems);
+            return NewItemOrder.OrderBy.Order(playlistItems).ToArray();
         }
 
         private IEnumerable<BaseItem> FilterItems(IEnumerable<BaseItem> playlistItems, IEnumerable<BaseItem> newItems,

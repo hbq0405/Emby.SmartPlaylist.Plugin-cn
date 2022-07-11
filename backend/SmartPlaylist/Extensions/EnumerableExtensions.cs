@@ -6,9 +6,9 @@ namespace SmartPlaylist.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+        public static T[] Shuffle<T>(this T[] source)
         {
-            return source.Shuffle(new Random());
+            return source.Shuffle(new Random()).ToArray();
         }
 
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)

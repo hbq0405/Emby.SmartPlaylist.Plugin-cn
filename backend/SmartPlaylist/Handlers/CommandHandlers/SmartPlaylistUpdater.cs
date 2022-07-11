@@ -53,6 +53,9 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 smartPlaylist.Log($"Execution triggered by '{_executionMode}'");
                 (UserFolder user, BaseItem[] items) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
                 BaseItem[] processItems = items == null ? folder.items : folder.items.Union(items).ToArray();
+                if (processItems == null)
+                    processItems = new BaseItem[] { };
+
                 smartPlaylist.Log($"Dealing with {processItems.Length} media items from source.");
 
                 BaseItem[] newItems;

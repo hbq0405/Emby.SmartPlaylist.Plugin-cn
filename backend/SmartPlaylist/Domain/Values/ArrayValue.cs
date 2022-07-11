@@ -12,7 +12,7 @@ namespace SmartPlaylist.Domain.Values
 
         public override string Kind => "array";
 
-        internal override string Friendly => $"'{string.Join("', '", Values.Select(x => x.Friendly))}'";
+        internal override string Friendly => $"[{string.Join("', '", Values.Select(x => x.Friendly))}]";
 
         internal override bool IsEmpty => IsNone || Values.Length == 0;
 
