@@ -10,6 +10,7 @@ export const Icon: React.FC<IconProps> = props => {
             {props.type === 'expanded' && <i className="md-icon">keyboard_arrow_down</i>}
             {props.type === 'collapsed' && <i className="md-icon">keyboard_arrow_right</i>}
             {props.type === 'checklist' && <i className="md-icon">checklist</i>}
+            {props.type === 'library_add' && <i className="md-icon">library_add</i>}
         </>
     );
 };

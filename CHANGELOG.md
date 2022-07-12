@@ -2,9 +2,11 @@
 ## Version 2.4.0.0
   ## Feature
   - Added verbose log to info section.
-  - Added link to open up generated playlist
-  - General optimization and clean up
+  - Added link to open up generated playlist.
+  - General optimization and clean up.
   - Added Sort (Then Bys) to Sort Jobs.
+  - Added Sorting to source list.
+  - Added Multiple Add functionality to PlaylistEditor.
   - Added user based criteria for following user metadata fields:
     - Favorite
     - LastPlayed

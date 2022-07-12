@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export type IconProps = {
-    type: 'add' | 'remove' | 'group' | 'collapsed' | 'expanded' | 'checklist' | 'account_circle';
+    type: 'add' | 'remove' | 'group' | 'collapsed' | 'expanded' | 'checklist' | 'account_circle' | 'library_add';
 };
 
 export const Icon: React.FC<IconProps> = props => {
@@ -14,6 +14,7 @@ export const Icon: React.FC<IconProps> = props => {
             {props.type === 'collapsed' && '>'}
             {props.type === 'checklist' && 'checklist'}
             {props.type === 'account_circle' && 'account_circle'}
+            {props.type === 'library_add' && 'library_add'}
         </>
     );
 };

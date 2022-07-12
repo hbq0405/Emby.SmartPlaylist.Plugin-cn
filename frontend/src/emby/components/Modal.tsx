@@ -8,9 +8,11 @@ export type ModalProps = {
     confirmLabel: string;
     onClose(): void;
     onConfirm(): void;
+    small?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = props => {
+    if (props.small === undefined) props.small = false;
     return (
         <>
 
@@ -18,7 +20,7 @@ export const Modal: React.FC<ModalProps> = props => {
             <div className="dialogContainer">
                 <ToastContainer containerId="modalToast" />
                 <div
-                    className="focuscontainer dialog dialog-fixedSize dialog-medium-tall formDialog opened"
+                    className={"focuscontainer dialog " + (props.small ? "dialog-small" : "dialog-fixedSize") + " dialog-medium-tall formDialog opened"}
                     data-lockscroll="true"
                     data-history="true"
                     data-autofocus="true"

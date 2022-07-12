@@ -11,7 +11,12 @@ import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
 import { AutoSize } from '~/common/components/AutoSize';
 import { Toggle } from '~/common/components/Toggle';
-import { Source } from '../types/appData';
+import { TreeViewMultiAdd } from '../../common/components/TreeView/TreeViewMultiAdd';
+import { Button } from '~/common/components/Button';
+import { Icon } from '~/emby/components/Icon';
+import './PlaylistEditor.css'
+import { TreeNode } from '~/emby/components/TreeNode';
+import { createTreeNodeData } from '~/common/components/TreeView/types/tree.factory';
 
 type PlaylistEditorProps = {};
 
@@ -189,7 +194,6 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     }
                 />
             </Inline>
-
             <TreeView
                 data={rulesTree}
                 renderNodeContent={nodeData => <RuleTreeNodeContent node={nodeData} />}

@@ -26,7 +26,7 @@ namespace SmartPlaylist.Contracts
                     Type = "Collection",
                     Id = x.Id.ToString(),
                     Name = x.Name
-                })).ToArray();
+                })).OrderBy(x => x.Name).ToArray();
             }
         }
     }

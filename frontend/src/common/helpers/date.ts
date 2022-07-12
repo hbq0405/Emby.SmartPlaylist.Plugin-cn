@@ -25,3 +25,18 @@ export function parseIsoDate(value) {
     }
     return value;
 }
+
+export function tryParseDate(d: any) {
+    var date = Date.parse(d);
+    if (isNaN(date))
+        throw Error(d + ' is not a valid date.')
+
+    return new Date(date);
+}
+
+export function tryParseInt(i: any) {
+    if (isNaN(i))
+        throw Error(i + ' is not a valid number.');
+
+    return parseInt(i);
+}

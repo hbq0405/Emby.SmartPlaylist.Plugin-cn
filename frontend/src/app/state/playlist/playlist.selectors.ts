@@ -1,5 +1,5 @@
 import { RuleOrRuleGroup } from '~/app/types/rule';
-import { TreeViewData } from '~/common/components/TreeView/types/tree';
+import { TreeNodeData, TreeViewData } from '~/common/components/TreeView/types/tree';
 import { PlaylistState } from '~/app/state/playlist/playlist.reducer';
 import { isShuffleUpdateType, PlaylistBasicData } from '~/app/types/playlist';
 
@@ -7,7 +7,8 @@ export type PlaylistSelectors = {
     getRulesTree(): TreeViewData<RuleOrRuleGroup>;
     getBasicData(): PlaylistBasicData;
     isShuffleUpdateType(): boolean;
-    getPlaylist(): PlaylistState
+    getPlaylist(): PlaylistState;
+    getLastTreeNode(): TreeNodeData;
 };
 
 export const createPlaylistSelectors = (state: PlaylistState): PlaylistSelectors => {
@@ -24,6 +25,14 @@ export const createPlaylistSelectors = (state: PlaylistState): PlaylistSelectors
         },
         getPlaylist: (): PlaylistState => {
             return state;
+        },
+        getLastTreeNode: (): TreeNodeData => {
+            let keys = Object.keys(state.rulesTree.byId);
+            if (keys.length !== 0)
+                return state.rulesTree.byId[keys[keys.length - 1]];
+
+            keys = Object.keys(state.rulesTree.rootIds);
+            return state.rulesTree.rootIds[keys[keys.length - 1]];
         }
     };
 };

@@ -6,14 +6,15 @@ import { Guid } from '~/common/helpers/guid';
 type UserListInputProps = {
     userId: string;
     onChange(userId: string): void;
+    label?: string;
 } & React.SelectHTMLAttributes<HTMLSelectElement> &
     BaseProps;
 
 export const UserListInput: React.FC<UserListInputProps> = props => {
     const appContext = React.useContext(AppContext);
-
+    const container = 'selectContainer padding-lr ' + (props.maxWidth ? 'max-width' : 'inline');
     return (
-        <div className='selectContainer padding-lr inline'>
+        <div className={container}>
             <select is="emby-select" {...props} onChange={e => props.onChange(e.target.value)} value={props.userId}>
                 <option value={''}>[Current User]</option>
                 {appContext.getUsers().map(item => (

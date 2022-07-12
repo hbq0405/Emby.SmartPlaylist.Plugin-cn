@@ -41,7 +41,7 @@ export const App: React.FC<AppProps> = props => {
         getViewPlaylist,
         getConfirmation,
         isLoaded,
-        getSortJobPlaylist
+        getSortJobPlaylist,
     } = appContext;
 
     const editedPlaylist = getEditedPlaylist();
