@@ -55,7 +55,7 @@ namespace SmartPlaylist.Domain
                 NextUpdate = NextUpdate,
                 LastUpdated = LastUpdated,
                 LastRan = LastRan,
-                ThenBys = ThenBys.Select(x => x.Name).ToArray()
+                ThenBys = ThenBys == null ? new string[] { } : ThenBys.Select(x => x.Name).ToArray()
             };
         }
 
