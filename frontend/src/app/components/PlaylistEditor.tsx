@@ -1,22 +1,17 @@
+import * as React from 'react';
 import { PlaylistContext } from '~/app/state/playlist/playlist.context';
 import { Select } from '~/common/components/Select';
 import { TreeView } from '~/common/components/TreeView/TreeView';
 import { RuleTreeNodeContent } from '~/app/components/RuleTreeNodeContent';
 import { Input } from '~/common/components/Input';
-import * as React from 'react';
 import { AppContext } from '~/app/state/app.context';
-import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes, SourceTypes, defaultNewItemOrder, defaultSortJob } from '~/app/app.const';
+import { defaultGroupMatchType, RuleMatchTypes, SmartTypes, UpdateTypes, CollectionModes, SourceTypes } from '~/app/app.const';
 import { Inline } from '~/common/components/Inline';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
 import { AutoSize } from '~/common/components/AutoSize';
 import { Toggle } from '~/common/components/Toggle';
-import { TreeViewMultiAdd } from '../../common/components/TreeView/TreeViewMultiAdd';
-import { Button } from '~/common/components/Button';
-import { Icon } from '~/emby/components/Icon';
 import './PlaylistEditor.css'
-import { TreeNode } from '~/emby/components/TreeNode';
-import { createTreeNodeData } from '~/common/components/TreeView/types/tree.factory';
 
 type PlaylistEditorProps = {};
 
@@ -226,6 +221,7 @@ const GroupContentHeader: React.FC<{ node: TreeNodeData<RuleOrRuleGroup> }> = pr
             {nodeData.kind === 'ruleGroup' && (
                 <AutoSize>
                     <Select
+                        title='All items need to match under an "All" group but only one needs to match in an "Any" group for the item to be matched successfully'
                         values={RuleMatchTypes.map(x => x)}
                         value={nodeData.matchMode || defaultGroupMatchType}
                         onChange={newVal => playlistContext.changeMatchMode(nodeData, newVal)}

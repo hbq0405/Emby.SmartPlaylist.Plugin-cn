@@ -86,5 +86,21 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
                 return _decorated.GetLogFilePath(userId, smartPlaylistId);
             }
         }
+
+        public string Export(string[] ids)
+        {
+            using (PerfLogger.Create("Exporting"))
+            {
+                return _decorated.Export(ids);
+            }
+        }
+
+        public void Delete(string path)
+        {
+            using (PerfLogger.Create($"Deleting file: {path}"))
+            {
+                _decorated.Delete(path);
+            }
+        }
     }
 }

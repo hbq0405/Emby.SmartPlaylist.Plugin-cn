@@ -1,5 +1,7 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { version } from '~/emby/app.data';
+import { Guid } from './guid';
 
 toast.configure();
 
@@ -30,4 +32,12 @@ export function tryParseInt(i: any) {
         throw Error(i + ' is not a valid number.');
 
     return parseInt(i);
+}
+
+export function openUrl(baseUrl: string, newWindow: boolean) {
+    const url = `${baseUrl}?v=${version}&X-Emby-Client=${window.ApiClient.appName()}&X-Emby-Device-Name=${window.ApiClient.deviceName()}&X-Emby-Device-Id=${window.ApiClient.deviceId()}&X-Emby-Client-Version=${window.ApiClient.appVersion()}&X-Emby-Token=${window.ApiClient.accessToken()}`;
+    if (newWindow)
+        window.open(url, Guid.newGuid());
+    else
+        window.location.href = url;
 }

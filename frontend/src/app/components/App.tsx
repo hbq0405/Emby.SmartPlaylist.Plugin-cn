@@ -14,12 +14,21 @@ import './App.css';
 import { Confirmation } from '~/emby/components/Confirmation';
 import { Modal } from '~/emby/components/Modal';
 import BeatLoader from "react-spinners/BeatLoader"
-import { showError } from '~/common/helpers/utils';
+import { openUrl, showError } from '~/common/helpers/utils';
+import { Menu } from './Menu';
+import { Export } from './Export';
+import { Inline } from '~/common/components/Inline';
 export type AppProps = {
     appId: string;
 };
 
+enum UIFlags {
+    None,
+    Export
+}
+
 export const App: React.FC<AppProps> = props => {
+
     const [appState, appDispatcher] = React.useReducer(appReducer, {
         ...initAppState,
     });
@@ -55,14 +64,34 @@ export const App: React.FC<AppProps> = props => {
     const loaded = isLoaded()
     const sortJobPlaylist = getSortJobPlaylist();
 
+    const [uiFlag, setUIFlag] = React.useState(UIFlags.None);
+
     return (
         <>
             <AppContext.Provider value={appContext}>
-                <div className="flex align-items-center justify-content-center focuscontainer-x itemsViewSettingsContainer padded-top padded-bottom padded-left padded-left-page padded-right">
-                    <AddButton
-                        onClick={() => addNewPlaylist()}
-                        label="Add Smart Playlist" />
-                </div>
+                {loaded && (
+                    <Menu
+                        open={appContext.getPlaylists().length === 0}
+                        menuItems={[
+                            { label: 'Add Smart Playlist', icon: 'add', onClick: () => addNewPlaylist() },
+                            { label: 'Export Playlists', icon: 'arrow_circle_down', onClick: () => setUIFlag(UIFlags.Export) },
+                            { label: 'Import Playlists', icon: 'arrow_circle_up', onClick: () => alert('hello') }
+                        ]}
+                    />
+                )}
+
+                {(loaded && appContext.getPlaylists().length === 0) && (
+                    <>
+                        <Inline>
+                            <b><u>Welcome to Smart Playlist!</u></b>
+                        </Inline>
+                        <Inline>
+                            <p>You currently do not have any smart playlists or collections added,
+                                to do so, select <b>'Add New Playlist'</b> from the menu on the right.
+                                <i className="md-icon" style={{ fontSize: "x-large" }}>pending</i></p>
+                        </Inline>
+                    </>
+                )}
 
                 {!loaded && (
                     <div className='app-container'>
@@ -134,6 +163,23 @@ export const App: React.FC<AppProps> = props => {
                         }}
                     >
                     </Confirmation>
+                )}
+
+                {uiFlag === UIFlags.Export && (
+                    <Export
+                        playlists={appContext.getPlaylists()}
+                        onClose={() => setUIFlag(UIFlags.None)}
+                        onConfirm={(ids) => {
+                            try {
+                                if (ids.length !== 0)
+                                    openUrl(`../smartplaylist/export/${window.btoa(ids.join(','))}`, false);
+                            } catch (e) {
+                                showError({ label: 'Error exporting', content: e });
+                            } finally {
+                                setUIFlag(UIFlags.None)
+                            }
+                        }}
+                    />
                 )}
             </AppContext.Provider>
         </>

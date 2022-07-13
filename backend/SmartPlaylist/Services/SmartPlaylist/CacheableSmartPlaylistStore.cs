@@ -79,5 +79,15 @@ namespace SmartPlaylist.Services.SmartPlaylist
         {
             return _decorated.GetLogFilePath(userId, smartPlaylistId);
         }
+
+        public string Export(string[] smartPlaylistIds)
+        {
+            return _decorated.Export(smartPlaylistIds);
+        }
+
+        public void Delete(string path)
+        {
+            _decorated.Delete(path);
+        }
     }
 }

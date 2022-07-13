@@ -64,3 +64,26 @@
 .toggle-checkbox:checked + .toggle-label .toggle-toggle-switch {
     right: 0px;
 }
+.label-right-container {
+    display: flex;
+    align-items: center;
+}
+.label-right {
+    padding: 5px 0 0 10px;
+}
+
+.label-right-container:hover .label-right {
+    color: hsl(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness)
+    ) !important;
+}
+
+.inputContainer:hover .inputLabel {
+    color: hsl(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness)
+    ) !important;
+}

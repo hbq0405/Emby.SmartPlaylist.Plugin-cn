@@ -9,10 +9,11 @@
     "license": "MIT",
     "dependencies": {
         "camelcase-keys": "^7.0.2",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "react-spinners": "^0.11.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-spinners": "^0.13.3",
         "react-toastify": "^8.1.1",
+        "reactjs-popup": "^2.0.5",
         "tslint-react": "^4.1.0",
         "why-did-you-update": "^1.0.6"
     },

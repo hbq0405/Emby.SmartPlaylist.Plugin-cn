@@ -1,0 +1,29 @@
+.menu-container {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    padding: 5px;
+    font-size: x-large;
+}
+.menu {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    border: calc(var(--line-size) * 1.8) solid var(--line-background);
+    border-radius: 5px;
+}
+.menu-item {
+    cursor: pointer;
+    padding: 5px;
+    height: 28px;
+    border-bottom: calc(var(--line-size) * 1.8) solid var(--line-background);
+    background-color: hsla(0, 0%, 66%, 0.1);
+    display: inline-flex;
+    align-items: center;
+}
+.menu-item:last-child {
+    border: none;
+}
+.menu-item:hover {
+    color: var(--theme-accent-text-color);
+}

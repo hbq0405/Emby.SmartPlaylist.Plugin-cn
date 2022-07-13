@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Model.Serialization;
@@ -122,6 +123,28 @@ namespace SmartPlaylist.Services.SmartPlaylist
             if (!File.Exists(filePath))
                 throw new FileLoadException($"Log file {filePath} does not exist");
             return filePath;
+        }
+
+        public string Export(string[] smartPlaylistIds)
+        {
+            var tempPath = Path.Combine(Path.GetTempPath(), $"Export-{DateTime.Now.ToFileTimeUtc()}.zip");
+            var paths = _fileSystem.GetAllSmartPlaylistFilePaths().Where(p => smartPlaylistIds.Contains(Path.GetFileNameWithoutExtension(p)))
+                .Select(x => new FileInfo(x));
+
+            using (FileStream zipFile = File.Open(tempPath, FileMode.Create))
+            using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Create, true))
+            {
+                foreach (var path in paths)
+                    archive.CreateEntryFromFile(path.FullName, path.Name);
+            }
+
+            return tempPath;
+        }
+
+        public void Delete(string path)
+        {
+            if (File.Exists(path))
+                File.Delete(path);
         }
     }
 }

@@ -1,6 +1,6 @@
-import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
+import { AppData, AppPlaylist } from '~/app/types/appData';
 import { demoAppData, demoAppPlaylistView } from '~/app/app.demo';
-import { Playlist, PlaylistInfo, ServerResponse } from './types/playlist';
+import { PlaylistInfo, ServerResponse } from './types/playlist';
 
 export const loadAppData = (appId: string): Promise<AppData> => {
     return new Promise<AppData>(res => {

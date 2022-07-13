@@ -1,17 +1,23 @@
-import { AppData, AppPlaylist, AppPlaylists } from '~/app/types/appData';
+import { AppData, AppPlaylist } from '~/app/types/appData';
 import camelcaseKeys = require('camelcase-keys');
 import { parseDate } from '~/common/helpers/date';
 import { convertObjectPropValues } from '~/common/helpers/object';
 import { PlaylistInfo, ServerResponse } from '~/app/types/playlist';
+import { showError } from '~/common/helpers/utils';
 
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;
     updatePluginConfiguration<TConfig>(pluginId: string, config: TConfig): Promise<any>;
     serverId(): string;
+    deviceId(): string;
+    accessToken(): string;
+    appVersion(): string;
+    deviceName(): string;
+    appName(): string;
     ajax<T = any>(request: any): Promise<T>;
 };
 
-export const version = "2.3.0.2";
+export const version = "2.4.0.1";
 
 declare global {
     // tslint:disable-next-line:interface-name

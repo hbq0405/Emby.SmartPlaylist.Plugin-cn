@@ -8,6 +8,7 @@ export type ToggleProps = {
     switchStyle?: React.CSSProperties,
     containerStyle?: React.CSSProperties,
     title?: string,
+    labelPos?: 'top' | 'right'
     onToggled(change: boolean): void,
 
 } & BaseProps;
@@ -40,10 +41,21 @@ export const Toggle: React.FC<ToggleProps> = props => {
         </div>
     </div>
 
-    const labeled = <div className='inputContainer padding-lr'>
-        <label className='inputLabel inputLabelUnfocused' htmlFor={props.id}>{props.label}</label>
-        {main}
-    </div>
+    if (!props.label)
+        return main;
 
-    return props.label ? labeled : main;
+    if (!props.labelPos)
+        props.labelPos = 'top';
+
+    if (props.labelPos == 'top')
+        return <div className='inputContainer padding-lr'>
+            <label className='inputLabel inputLabelUnfocused' htmlFor={props.id}>{props.label}</label>
+            {main}
+        </div>
+    else
+        return <div className='label-right-container'>
+            {main}
+            <div className='label-right'>{props.label}</div>
+        </div>
+
 }

@@ -46,4 +46,10 @@ namespace SmartPlaylist.Api
     {
         public string Id { get; set; }
     }
+
+    [Route("/smartplaylist/export/{payload}", "GET", Summary = "")]
+    public class ExportPlaylists : IReturn
+    {
+        public string payload { get; set; }
+    }
 }

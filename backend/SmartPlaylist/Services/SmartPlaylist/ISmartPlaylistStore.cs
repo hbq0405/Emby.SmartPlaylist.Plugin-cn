@@ -17,7 +17,10 @@ namespace SmartPlaylist.Services.SmartPlaylist
         string GetLogFilePath(Guid userId, string smartPlaylistId);
 
         void Delete(Guid userId, string smartPlaylistId);
+        void Delete(string path);
 
         bool Exists(Guid userId, string smartPlaylistId);
+
+        string Export(string[] smartPlaylistIds);
     }
 }

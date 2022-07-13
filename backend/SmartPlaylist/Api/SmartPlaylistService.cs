@@ -8,8 +8,6 @@ using SmartPlaylist.Infrastructure.MesssageBus;
 using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Services;
 using SmartPlaylist.Adapters;
-using System.Linq;
-using SmartPlaylist.Domain;
 
 namespace SmartPlaylist.Api
 {
@@ -21,8 +19,7 @@ namespace SmartPlaylist.Api
         private readonly SmartPlaylistValidator _smartPlaylistValidator;
         private readonly IFolderRepository _folderRepository;
 
-        public SmartPlaylistService(ISessionContext sessionContext
-        )
+        public SmartPlaylistService(ISessionContext sessionContext)
         {
             _sessionContext = sessionContext;
 
@@ -110,7 +107,6 @@ namespace SmartPlaylist.Api
                     Error = ex.Message
                 };
             }
-
         }
 
         private Contracts.SmartPlaylistDto GetPlaylistFromStore(Guid playlistId)
