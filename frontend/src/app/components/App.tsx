@@ -14,6 +14,7 @@ import './App.css';
 import { Confirmation } from '~/emby/components/Confirmation';
 import { Modal } from '~/emby/components/Modal';
 import BeatLoader from "react-spinners/BeatLoader"
+import { showError } from '~/common/helpers/utils';
 export type AppProps = {
     appId: string;
 };
@@ -27,7 +28,11 @@ export const App: React.FC<AppProps> = props => {
 
     React.useEffect(() => {
         loadAppData(props.appId).then((appData: AppData) => {
-            appContext.loadAppData(appData);
+            try {
+                appContext.loadAppData(appData);
+            } catch (e) {
+                showError({ msg: "Error loading playlists", content: e });
+            }
         });
     }, [props.appId]);
 

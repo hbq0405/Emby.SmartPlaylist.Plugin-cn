@@ -6,10 +6,8 @@ import { TagList } from '~/common/components/TagList';
 import { Button } from '~/emby/components/Button';
 import { Icon } from '~/emby/components/Icon';
 import { viewPlaylistLog } from '~/emby/app.data';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { showError } from '~/common/helpers/utils';
 
-toast.configure();
 
 export type PlaylistDetailProps = {
     playlist: PlaylistInfo
@@ -40,14 +38,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             var msg = reason instanceof Response ? "Log file for playlist does not exist yet" :
                 reason instanceof Error ? reason.message : reason;
 
-            toast.error(`Error loading playlist log: ${msg}`, {
-                containerId: "modalToast",
-                autoClose: false,
-                position: 'top-center',
-                bodyStyle: {
-                    zIndex: 1000
-                }
-            });
+            showError({ msg: "Error loading playlist log", content: msg });
 
         }).finally(() => {
             if (ev.target instanceof HTMLButtonElement)

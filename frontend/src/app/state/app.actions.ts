@@ -5,13 +5,9 @@ import { AppAction, AppState } from '~/app/state/app.reducer';
 import { AppData, AppPlaylist } from '~/app/types/appData';
 import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
 import { getAppEditPlaylist, getAppPlaylistForPlaylist, getAppSortJobPlaylist } from '~/app/state/app.selectors';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { render } from 'react-dom';
 import { ConfirmDeletePlaylist, DeleteData } from '~/emby/components/Confirmation';
-import { response } from 'express';
+import { showError, showInfo } from '~/common/helpers/utils';
 
-toast.configure();
 
 export type AppActions = {
     addNewPlaylist(): void;
@@ -36,14 +32,7 @@ export function handleSaveResponse(response: ServerResponse, dis) {
         });
     }
     else {
-        toast.error(`Error saving playlist: ${response.error}`, {
-            containerId: "modalToast",
-            autoClose: false,
-            position: 'top-center',
-            bodyStyle: {
-                zIndex: 1000
-            }
-        });
+        showError({ msg: "Error saving playlist", content: response.error })
     }
 }
 
@@ -100,7 +89,7 @@ export const createAppActions = (
             });
         },
         executePlaylist: async (plalist: Playlist) => {
-            toast('Executing playlist: ' + plalist.name);
+            showInfo('Executing playlist: ' + plalist.name);
             viewPlaylist(plalist.id, true)
         },
         discardPlaylist: () => {

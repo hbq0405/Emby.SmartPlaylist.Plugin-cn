@@ -7,12 +7,9 @@ import { createRule } from '../../../app/types/rule.factory';
 import { Inline } from '~/common/components/Inline';
 import { UserListInput } from '../../../app/components/RuleEditor/ValueInputs/UserList';
 import './TreeViewMultiAdd.css'
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { tryParseInt, tryParseDate } from '~/common/helpers/date';
+import { tryParseDate } from '~/common/helpers/date';
 import { Guid } from '~/common/helpers/guid';
-
-toast.configure();
+import { tryParseInt, showError } from '~/common/helpers/utils';
 
 type PlaylistEditorMultiAddProps = {
     onClose(): void;
@@ -132,14 +129,7 @@ export const TreeViewMultiAdd: React.FC<PlaylistEditorMultiAddProps> = (props) =
                 } catch (e) {
                     var msg = e instanceof Error ? e.message : e;
 
-                    toast.error(`Error adding multiple values: ${msg}`, {
-                        containerId: "modalToast",
-                        autoClose: 5000,
-                        position: 'top-center',
-                        bodyStyle: {
-                            zIndex: 1000
-                        }
-                    });
+                    showError({ msg: 'Error adding multiple values', content: e, timeout: 5000 });
                 }
 
             }

@@ -33,10 +33,3 @@ export function tryParseDate(d: any) {
 
     return new Date(date);
 }
-
-export function tryParseInt(i: any) {
-    if (isNaN(i))
-        throw Error(i + ' is not a valid number.');
-
-    return parseInt(i);
-}
