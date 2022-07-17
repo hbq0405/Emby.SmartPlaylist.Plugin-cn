@@ -6,7 +6,7 @@ import { TagList } from '~/common/components/TagList';
 import { Button } from '~/emby/components/Button';
 import { Icon } from '~/emby/components/Icon';
 import { viewPlaylistLog } from '~/emby/app.data';
-import { showError } from '~/common/helpers/utils';
+import { openUrl, showError } from '~/common/helpers/utils';
 
 
 export type PlaylistDetailProps = {
@@ -27,23 +27,17 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
         if (ev.target instanceof HTMLButtonElement)
             handleButton(ev.target, true);
 
-        viewPlaylistLog(playlist.id).then((value: string) => {
-            var w = window.open('', playlist.name + "_log");
-            w.document.writeln("<html><head><title>" + playlist.name + " Log File</title></head>")
-            w.document.writeln('<body><pre>');
-            w.document.writeln(value);
-            w.document.writeln('</pre></body></html>');
+        try {
+            openUrl(`../smartplaylist/log/${playlist.id}`, true)
+        } catch (e) {
+            var msg = e instanceof Response ? "Log file for playlist does not exist yet" :
+                e instanceof Error ? e.message : e;
 
-        }).catch((reason) => {
-            var msg = reason instanceof Response ? "Log file for playlist does not exist yet" :
-                reason instanceof Error ? reason.message : reason;
-
-            showError({ msg: "Error loading playlist log", content: msg });
-
-        }).finally(() => {
+            showError({ label: "Error loading playlist log", content: msg, modal: true });
+        } finally {
             if (ev.target instanceof HTMLButtonElement)
                 handleButton(ev.target, false);
-        })
+        }
     }
 
     return (

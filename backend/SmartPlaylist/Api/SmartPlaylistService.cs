@@ -4,10 +4,11 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Net;
 using MediaBrowser.Model.Services;
 using SmartPlaylist.Handlers.Commands;
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Services;
 using SmartPlaylist.Adapters;
+using SmartPlaylist.Contracts;
 
 namespace SmartPlaylist.Api
 {
@@ -31,7 +32,7 @@ namespace SmartPlaylist.Api
 
         public IRequest Request { get; set; }
 
-        public Contracts.SmartPlaylistResponseDto Post(SaveSortJobPlaylist request)
+        public Contracts.ResponseDto<SmartPlaylistDto> Post(SaveSortJobPlaylist request)
         {
             try
             {
@@ -51,23 +52,15 @@ namespace SmartPlaylist.Api
                 Contracts.SmartPlaylistDto dto = smartPlaylist.ToDto();
                 _smartPlaylistStore.Save(dto);
 
-                return new Contracts.SmartPlaylistResponseDto()
-                {
-                    Success = true,
-                    Playlist = dto
-                };
+                return ResponseDto<SmartPlaylistDto>.CreateSuccess(dto);
             }
             catch (Exception ex)
             {
                 Plugin.Instance.Logger.Error($"Error saving smart playlist: {ex.Message}", request);
-                return new Contracts.SmartPlaylistResponseDto()
-                {
-                    Success = false,
-                    Error = ex.Message
-                };
+                return ResponseDto<SmartPlaylistDto>.CreateError(ex.Message);
             }
         }
-        public Contracts.SmartPlaylistResponseDto Post(SaveSmartPlaylist request)
+        public Contracts.ResponseDto<SmartPlaylistDto> Post(SaveSmartPlaylist request)
         {
             try
             {
@@ -92,20 +85,12 @@ namespace SmartPlaylist.Api
 
                 _messageBus.Publish(new UpdateSmartPlaylistCommand(Guid.Parse(playlist.Id), ExecutionModes.OnSave));
 
-                return new Contracts.SmartPlaylistResponseDto()
-                {
-                    Success = true,
-                    Playlist = playlist
-                };
+                return ResponseDto<SmartPlaylistDto>.CreateSuccess(playlist);
             }
             catch (Exception ex)
             {
                 Plugin.Instance.Logger.Error($"Error saving smart playlist: {ex.Message}", request);
-                return new Contracts.SmartPlaylistResponseDto()
-                {
-                    Success = false,
-                    Error = ex.Message
-                };
+                return ResponseDto<SmartPlaylistDto>.CreateError(ex.Message);
             }
         }
 

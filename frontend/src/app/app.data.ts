@@ -1,6 +1,6 @@
 import { AppData, AppPlaylist } from '~/app/types/appData';
-import { demoAppData, demoAppPlaylistView } from '~/app/app.demo';
-import { PlaylistInfo, ServerResponse } from './types/playlist';
+import { demoAppData, demoAppPlaylistView, demoServerResponse } from '~/app/app.demo';
+import { Playlist, PlaylistInfo, ServerResponse } from './types/playlist';
 
 export const loadAppData = (appId: string): Promise<AppData> => {
     return new Promise<AppData>(res => {
@@ -11,9 +11,9 @@ export const loadAppData = (appId: string): Promise<AppData> => {
     });
 };
 
-export const saveAppPlaylist = (playlist: AppPlaylist, saveSortJob: boolean): Promise<ServerResponse | void> => {
+export const saveAppPlaylist = (playlist: AppPlaylist, saveSortJob: boolean): Promise<ServerResponse<Playlist> | void> => {
     // tslint:disable-next-line:no-console
-    return new Promise<ServerResponse | void>(res => {
+    return new Promise<ServerResponse<Playlist> | void>(res => {
         res();
     });
 };
@@ -37,3 +37,11 @@ export const viewPlaylistLog = (playlistId: string): Promise<string> => {
         res('');
     });
 };
+
+export const importPlaylists = (uploadFile: File): Promise<ServerResponse<string>> => {
+    return new Promise<ServerResponse<string>>(res => {
+        res({
+            ...demoServerResponse
+        })
+    })
+}

@@ -8,24 +8,29 @@ import { AppContext, createAppContextValue } from '~/app/state/app.context';
 import { loadAppData } from '~/app/app.data';
 import { AppData } from '~/app/types/appData';
 import { PlaylistList } from '~/app/components/PlaylistList';
-import { AddButton } from '~/common/components/AddButton';
 import { PlaylistDetail } from '~/app/components/PlaylistDetail';
 import './App.css';
 import { Confirmation } from '~/emby/components/Confirmation';
 import { Modal } from '~/emby/components/Modal';
 import BeatLoader from "react-spinners/BeatLoader"
-import { openUrl, showError } from '~/common/helpers/utils';
+import { openUrl, showError, showInfo, utils_configure } from '~/common/helpers/utils';
 import { Menu } from './Menu';
 import { Export } from './Export';
 import { Inline } from '~/common/components/Inline';
+import { Import } from './Import';
+import { ToastContainer } from 'react-toastify';
+
 export type AppProps = {
     appId: string;
 };
 
 enum UIFlags {
     None,
-    Export
+    Export,
+    Import
 }
+
+utils_configure();
 
 export const App: React.FC<AppProps> = props => {
 
@@ -36,13 +41,7 @@ export const App: React.FC<AppProps> = props => {
     const appContext = createAppContextValue(appState, appDispatcher);
 
     React.useEffect(() => {
-        loadAppData(props.appId).then((appData: AppData) => {
-            try {
-                appContext.loadAppData(appData);
-            } catch (e) {
-                showError({ msg: "Error loading playlists", content: e });
-            }
-        });
+        loadPlaylists();
     }, [props.appId]);
 
     const {
@@ -56,7 +55,18 @@ export const App: React.FC<AppProps> = props => {
         getConfirmation,
         isLoaded,
         getSortJobPlaylist,
+        reset
     } = appContext;
+
+    function loadPlaylists() {
+        loadAppData(props.appId).then((appData: AppData) => {
+            try {
+                appContext.loadAppData(appData);
+            } catch (e) {
+                showError({ label: "Error loading playlists", content: e, modal: false });
+            }
+        });
+    }
 
     const editedPlaylist = getEditedPlaylist();
     const viewPlaylistInfo = getViewPlaylist();
@@ -65,6 +75,16 @@ export const App: React.FC<AppProps> = props => {
     const sortJobPlaylist = getSortJobPlaylist();
 
     const [uiFlag, setUIFlag] = React.useState(UIFlags.None);
+
+    const doUIFlagResponse = (func, error: string) => {
+        try {
+            func();
+        } catch (e) {
+            showError({ label: error, content: e, modal: false });
+        } finally {
+            setUIFlag(UIFlags.None)
+        }
+    }
 
     return (
         <>
@@ -75,10 +95,12 @@ export const App: React.FC<AppProps> = props => {
                         menuItems={[
                             { label: 'Add Smart Playlist', icon: 'add', onClick: () => addNewPlaylist() },
                             { label: 'Export Playlists', icon: 'arrow_circle_down', onClick: () => setUIFlag(UIFlags.Export) },
-                            { label: 'Import Playlists', icon: 'arrow_circle_up', onClick: () => alert('hello') }
+                            { label: 'Import Playlists', icon: 'arrow_circle_up', onClick: () => setUIFlag(UIFlags.Import) }
                         ]}
                     />
                 )}
+
+                <ToastContainer containerId='appToast' />
 
                 {(loaded && appContext.getPlaylists().length === 0) && (
                     <>
@@ -169,16 +191,29 @@ export const App: React.FC<AppProps> = props => {
                     <Export
                         playlists={appContext.getPlaylists()}
                         onClose={() => setUIFlag(UIFlags.None)}
-                        onConfirm={(ids) => {
-                            try {
-                                if (ids.length !== 0)
-                                    openUrl(`../smartplaylist/export/${window.btoa(ids.join(','))}`, false);
-                            } catch (e) {
-                                showError({ label: 'Error exporting', content: e });
-                            } finally {
-                                setUIFlag(UIFlags.None)
-                            }
-                        }}
+                        onConfirm={(ids) => doUIFlagResponse(() => {
+                            if (ids.length !== 0)
+                                openUrl(`../smartplaylist/export/${window.btoa(ids.join(','))}`, false);
+                        }, 'Error exporting')}
+                    />
+                )}
+
+                {uiFlag === UIFlags.Import && (
+                    <Import
+                        onClose={() => setUIFlag(UIFlags.None)}
+                        onConfirm={(response) => doUIFlagResponse(() => {
+                            if (response.success) {
+                                new Promise<void>((res) => {
+                                    showInfo('Import successful: ' + response.response, false);
+                                    res();
+                                }).then(() => {
+                                    reset();
+                                    loadPlaylists();
+                                });
+                            } else
+                                throw Error(response.error);
+
+                        }, 'Error importing')}
                     />
                 )}
             </AppContext.Provider>

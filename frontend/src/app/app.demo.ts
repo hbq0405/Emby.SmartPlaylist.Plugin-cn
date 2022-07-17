@@ -14,7 +14,7 @@ import {
     defaultNewItemOrder,
     defaultSortJob
 } from '~/app/app.const';
-import { PlaylistInfo } from './types/playlist';
+import { PlaylistInfo, ServerResponse } from './types/playlist';
 
 export const demoRulesCritDefinitions: RuleCriteriaDefinition[] = [
     defaultRuleCriteriaDefinition,
@@ -92,3 +92,8 @@ export const demoAppData: AppData = {
     sources: [],
     users: []
 };
+
+export const demoServerResponse: ServerResponse<string> = {
+    success: true,
+    response: ''
+}

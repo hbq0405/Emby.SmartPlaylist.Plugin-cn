@@ -65,5 +65,15 @@ namespace SmartPlaylist.Infrastructure
             _lock.Wait(TimeSpan.FromSeconds(30));
             _lock.SafeExecute(() => { _items.Remove(key); });
         }
+
+        public void Invalidate()
+        {
+            _lock.Wait(TimeSpan.FromSeconds(30));
+            _lock.SafeExecute(() =>
+            {
+                _lastCacheUpdateTime = null;
+                _items.Clear();
+            });
+        }
     }
 }

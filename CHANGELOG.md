@@ -1,4 +1,9 @@
 # ChangeLog
+## Version 2.4.0.1
+  ## Feature
+  - Added Import/Export functionality
+- ## Bug
+  - Changed the way log files are transferred.
 ## Version 2.4.0.0
   ## Feature
   - Added verbose log to info section.

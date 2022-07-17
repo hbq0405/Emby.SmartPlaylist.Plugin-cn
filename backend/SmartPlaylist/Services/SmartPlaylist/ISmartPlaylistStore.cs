@@ -21,6 +21,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
         bool Exists(Guid userId, string smartPlaylistId);
 
-        string Export(string[] smartPlaylistIds);
+        Task<string> ExportAsync(string[] smartPlaylistIds);
+        Task<string> ImportAsync(byte[] fileData, Guid userId);
     }
 }

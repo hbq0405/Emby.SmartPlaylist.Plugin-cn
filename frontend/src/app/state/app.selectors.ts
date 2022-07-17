@@ -76,7 +76,7 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         },
         getUsers: (): User[] => {
             return state.users;
-        },
+        }
     };
 };
 

@@ -150,14 +150,19 @@ namespace SmartPlaylist.Services.SmartPlaylist
             return _decorated.GetLogFilePath(userId, smartPlaylistId);
         }
 
-        public string Export(string[] smartPlaylistIds)
+        public async Task<string> ExportAsync(string[] smartPlaylistIds)
         {
-            return _decorated.Export(smartPlaylistIds);
+            return await _decorated.ExportAsync(smartPlaylistIds).ConfigureAwait(false);
         }
 
         public void Delete(string path)
         {
             _decorated.Delete(path);
+        }
+
+        public async Task<string> ImportAsync(byte[] fileData, Guid userId)
+        {
+            return await _decorated.ImportAsync(fileData, userId).ConfigureAwait(false);
         }
     }
 }

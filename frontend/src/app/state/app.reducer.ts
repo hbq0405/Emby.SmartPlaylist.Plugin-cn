@@ -58,7 +58,8 @@ export type AppAction =
     | { type: 'app:savePlaylist'; playlist: Playlist }
     | { type: 'app:removePlaylist'; playlist: Playlist, keep: boolean }
     | { type: 'app:loadPlaylistInfo'; playlistInfo: PlaylistInfo }
-    | { type: 'app:confirmDeletePlaylist'; confirmationProps: ConfirmationProps };
+    | { type: 'app:confirmDeletePlaylist'; confirmationProps: ConfirmationProps }
+    | { type: 'app:reset' };
 
 export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (state, action) => {
     switch (action.type) {
@@ -128,6 +129,11 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                     names: state.playlists.names.filter(x => x !== action.playlist.id),
                 },
             };
+        }
+        case 'app:reset': {
+            return {
+                ...initAppState
+            }
         }
         case 'app:loadPlaylistInfo': {
             return {

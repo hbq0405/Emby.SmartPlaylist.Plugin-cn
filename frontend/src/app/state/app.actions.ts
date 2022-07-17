@@ -22,17 +22,18 @@ export type AppActions = {
     viewPlaylist(plalist: Playlist): void;
     executePlaylist(plalist: Playlist): void;
     confirmDeletePlaylist(plalist: Playlist): void;
+    reset(): void;
 };
 
-export function handleSaveResponse(response: ServerResponse, dis) {
+export function handleSaveResponse(response: ServerResponse<Playlist>, dis) {
     if (response.success) {
         dis({
             type: 'app:savePlaylist',
-            playlist: response.playlist
+            playlist: response.response
         });
     }
     else {
-        showError({ msg: "Error saving playlist", content: response.error })
+        showError({ label: "Error saving playlist", content: response.error, modal: false })
     }
 }
 
@@ -67,11 +68,11 @@ export const createAppActions = (
             });
         },
         savePlaylist: async () => {
-            handleSaveResponse(await saveAppPlaylist(getAppEditPlaylist(state), false) as ServerResponse, dispatcher);
+            handleSaveResponse(await saveAppPlaylist(getAppEditPlaylist(state), false) as ServerResponse<Playlist>, dispatcher);
 
         },
         saveSortJob: async () => {
-            handleSaveResponse(await saveAppPlaylist(getAppSortJobPlaylist(state), true) as ServerResponse, dispatcher);
+            handleSaveResponse(await saveAppPlaylist(getAppSortJobPlaylist(state), true) as ServerResponse<Playlist>, dispatcher);
         },
 
         deletePlaylist: async (plalist: Playlist, keep: boolean) => {
@@ -89,7 +90,7 @@ export const createAppActions = (
             });
         },
         executePlaylist: async (plalist: Playlist) => {
-            showInfo('Executing playlist: ' + plalist.name);
+            showInfo('Executing playlist: ' + plalist.name, false);
             viewPlaylist(plalist.id, true)
         },
         discardPlaylist: () => {
@@ -124,5 +125,10 @@ export const createAppActions = (
                 settings: appData,
             });
         },
+        reset: () => {
+            dispatcher({
+                type: 'app:reset'
+            });
+        }
     };
 };

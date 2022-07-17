@@ -74,10 +74,10 @@ export type SmartType = typeof SmartTypes[number];
 
 export type CollectionMode = typeof CollectionModes[number];
 
-export type ServerResponse = {
+export type ServerResponse<T> = {
     success: boolean;
     error?: string;
-    playlist: Playlist
+    response?: T
 }
 
 export const isShuffleUpdateType = (updateType: UpdateType) => {

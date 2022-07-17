@@ -6,6 +6,7 @@ import './Modal.css';
 export type ModalProps = {
     title?: string;
     confirmLabel: string;
+    confirmDisable?: boolean;
     onClose(): void;
     onConfirm(): void;
     small?: boolean;
@@ -40,6 +41,7 @@ export const Modal: React.FC<ModalProps> = props => {
                                 onClick={_ => props.onConfirm()}
                                 isBlock={true}
                                 class="formDialogFooterItem"
+                                disabled={props.confirmDisable}
                             >
                                 {props.confirmLabel}
                             </Button>

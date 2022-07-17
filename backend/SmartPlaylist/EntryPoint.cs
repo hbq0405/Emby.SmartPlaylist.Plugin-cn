@@ -6,7 +6,7 @@ using MediaBrowser.Controller.Plugins;
 using MediaBrowser.Model.Entities;
 using SmartPlaylist.Comparers;
 using SmartPlaylist.Handlers.Commands;
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 using SmartPlaylist.Infrastructure.Queue;
 
 namespace SmartPlaylist

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Extensions;
 using System.Linq;

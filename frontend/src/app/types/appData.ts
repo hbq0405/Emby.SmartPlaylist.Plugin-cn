@@ -27,3 +27,11 @@ export type AppData = {
 export type AppPlaylists = {
     playlists: AppPlaylist[];
 };
+
+export type Upload = {
+    uploadFile: File,
+    type: string,
+    onProgress?(ev: ProgressEvent<EventTarget>): void
+    onStart?(): void,
+    onEnd?(): void
+}

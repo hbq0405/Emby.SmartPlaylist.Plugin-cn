@@ -3,18 +3,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import { version } from '~/emby/app.data';
 import { Guid } from './guid';
 
-toast.configure();
+export function utils_configure() {
+    toast.configure();
+}
 
-export type errorProps = {
-    msg: string,
-    content: any
+export type ErrorProps = {
+    label: string,
+    content: any,
+    modal: boolean,
     timeout?: number
 }
 
-export function showError(errorProps): void {
-    var m = `${errorProps.msg}: ${(errorProps.content instanceof Error ? errorProps.content.message : errorProps.content)}`;
+export function showError(errorProps: ErrorProps): void {
+    var m = `${errorProps.label}: ${(errorProps.content instanceof Error ? errorProps.content.message : errorProps.content)}`;
     toast.error(m, {
-        containerId: "modalToast",
+        containerId: errorProps.modal ? "modalToast" : "appToast",
         autoClose: errorProps.timeout ? errorProps.timeout : false,
         position: 'top-center',
         bodyStyle: {
@@ -23,8 +26,10 @@ export function showError(errorProps): void {
     });
 }
 
-export function showInfo(msg: string) {
-    toast(msg);
+export function showInfo(msg: string, modal: boolean) {
+    toast(msg, {
+        containerId: modal ? "modalToast" : "appToast"
+    });
 }
 
 export function tryParseInt(i: any) {
@@ -41,3 +46,10 @@ export function openUrl(baseUrl: string, newWindow: boolean) {
     else
         window.location.href = url;
 }
+
+export const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});

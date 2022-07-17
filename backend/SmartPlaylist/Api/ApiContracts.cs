@@ -10,11 +10,11 @@ using SmartPlaylist.Handlers.Commands;
 namespace SmartPlaylist.Api
 {
     [Route("/smartplaylist", "POST", Summary = "")]
-    public class SaveSmartPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistResponseDto>
+    public class SaveSmartPlaylist : SmartPlaylistDto, IReturn<ResponseDto<SmartPlaylistDto>>
     { }
 
     [Route("/smartplaylist/sort", "POST", Summary = "")]
-    public class SaveSortJobPlaylist : SmartPlaylistDto, IReturn<SmartPlaylistResponseDto>
+    public class SaveSortJobPlaylist : SmartPlaylistDto, IReturn<ResponseDto<SmartPlaylistDto>>
     { }
 
     [Route("/smartplaylist/log/{Id}", "GET", Summary = "")]
@@ -51,5 +51,12 @@ namespace SmartPlaylist.Api
     public class ExportPlaylists : IReturn
     {
         public string payload { get; set; }
+    }
+
+    [Route("/smartplaylist/import", "POST", Summary = "")]
+    public class Import : IReturn<ResponseDto<string>>
+    {
+        public string type { get; set; }
+        public string UploadFile { get; set; }
     }
 }

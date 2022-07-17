@@ -125,8 +125,9 @@ namespace SmartPlaylist.Services.SmartPlaylist
             return filePath;
         }
 
-        public string Export(string[] smartPlaylistIds)
+        public Task<string> ExportAsync(string[] smartPlaylistIds)
         {
+
             var tempPath = Path.Combine(Path.GetTempPath(), $"Export-{DateTime.Now.ToFileTimeUtc()}.zip");
             var paths = _fileSystem.GetAllSmartPlaylistFilePaths().Where(p => smartPlaylistIds.Contains(Path.GetFileNameWithoutExtension(p)))
                 .Select(x => new FileInfo(x));
@@ -138,13 +139,55 @@ namespace SmartPlaylist.Services.SmartPlaylist
                     archive.CreateEntryFromFile(path.FullName, path.Name);
             }
 
-            return tempPath;
+            return Task.FromResult<string>(tempPath);
+
+
         }
 
         public void Delete(string path)
         {
             if (File.Exists(path))
                 File.Delete(path);
+        }
+
+        public async Task<string> ImportAsync(byte[] fileData, Guid userId)
+        {
+            (int add, int update, int fail) stats = (0, 0, 0);
+
+            var playlistPath = _fileSystem.GetOrCreateSmartPlaylistDir(userId);
+            using (var ms = new MemoryStream(fileData))
+            using (var archive = new ZipArchive(ms, ZipArchiveMode.Read, true))
+                foreach (var entry in archive.Entries)
+                {
+                    try
+                    {
+                        string fileName = Path.Combine(playlistPath, entry.FullName);
+                        SmartPlaylistDto persistedPL = File.Exists(fileName) ? await LoadPlaylistAsync(fileName) : null;
+                        entry.ExtractToFile(fileName, true);
+
+                        var smartPlaylistDto = await LoadPlaylistAsync(fileName);
+                        smartPlaylistDto.UserId = userId;
+
+                        if (persistedPL != null)
+                        {
+                            smartPlaylistDto.InternalId = persistedPL.InternalId;
+                            stats.update++;
+                        }
+                        else
+                        {
+                            smartPlaylistDto.InternalId = -1;
+                            stats.add++;
+                        }
+
+                        Save(smartPlaylistDto);
+                    }
+                    catch (Exception)
+                    {
+                        stats.fail++;
+                    }
+                }
+
+            return $"Added: {stats.add}, Updated: {stats.update}, Failed: {stats.fail}";
         }
     }
 }

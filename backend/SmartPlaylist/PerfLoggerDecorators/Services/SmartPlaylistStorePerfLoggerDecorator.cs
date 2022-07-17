@@ -87,11 +87,13 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public string Export(string[] ids)
+        public async Task<string> ExportAsync(string[] ids)
         {
+            string result;
             using (PerfLogger.Create("Exporting"))
             {
-                return _decorated.Export(ids);
+                result = await _decorated.ExportAsync(ids).ConfigureAwait(false);
+                return result;
             }
         }
 
@@ -100,6 +102,16 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             using (PerfLogger.Create($"Deleting file: {path}"))
             {
                 _decorated.Delete(path);
+            }
+        }
+
+        public async Task<string> ImportAsync(byte[] fileData, Guid userId)
+        {
+            string result;
+            using (PerfLogger.Create($"Importing"))
+            {
+                result = await _decorated.ImportAsync(fileData, userId).ConfigureAwait(false);
+                return result;
             }
         }
     }

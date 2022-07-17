@@ -1,9 +1,9 @@
-import { AppData, AppPlaylist } from '~/app/types/appData';
+import { AppData, AppPlaylist, Upload } from '~/app/types/appData';
 import camelcaseKeys = require('camelcase-keys');
 import { parseDate } from '~/common/helpers/date';
 import { convertObjectPropValues } from '~/common/helpers/object';
-import { PlaylistInfo, ServerResponse } from '~/app/types/playlist';
-import { showError } from '~/common/helpers/utils';
+import { Playlist, PlaylistInfo, ServerResponse } from '~/app/types/playlist';
+import { showError, toBase64 } from '~/common/helpers/utils';
 
 type ApiClient = {
     getPluginConfiguration<TConfig>(pluginId: string): Promise<TConfig>;
@@ -64,8 +64,8 @@ export const loadAppData = async (appId: string): Promise<AppData> => {
     });
 };
 
-export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolean): Promise<ServerResponse> => {
-    let response = await window.ApiClient.ajax<ServerResponse>(
+export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolean): Promise<ServerResponse<Playlist>> => {
+    let response = await window.ApiClient.ajax<ServerResponse<Playlist>>(
         {
             url: `../smartplaylist${sortJobSave ? "/sort" : ""}?v=${version}`,
             type: 'POST',
@@ -78,8 +78,8 @@ export const saveAppPlaylist = async (playlist: AppPlaylist, sortJobSave: boolea
             dataType: 'json',
         }
     );
-    return new Promise<ServerResponse>(res => {
-        res(convertResponse<ServerResponse>(response))
+    return new Promise<ServerResponse<Playlist>>(res => {
+        res(convertResponse<ServerResponse<Playlist>>(response))
     })
 };
 
@@ -120,4 +120,30 @@ export const viewPlaylistLog = (playlistId: string): Promise<string> => {
             dataType: 'text'
         }
     );
+}
+
+export const importFile = async (props: Upload): Promise<ServerResponse<string>> => {
+
+    const payload = {
+        "type": props.type,
+        "uploadFile": await toBase64(props.uploadFile)
+    }
+
+    let response = await window.ApiClient.ajax(
+        {
+            url: `../smartplaylist/import?v=${version}`,
+            type: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            data: JSON.stringify(payload),
+            contentType: 'application/json',
+            dataType: 'json',
+        }
+    );
+
+    return new Promise<ServerResponse<string>>(res => {
+        res(convertResponse<ServerResponse<string>>(response));
+    });
 }

@@ -129,7 +129,7 @@ export const TreeViewMultiAdd: React.FC<PlaylistEditorMultiAddProps> = (props) =
                 } catch (e) {
                     var msg = e instanceof Error ? e.message : e;
 
-                    showError({ msg: 'Error adding multiple values', content: e, timeout: 5000 });
+                    showError({ label: 'Error adding multiple values', content: e, timeout: 5000, modal: true });
                 }
 
             }

@@ -1,5 +1,5 @@
 ﻿using System;
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 
 namespace SmartPlaylist.Handlers.Commands
 {

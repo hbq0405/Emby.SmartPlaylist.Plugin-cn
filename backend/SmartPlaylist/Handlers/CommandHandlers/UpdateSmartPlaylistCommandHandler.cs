@@ -9,7 +9,7 @@ using MediaBrowser.Controller.Playlists;
 using SmartPlaylist.Domain;
 using SmartPlaylist.Handlers.Commands;
 using SmartPlaylist.Infrastructure;
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 using SmartPlaylist.Services;
 using SmartPlaylist.Services.SmartPlaylist;
 

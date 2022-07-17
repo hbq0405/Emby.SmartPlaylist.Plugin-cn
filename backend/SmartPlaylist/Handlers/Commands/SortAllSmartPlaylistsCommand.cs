@@ -1,4 +1,4 @@
-using SmartPlaylist.Infrastructure.MesssageBus;
+using SmartPlaylist.Infrastructure.MessageBus;
 
 public class SortAllSmartPlaylistsCommand : IMessage
 {
