@@ -5,7 +5,13 @@ import './Menu.css';
 export type MenuItem = {
     label: string;
     icon?: string;
-    onClick(): void
+    onClick(): void;
+}
+
+export type MenuItemToggle = {
+    label: string,
+    onToggle(check: boolean): void;
+    value: boolean
 }
 
 export type MenuProps = {

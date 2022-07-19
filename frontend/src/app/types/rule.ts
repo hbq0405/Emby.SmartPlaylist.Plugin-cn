@@ -24,7 +24,8 @@ export type CriteriaValue =
     | NumberValue
     | NumberRangeValue
     | ListValueRange
-    | EmptyValue;
+    | EmptyValue
+    | RegexValue;
 
 export type RuleCriteriaValue = {
     name: string;
@@ -47,7 +48,7 @@ export type RuleCriteriaOperator = {
     defaultValue: CriteriaValue;
 };
 
-export type CriteriaType = 'string' | 'date' | 'number' | 'listValue' | 'bool' | 'empty';
+export type CriteriaType = 'string' | 'date' | 'number' | 'listValue' | 'bool' | 'empty' | 'regex';
 export type OperatorType =
     | 'string'
     | 'date'
@@ -59,7 +60,8 @@ export type OperatorType =
     | 'numberRange'
     | 'listValueRange'
     | 'bool'
-    | 'empty';
+    | 'empty'
+    | 'regex';
 
 export type RuleCriteriaDefinitionType = {
     name: CriteriaType;
@@ -70,6 +72,12 @@ export type StringValue = {
     kind: 'string';
     value: string;
 };
+
+export type RegexValue = {
+    kind: 'regex',
+    value: string,
+    caseSensitive: boolean
+}
 
 export type NumberValue = {
     kind: 'number';

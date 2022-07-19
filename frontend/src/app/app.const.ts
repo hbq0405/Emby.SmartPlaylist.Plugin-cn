@@ -4,6 +4,7 @@ import {
     EmptyValue,
     GroupMatchMode,
     LastPeriodValue,
+    RegexValue,
     RuleCriteriaDefinition,
     RuleCriteriaDefinitionType,
     StringValue,
@@ -70,6 +71,12 @@ export const defaultEmpty: EmptyValue = {
     value: 'empty'
 }
 
+export const defaultRegex: RegexValue = {
+    kind: 'regex',
+    value: '',
+    caseSensitive: false
+}
+
 export const stringCriteriaDefinitionType: RuleCriteriaDefinitionType = {
     name: 'string',
     operators: [
@@ -80,7 +87,9 @@ export const stringCriteriaDefinitionType: RuleCriteriaDefinitionType = {
         { name: 'starts with', type: 'string', defaultValue: defaultString },
         { name: 'ends with', type: 'string', defaultValue: defaultString },
         { name: 'is empty', type: 'empty', defaultValue: defaultEmpty },
-    ],
+        { name: 'regular expression (match)', type: 'regex', defaultValue: defaultRegex },
+        { name: 'regular expression (no match)', type: 'regex', defaultValue: defaultRegex }
+    ]
 };
 
 export const dateCriteriaDefinitionType: RuleCriteriaDefinitionType = {

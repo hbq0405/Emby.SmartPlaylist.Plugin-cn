@@ -10,8 +10,8 @@ import {
     NumberRangeValue,
     NumberValue,
     OperatorType,
+    RegexValue,
     StringValue,
-    EmptyValue
 } from '~/app/types/rule';
 import { SingleDate } from '~/app/components/RuleEditor/ValueInputs/SingleDate';
 import { LastPeriod } from '~/app/components/RuleEditor/ValueInputs/LastPeriod';
@@ -22,6 +22,7 @@ import { NumberValueInput } from '~/app/components/RuleEditor/ValueInputs/Number
 import { NumberRangeValueInput } from '~/app/components/RuleEditor/ValueInputs/NumberRange';
 import { ListValueRangeInput } from '~/app/components/RuleEditor/ValueInputs/ListValueRange';
 import { ListMapValueInput } from '~/app/components/RuleEditor/ValueInputs/ListMapValue';
+import { RegexValueInput } from './ValueInputs/Regex';
 
 type ValueInputProps = {
     type: OperatorType;
@@ -99,6 +100,13 @@ export const ValueInput: React.FC<ValueInputProps> = props => {
                         onChange={newVal => onChange(newVal)}
                     />
                 );
+            case 'regex':
+                return (
+                    <RegexValueInput
+                        value={value as RegexValue}
+                        onChange={newVal => onChange(newVal)}
+                    />
+                )
             default:
                 return <></>;
         }

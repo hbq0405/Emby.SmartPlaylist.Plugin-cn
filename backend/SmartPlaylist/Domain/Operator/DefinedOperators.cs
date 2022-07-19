@@ -12,7 +12,8 @@ namespace SmartPlaylist.Domain.Operator
         public static readonly Operator[] StringOperators =
             All.Where(x =>
                 x.Type == StringValue.Default.Kind ||
-                x.Type == EmptyValue.Default.Kind).ToArray();
+                x.Type == EmptyValue.Default.Kind ||
+                x.Type == RegexValue.Default.Kind).ToArray();
 
         public static readonly Operator[] NumberOperators =
             All.Where(x =>

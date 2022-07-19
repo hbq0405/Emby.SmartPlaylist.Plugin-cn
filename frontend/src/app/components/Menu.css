@@ -17,7 +17,7 @@
     padding: 5px;
     height: 28px;
     border-bottom: calc(var(--line-size) * 1.8) solid var(--line-background);
-    background-color: hsla(0, 0%, 66%, 0.1);
+    background-color: var(--theme-background);
     display: inline-flex;
     align-items: center;
 }

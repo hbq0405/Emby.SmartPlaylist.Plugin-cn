@@ -12,9 +12,6 @@ namespace SmartPlaylist
 {
     public static class Const
     {
-        //public static readonly Type[] SupportedItemTypes =
-        //    {typeof(Audio), typeof(Movie), typeof(Episode), typeof(MusicVideo)};
-
         public static readonly MediaTypeDescriptor[] SupportedItemTypes =
         {
             MediaTypeDescriptor.CreateAudio<Audio>(),
