@@ -16,7 +16,7 @@ namespace SmartPlaylist.Domain.Values
 
         public override string Kind => "listMapValue";
 
-        internal override string Friendly => $"{Map}=>{Value}";
+        internal override string Friendly => Map.Equals(Value) ? Value : $"{Map}=>{Value}";
 
         protected bool Equals(ListMapValue other)
         {

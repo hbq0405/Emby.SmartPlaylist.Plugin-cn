@@ -2,7 +2,7 @@
 
 namespace SmartPlaylist.Domain.Values
 {
-    public class DateValue : EmptableValue
+    public class DateValue : EmptyableValue
     {
         public static readonly DateValue Default = new DateValue(DateTimeOffset.UtcNow);
 

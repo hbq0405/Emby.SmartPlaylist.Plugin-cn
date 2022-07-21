@@ -127,7 +127,7 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                     ...state.playlists,
                     byId: byId,
                     names: state.playlists.names.filter(x => x !== action.playlist.id),
-                },
+                }
             };
         }
         case 'app:reset': {

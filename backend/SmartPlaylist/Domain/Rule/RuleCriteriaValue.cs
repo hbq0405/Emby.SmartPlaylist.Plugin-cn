@@ -12,7 +12,7 @@ namespace SmartPlaylist.Domain.Rule
             Value = value;
             Operator = @operator;
             UserId = userId;
-            CriteriaDefinition = criteriaDefinition;
+            Definition = criteriaDefinition;
         }
 
         public Value Value { get; }
@@ -20,7 +20,7 @@ namespace SmartPlaylist.Domain.Rule
 
         public Operator.Operator Operator { get; }
 
-        public CriteriaDefinition.CriteriaDefinition CriteriaDefinition { get; }
+        public CriteriaDefinition.CriteriaDefinition Definition { get; }
 
         private (Value value, string user) GetItemValueForUser(UserItem item)
         {
@@ -38,35 +38,36 @@ namespace SmartPlaylist.Domain.Rule
 
         private (Value value, string user) GetItemValue(UserItem item)
         {
-            return (CriteriaDefinition.GetValue(item), item.User.Name);
+            return (Definition.GetValue(item), item.User.Name);
         }
 
         public bool IsMatch(UserItem item)
         {
-            try
-            {
-                var itemValue = item.Item.SupportsUserData && CriteriaDefinition.IsUserSpecific && !string.IsNullOrEmpty(UserId)
+            var itemValue = item.Item.SupportsUserData && Definition.IsUserSpecific && !string.IsNullOrEmpty(UserId)
                     ? GetItemValueForUser(item)
                     : GetItemValue(item);
+            try
+            {
+
 
                 if (Operator.CanCompare(itemValue.value, Value))
                 {
                     bool result = Operator.Compare(itemValue.value, Value);
-                    item.SmartPlaylist.Log($"Comparing: '{item.Item.Name}', Field: '{CriteriaDefinition.Name}', Expected: '{Value.Friendly}', Actual: '{itemValue.value.Friendly}', Operator: '{Operator.Name}', Type: '{itemValue.value.Kind.ToString()}', Context '{itemValue.user}', Matched: {result}");
+                    item.SmartPlaylist.Log($"Comparing: '{item.Item.Name}', Field: '{Definition.Name}', Expected: '{Value.Friendly}', Actual: '{itemValue.value.Friendly}', Operator: '{Operator.Name}', Type: '{itemValue.value.Kind.ToString()}', Context '{itemValue.user}', Matched: {result}");
                     return result;
                 }
                 else
                 {
                     item.SmartPlaylist.Log(
                         itemValue.value.IsNone ?
-                        $"Incomparable: '{item.Item.Name}', Field: '{CriteriaDefinition.Name}': 'No metadata value found'" :
-                        $"Incomparable: '{item.Item.Name}', Field: '{CriteriaDefinition.Name}', Expected: '{Value.Friendly}', Actual: '{itemValue.value.Friendly}', Operator: '{Operator.Name}', Type: '{itemValue.value.Kind.ToString()}', Context '{itemValue.user}'");
+                        $"Incomparable: '{item.Item.Name}', Field: '{Definition.Name}': 'No metadata value found'" :
+                        $"Incomparable: '{item.Item.Name}', Field: '{Definition.Name}', Expected: '{Value.Friendly}', Actual: '{itemValue.value.Friendly}', Operator: '{Operator.Name}', Type: '{itemValue.value.Kind.ToString()}', Context '{itemValue.user}'");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                item.SmartPlaylist.Log($"Error: {item.Item.Name}, Field: '{CriteriaDefinition.Name}', Metadata '{Value.Friendly}': {ex.Message}");
+                item.SmartPlaylist.Log($"Error: {item.Item.Name}, Field: '{Definition.Name}', Metadata '{Value.Friendly}': {ex.Message}");
                 return false;
             }
         }

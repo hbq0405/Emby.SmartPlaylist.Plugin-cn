@@ -170,6 +170,14 @@ namespace SmartPlaylist.Domain
                 .Where(x => IsMatchRules(x, user));
         }
 
+        public HierarchyStringDto ExplainRules()
+        {
+            HierarchyStringDto where = new HierarchyStringDto("WHERE", 0);
+            Rules.ForEach(x => x.Explain(where, 1, UserDto.All));
+            where.CompressContainers();
+            return where;
+        }
+
         private bool IsMatchRules(BaseItem item, User user)
         {
             bool result = Rules.All(x => x.IsMatch(new UserItem(user, item, this)));

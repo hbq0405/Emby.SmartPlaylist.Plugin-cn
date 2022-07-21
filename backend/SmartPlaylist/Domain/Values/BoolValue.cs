@@ -1,6 +1,6 @@
 ﻿namespace SmartPlaylist.Domain.Values
 {
-    public class BoolValue : EmptableValue
+    public class BoolValue : EmptyableValue
     {
         public static readonly BoolValue Default = new BoolValue(false);
 

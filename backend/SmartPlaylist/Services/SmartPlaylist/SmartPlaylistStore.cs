@@ -76,9 +76,10 @@ namespace SmartPlaylist.Services.SmartPlaylist
                     return res;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MoveToFailed(filePath);
+                Logger.Instance?.LogError(new Exception($"Failed to load playlist {filePath}: Error: {ex.Message}"));
                 return null;
             }
         }

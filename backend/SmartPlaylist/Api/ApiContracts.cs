@@ -59,4 +59,8 @@ namespace SmartPlaylist.Api
         public string type { get; set; }
         public string UploadFile { get; set; }
     }
+
+    [Route("/smartplaylist/explain_rules", "POST", Summary = "")]
+    public class ExplainPlaylistRules : SmartPlaylistDto, IReturn<ResponseDto<HierarchyStringDto>>
+    { }
 }

@@ -6,6 +6,11 @@ import { Button } from '../Button';
 import { Icon } from '../Icon';
 import { TreeViewMultiAdd } from './TreeViewMultiAdd';
 import { PlaylistContext } from '~/app/state/playlist/playlist.context';
+import { explainPlaylistRules } from '~/emby/app.data';
+import { getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
+import { showError } from '~/common/helpers/utils';
+import { Modal } from '~/emby/components/Modal';
+import { HierarchyStringContainer } from '../HierarchyStringContainer';
 
 type TreeViewProps = {
     data: TreeViewData;
@@ -18,8 +23,9 @@ type TreeViewProps = {
 
 export const TreeView: React.FC<TreeViewProps> = props => {
     const playlistContext = React.useContext(PlaylistContext);
+    playlistContext.getPlaylist()
     let [showMultiAdd, setShowMultiAdd] = React.useState(false);
-
+    let [explainedText, setExplainedText] = React.useState(undefined);
     const [Node, nodeProps] = useOverrides(props.overrides && props.overrides.Node, TreeNode);
 
     const { data } = props;
@@ -38,9 +44,21 @@ export const TreeView: React.FC<TreeViewProps> = props => {
     return (
         <>
             <div className='multi-add'>
-                <Button onClick={_ => setShowMultiAdd(true)}>
-                    <Icon type="library_add" />
-                </Button>
+                <div>
+                    <Button onClick={_ => explainPlaylistRules(getAppPlaylistForPlaylist(playlistContext.getPlaylist()))
+                        .then(res => {
+                            if (res.success) {
+                                setExplainedText(res.response);
+                            } else {
+                                showError({ label: "Error", content: res.error, modal: true, timeout: 3000 });
+                            }
+                        })} title="Show a more human readable (hopefully) format of the rules.">
+                        <Icon type="help" />
+                    </Button>
+                    <Button onClick={_ => setShowMultiAdd(true)} title='Added multiple values to a field'>
+                        <Icon type="library_add" />
+                    </Button>
+                </div>
             </div>
             <div>
                 {showMultiAdd && (
@@ -55,6 +73,20 @@ export const TreeView: React.FC<TreeViewProps> = props => {
                             setShowMultiAdd(false);
                         }}
                     />
+                )}
+                {explainedText !== undefined && (
+                    <Modal
+                        onClose={() => { setExplainedText(undefined) }}
+                        onConfirm={() => { setExplainedText(undefined) }}
+                        confirmLabel='Thanks for that'
+                        title='Mostest readable'
+                        small={true}
+                    >
+                        <HierarchyStringContainer
+                            value={explainedText}
+                        />
+
+                    </Modal>
                 )}
             </div>
             {getRootNodes().map(nodeData => (

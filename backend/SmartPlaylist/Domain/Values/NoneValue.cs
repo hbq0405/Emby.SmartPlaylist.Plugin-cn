@@ -1,6 +1,6 @@
 ﻿namespace SmartPlaylist.Domain.Values
 {
-    public sealed class NoneValue : EmptableValue
+    public sealed class NoneValue : EmptyableValue
     {
         public override string Kind { get; } = nameof(NoneValue);
 

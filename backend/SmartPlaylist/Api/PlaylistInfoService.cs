@@ -5,6 +5,8 @@ using SmartPlaylist.Contracts;
 using SmartPlaylist.Handlers.Commands;
 using System.Linq;
 using System.Threading;
+using SmartPlaylist.Services.SmartPlaylist;
+
 namespace SmartPlaylist.Api
 {
     public class PlaylistInfoService : IService
@@ -16,6 +18,22 @@ namespace SmartPlaylist.Api
                 return getInfo(persistedPlaylist);
 
             return "{}";
+        }
+
+        public ResponseDto<HierarchyStringDto> Post(ExplainPlaylistRules request)
+        {
+            try
+            {
+                if (!SmartPlaylistValidator.ValidateCriteriaEmpty(request))
+                    throw new Exception("Criteria missing a value.");
+                Domain.SmartPlaylist smartPlaylist = new Domain.SmartPlaylist(request);
+
+                return ResponseDto<HierarchyStringDto>.CreateSuccess(smartPlaylist.ExplainRules());
+            }
+            catch (Exception ex)
+            {
+                return ResponseDto<HierarchyStringDto>.CreateError($"Error translating: {ex.Message}");
+            }
         }
 
         private SmartPlaylistInfoDto getInfo(SmartPlaylistDto dto)
@@ -42,7 +60,5 @@ namespace SmartPlaylist.Api
 
             return "{}";
         }
-
     }
-
 }

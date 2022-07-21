@@ -2,7 +2,7 @@
 
 namespace SmartPlaylist.Domain.Values
 {
-    public class DateRangeValue : EmptableValue
+    public class DateRangeValue : EmptyableValue
     {
         public static readonly DateRangeValue Default =
             new DateRangeValue(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddMonths(1));

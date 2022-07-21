@@ -13,11 +13,13 @@ namespace SmartPlaylist.Domain.Operator.Operators.GlobalOperators
 
         public override bool CanCompare(Value itemValue, Value value)
         {
-            return value is EmptyValue && typeof(EmptableValue).IsAssignableFrom(itemValue.GetType());
+            return value is EmptyValue && typeof(EmptyableValue).IsAssignableFrom(itemValue.GetType());
         }
         public override bool Compare(Value itemValue, Value value)
         {
-            return (itemValue is EmptableValue eValue) ? eValue.IsEmpty : false;
+            return (itemValue is EmptyableValue eValue) ? eValue.IsEmpty : false;
         }
+
+        public override bool Valueless => true;
     }
 }

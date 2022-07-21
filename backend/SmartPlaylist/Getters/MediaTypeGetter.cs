@@ -14,7 +14,7 @@ namespace SmartPlaylist.Domain
                 .SelectMany(x => x.Children)
                 .OfType<Rule.Rule>()
                 .Select(x => x.Criteria)
-                .Where(x => x.CriteriaDefinition is MediaTypeCriteriaDefinition)
+                .Where(x => x.Definition is MediaTypeCriteriaDefinition)
                 .Select(x => x.Value.ToString())
                 .Distinct()
                 .ToArray();

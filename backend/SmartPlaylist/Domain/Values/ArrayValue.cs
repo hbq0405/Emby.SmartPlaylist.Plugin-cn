@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 namespace SmartPlaylist.Domain.Values
 {
-    public class ArrayValue<TValue> : EmptableValue where TValue : Value
+    public class ArrayValue<TValue> : EmptyableValue where TValue : Value
     {
         private ArrayValue(TValue[] values)
         {

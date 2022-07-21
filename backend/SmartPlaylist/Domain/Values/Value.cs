@@ -9,7 +9,7 @@ namespace SmartPlaylist.Domain.Values
         public abstract string Kind { get; }
         internal abstract string Friendly { get; }
 
-        [IgnoreDataMember] public bool IsNone => this == None;
+        [IgnoreDataMember] public virtual bool IsNone => this == None;
 
         public bool IsType(Type type)
         {
@@ -17,7 +17,7 @@ namespace SmartPlaylist.Domain.Values
         }
     }
 
-    public abstract class EmptableValue : Value
+    public abstract class EmptyableValue : Value
     {
         internal abstract bool IsEmpty { get; }
     }

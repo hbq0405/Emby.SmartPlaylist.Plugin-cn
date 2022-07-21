@@ -1,6 +1,6 @@
 ﻿namespace SmartPlaylist.Domain.Values
 {
-    public class NumberRangeValue : EmptableValue
+    public class NumberRangeValue : EmptyableValue
     {
         public static readonly NumberRangeValue Default = new NumberRangeValue(0, 0);
 

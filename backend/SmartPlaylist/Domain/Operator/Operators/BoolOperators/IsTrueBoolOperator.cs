@@ -21,5 +21,7 @@ namespace SmartPlaylist.Domain.Operator.Operators.BoolOperators
         {
             throw new System.NotImplementedException();
         }
+
+        public override bool Valueless => true;
     }
 }

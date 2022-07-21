@@ -2,7 +2,10 @@
 ## Version 2.4.0.1
   ## Feature
   - Added Import/Export functionality
-  - Added Regular Expression (Match and No Match) Criteria
+  - Added Regular Expression (Match and No Match) Operators for string values
+  - Added 'Overview' Criteria
+  - Added Readable to rules tree
+  - Added playlist load failure reason to main Emby Log. 
 - ## Bug
   - Changed the way log files are transferred.
 ## Version 2.4.0.0

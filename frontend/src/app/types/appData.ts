@@ -35,3 +35,9 @@ export type Upload = {
     onStart?(): void,
     onEnd?(): void
 }
+
+export type HierarchyString = {
+    value: string;
+    children: HierarchyString[];
+    level: number;
+}

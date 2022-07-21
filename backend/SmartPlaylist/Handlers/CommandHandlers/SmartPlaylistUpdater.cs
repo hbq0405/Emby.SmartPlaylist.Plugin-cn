@@ -57,7 +57,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                     processItems = new BaseItem[] { };
 
                 smartPlaylist.Log($"Dealing with {processItems.Length} media items from source.");
-
+                smartPlaylist.Log($"Query: {smartPlaylist.ExplainRules()}");
                 BaseItem[] newItems;
                 using (PerfLogger.Create("FilterPlaylistItems",
                     () => new { playlistName = folder.user.SmartPlaylist.Name, itemsCount = processItems.Length }))

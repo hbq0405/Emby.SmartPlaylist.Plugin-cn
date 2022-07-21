@@ -37,11 +37,19 @@ namespace SmartPlaylist.Services.SmartPlaylist
             return smartPlaylist.Limit.HasLimit && smartPlaylist.Limit.MaxItems >= 1 || !smartPlaylist.Limit.HasLimit;
         }
 
-        private static bool ValidateCriteriaValue(SmartPlaylistDto smartPlaylist)
+        public static bool ValidateCriteriaValue(SmartPlaylistDto smartPlaylist)
         {
             return smartPlaylist.RulesTree.Select(x => x.Data)
                 .Where(x => x.Criteria != null).All(x => !((Value)x.Criteria.Value).IsNone);
         }
+
+        public static bool ValidateCriteriaEmpty(SmartPlaylistDto smartPlaylist)
+        {
+            return smartPlaylist.RulesTree.Select(x => x.Data)
+                .Where(x => x.Criteria != null && typeof(EmptyableValue).IsAssignableFrom(x.Criteria.Value.GetType()))
+                .All(x => !((EmptyableValue)x.Criteria.Value).IsEmpty);
+        }
+
 
         private static bool ValidateName(SmartPlaylistDto smartPlaylist)
         {

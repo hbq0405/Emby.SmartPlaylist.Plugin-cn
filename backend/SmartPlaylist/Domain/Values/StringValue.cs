@@ -3,7 +3,7 @@ using SmartPlaylist.Extensions;
 
 namespace SmartPlaylist.Domain.Values
 {
-    public class StringValue : EmptableValue
+    public class StringValue : EmptyableValue
     {
         public static readonly StringValue Default = new StringValue(string.Empty);
 

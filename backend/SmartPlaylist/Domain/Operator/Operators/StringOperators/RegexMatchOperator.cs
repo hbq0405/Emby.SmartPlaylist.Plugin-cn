@@ -45,5 +45,7 @@ namespace SmartPlaylist.Domain.Operator.Operators.StringOperators
                 new Regex(pattern).Match(value).Success :
                 new Regex(pattern, RegexOptions.IgnoreCase).Match(value).Success;
         }
+
+        public override bool Valueless => false;
     }
 }
