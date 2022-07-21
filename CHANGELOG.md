@@ -1,7 +1,7 @@
 # ChangeLog
 ## Version 2.4.0.1
   ## Feature
-  - Added Import/Export functionality
+  - Added Import/Export functionality allowing you to backup and restore playlists.
   - Added Regular Expression (Match and No Match) Operators for string values
   - Added 'Overview' Criteria
   - Added Readable to rules tree
