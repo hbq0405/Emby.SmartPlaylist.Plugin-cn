@@ -6,7 +6,7 @@ export type AppPlaylist = PlaylistBasicData &
     PlaylistRulesTree<Array<TreeNodeData<RuleOrRuleGroup>>>;
 
 export type Source = {
-    type: "Playlist" | "Collection",
+    type: string,
     id: string,
     name: string
 }

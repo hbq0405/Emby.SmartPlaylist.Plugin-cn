@@ -65,7 +65,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
 
         public async Task WriteToLogAsync(Domain.SmartPlaylist smartPlaylist)
         {
-            using (PerfLogger.Create("WriteLogToFS"))
+            using (PerfLogger.Create($"WriteLogToFS:{smartPlaylist.Id} [{smartPlaylist.Name}]"))
             {
                 await _decorated.WriteToLogAsync(smartPlaylist);
             }

@@ -39,7 +39,8 @@ export const CollectionModes = [
 export const SourceTypes = [
     'Media Items',
     'Playlist',
-    'Collection'
+    'Collection',
+    'Smart Playlist (Execute)'
 ] as const;
 
 export const LimitOrderByValues = ['Random', 'Name'] as const;

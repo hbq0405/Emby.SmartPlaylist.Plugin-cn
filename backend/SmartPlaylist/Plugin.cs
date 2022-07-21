@@ -64,7 +64,7 @@ namespace SmartPlaylist
             var collectionItemsUpdater =
                 new PlaylistItemsUpdaterPerfLoggerDecorator(new CollectionItemUpdater(libraryManager, collectionManager));
             FolderRepository =
-                new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager, collectionItemsUpdater, playlistItemsUpdater));
+                new PlaylistRepositoryPerfLoggerDecorator(new FolderRepository(userManager, libraryManager, collectionItemsUpdater, playlistItemsUpdater, smartPlaylistStore));
 
             MessageBus = new MessageBus();
             SmartPlaylistCommandHandler =

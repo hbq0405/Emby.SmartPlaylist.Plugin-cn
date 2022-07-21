@@ -6,6 +6,8 @@
   - Added 'Overview' Criteria
   - Added Readable to rules tree
   - Added playlist load failure reason to main Emby Log. 
+  - Added 'Smart Playlist (Execute)' Source item. This will first execute the playlist before reading the items from it. 
+  - Added More logging around errors and error handling.
 - ## Bug
   - Changed the way log files are transferred.
 ## Version 2.4.0.0

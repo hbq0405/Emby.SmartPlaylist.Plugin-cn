@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using SmartPlaylist.Domain;
 using SmartPlaylist.Extensions;
+using SmartPlaylist.Handlers.Commands;
+using SmartPlaylist.Services.SmartPlaylist;
+
 namespace SmartPlaylist.Services
 {
     public abstract class IFolderRepository
@@ -15,14 +19,16 @@ namespace SmartPlaylist.Services
         internal readonly IUserManager _userManager;
         internal readonly IFolderItemsUpdater _collectionItemUpdater;
         internal readonly IFolderItemsUpdater _playListItemsUpdater;
+        internal readonly ISmartPlaylistStore _playlistStore;
 
         public IFolderRepository(IUserManager userManager, ILibraryManager libraryManager,
-        IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater)
+        IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater, ISmartPlaylistStore smartPlaylistStore)
         {
             _userManager = userManager;
             _libraryManager = libraryManager;
             _collectionItemUpdater = collectionItemUpdater;
             _playListItemsUpdater = playListItemsUpdater;
+            _playlistStore = smartPlaylistStore;
         }
 
         public IFolderRepository() { }
@@ -47,15 +53,15 @@ namespace SmartPlaylist.Services
         public abstract BaseItem[] GetItemsForFolderId(Domain.SmartPlaylist smartPlaylist, User user);
         public abstract Folder GetFolder(Domain.SmartPlaylist smartPlaylist);
 
-        public abstract (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider);
+        public abstract Task<(UserFolder, BaseItem[])> GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider);
     }
 
     public class FolderRepository : IFolderRepository
     {
 
         public FolderRepository(IUserManager userManager, ILibraryManager libraryManager,
-            IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater)
-        : base(userManager, libraryManager, collectionItemUpdater, playListItemsUpdater) { }
+            IFolderItemsUpdater collectionItemUpdater, IFolderItemsUpdater playListItemsUpdater, ISmartPlaylistStore smartPlaylistStore)
+        : base(userManager, libraryManager, collectionItemUpdater, playListItemsUpdater, smartPlaylistStore) { }
 
         public override UserFolder GetUserPlaylistOrCollectionFolder(Domain.SmartPlaylist smartPlaylist)
         {
@@ -226,26 +232,40 @@ namespace SmartPlaylist.Services
             return folder == null ? new BaseItem[] { } : GetItemsForFolderId(folder.Id, user);
         }
 
-        public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
+        public override async Task<(UserFolder, BaseItem[])> GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
         {
-            var playlist = GetUserPlaylistOrCollectionFolder(smartPlaylist);
+            var baseFolder = GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
             if (smartPlaylist.SourceType.Equals("Playlist", StringComparison.OrdinalIgnoreCase) || smartPlaylist.SourceType.Equals("Collection", StringComparison.OrdinalIgnoreCase))
             {
                 smartPlaylist.Log($"Source is {smartPlaylist.Source.Name} [{smartPlaylist.SourceType}] ");
-                return (playlist, GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), playlist.User));
+                return (baseFolder, GetItemsForFolderId(Guid.Parse(smartPlaylist.Source.Id), baseFolder.User));
+            }
+            else if (smartPlaylist.SourceType.Equals("Smart Playlist (Execute)", StringComparison.OrdinalIgnoreCase))
+            {
+                var linkedPlaylistDto = await _playlistStore.GetSmartPlaylistAsync(Guid.Parse(smartPlaylist.Source.Id));
+                if (linkedPlaylistDto.InternalId == -1)
+                    throw new Exception("Base linked playlist does not contain any source items.");
+
+                Domain.SmartPlaylist linkedSmartPlaylist = new Domain.SmartPlaylist(linkedPlaylistDto);
+                smartPlaylist.Log($"Source is {smartPlaylist.Source.Name} [{smartPlaylist.SourceType}] ");
+                smartPlaylist.Log($"Executing base linked playlist: {smartPlaylist.Source.Name}");
+                await Plugin.Instance.SmartPlaylistCommandHandler.HandleAsync(new UpdateSmartPlaylistCommand(Guid.Parse(smartPlaylist.Source.Id), ExecutionModes.LinkedAsSource));
+                smartPlaylist.Log("Base linked playlist execution completed.");
+
+                return (baseFolder, GetItemsForFolderId(linkedSmartPlaylist, baseFolder.User));
             }
             else
             {
-                if (smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && playlist is LibraryUserFolder<Playlist>)
+                if (smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && baseFolder is LibraryUserFolder<Playlist>)
                 {
                     smartPlaylist.Log($"Source is {smartPlaylist.Name} [Live]");
-                    return (playlist, GetItemsForFolderId(smartPlaylist, playlist.User));
+                    return (baseFolder, GetItemsForFolderId(smartPlaylist, baseFolder.User));
                 }
                 else
                 {
                     smartPlaylist.Log($"Source is [{string.Join(", ", Const.SupportedItemTypeNames)}]");
-                    return (playlist, userItemsProvider?.GetItems(playlist.User, Const.SupportedItemTypeNames).ToArray());
+                    return (baseFolder, userItemsProvider?.GetItems(baseFolder.User, Const.SupportedItemTypeNames).ToArray());
                 }
             }
         }

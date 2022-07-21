@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
@@ -115,7 +116,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public override (UserFolder, BaseItem[]) GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
+        public override Task<(UserFolder, BaseItem[])> GetBaseItemsForSmartPlayList(Domain.SmartPlaylist smartPlaylist, IUserItemsProvider userItemsProvider)
         {
             using (PerfLogger.Create("GetItemsForSmartPlayList", () => new { smartPlaylist }))
             {

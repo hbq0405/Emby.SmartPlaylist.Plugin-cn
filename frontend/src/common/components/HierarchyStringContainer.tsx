@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HierarchyString } from '~/app/types/appData';
-import { Inline } from './Inline';
+import './HierarchyStringContainer.css';
 
 export type HierarchyStringProps = {
     value: HierarchyString
@@ -12,7 +12,7 @@ export const HierarchyStringContainer: React.FC<HierarchyStringProps> = props =>
     const getContainer = (hs: HierarchyString): React.ReactElement => {
         return (
             <>
-                <div style={{ width: '100%', paddingLeft: (hs.level * 10) + 'px' }}>
+                <div className='hier-str' style={{ paddingLeft: (hs.level * 10) + 'px' }}>
                     {hs.value}
                 </div>
 

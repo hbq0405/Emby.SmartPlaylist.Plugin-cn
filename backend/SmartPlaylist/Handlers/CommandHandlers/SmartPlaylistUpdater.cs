@@ -51,7 +51,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             try
             {
                 smartPlaylist.Log($"Execution triggered by '{_executionMode}'");
-                (UserFolder user, BaseItem[] items) folder = _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
+                (UserFolder user, BaseItem[] items) folder = await _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
                 BaseItem[] processItems = items == null ? folder.items : folder.items.Union(items).ToArray();
                 if (processItems == null)
                     processItems = new BaseItem[] { };
@@ -86,16 +86,22 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             catch (Exception ex)
             {
                 smartPlaylist.Status = $"Error {ex.Message}";
-                Plugin.Instance.Logger.Error($"Error executing smart playlist: {ex.Message}", smartPlaylist);
-                throw ex;
+                Logger.Instance?.LogError(ex);
             }
             finally
             {
                 sw.Stop();
-                smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
-                _smartPlaylistStore.Save(smartPlaylist.ToDto());
-                smartPlaylist.Log("Complete");
-                await _smartPlaylistStore.WriteToLogAsync(smartPlaylist).ConfigureAwait(false);
+                try
+                {
+                    smartPlaylist.LastSyncDuration = sw.ElapsedMilliseconds;
+                    _smartPlaylistStore.Save(smartPlaylist.ToDto());
+                    smartPlaylist.Log("Complete");
+                    await _smartPlaylistStore.WriteToLogAsync(smartPlaylist);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance?.LogError(ex);
+                }
             }
         }
     }

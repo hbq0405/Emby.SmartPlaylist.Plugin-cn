@@ -1,4 +1,4 @@
-import { Playlist, PlaylistInfo } from '~/app/types/playlist';
+import { Playlist, PlaylistInfo, SourceType } from '~/app/types/playlist';
 import {
     RuleCriteriaDefinition,
     RuleCriteriaOperator,
@@ -10,6 +10,7 @@ import { AppPlaylistState, AppState } from '~/app/state/app.reducer';
 import { AppData, AppPlaylist, Source, User } from '~/app/types/appData';
 import { TreeViewData } from '~/common/components/TreeView/types/tree';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
+import { SourceTypes, UpdateTypes } from '../app.const';
 
 export type AppSelectors = {
     getPlaylists(): Playlist[];
@@ -68,8 +69,16 @@ export const createAppSelectors = (state: AppState): AppSelectors => {
         getConfirmation: (): ConfirmationProps => {
             return state.confirmation;
         },
-        getSourcesFor: (type: string): Source[] => {
-            return state.sources.filter(s => s.type === type);
+        getSourcesFor: (type: SourceType): Source[] => {
+            if (type === SourceTypes[3]) {
+                return state.playlists.names.map(name => state.playlists.byId[name])
+                    .filter(p => p.enabled && p.updateType !== UpdateTypes[0])
+                    .map(p => {
+                        return { id: p.id, name: p.name, type: SourceTypes[3] } as Source
+                    }).sort((a, b) => a.name.localeCompare(b.name));
+            }
+            else
+                return state.sources.filter(s => s.type === type);
         },
         isLoaded: (): boolean => {
             return state.loadedPlaylist

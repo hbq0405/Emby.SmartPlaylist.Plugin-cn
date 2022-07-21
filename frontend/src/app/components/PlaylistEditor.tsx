@@ -11,7 +11,6 @@ import { TreeNodeData } from '~/common/components/TreeView/types/tree';
 import { RuleOrRuleGroup } from '~/app/types/rule';
 import { AutoSize } from '~/common/components/AutoSize';
 import { Toggle } from '~/common/components/Toggle';
-import './PlaylistEditor.css'
 
 type PlaylistEditorProps = {};
 

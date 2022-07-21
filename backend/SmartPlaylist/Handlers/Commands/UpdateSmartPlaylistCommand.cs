@@ -3,7 +3,7 @@ using SmartPlaylist.Infrastructure.MessageBus;
 
 namespace SmartPlaylist.Handlers.Commands
 {
-    public enum ExecutionModes { Scheduled, Manual, OnSave }
+    public enum ExecutionModes { Scheduled, Manual, OnSave, LinkedAsSource }
     public class UpdateSmartPlaylistCommand : IMessage
     {
 

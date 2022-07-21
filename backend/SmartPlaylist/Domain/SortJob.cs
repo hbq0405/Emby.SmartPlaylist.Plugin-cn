@@ -48,7 +48,7 @@ namespace SmartPlaylist.Domain
             {
                 Enabled = Enabled,
                 UpdateType = UpdateType.ToString(),
-                OrderBy = OrderBy.Name,
+                OrderBy = OrderBy?.Name,
                 SyncCount = SyncCount,
                 LastSyncDuration = LastSyncDuration,
                 Status = Status,

@@ -11,6 +11,7 @@ import { getAppPlaylistForPlaylist } from '~/app/state/app.selectors';
 import { showError } from '~/common/helpers/utils';
 import { Modal } from '~/emby/components/Modal';
 import { HierarchyStringContainer } from '../HierarchyStringContainer';
+import './TreeView.css';
 
 type TreeViewProps = {
     data: TreeViewData;
@@ -43,8 +44,8 @@ export const TreeView: React.FC<TreeViewProps> = props => {
 
     return (
         <>
-            <div className='multi-add'>
-                <div>
+            <div className='tree-button-container' >
+                <div className='tree-button-inner'>
                     <Button onClick={_ => explainPlaylistRules(getAppPlaylistForPlaylist(playlistContext.getPlaylist()))
                         .then(res => {
                             if (res.success) {
