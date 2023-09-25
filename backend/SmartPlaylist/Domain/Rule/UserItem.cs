@@ -13,10 +13,15 @@ namespace SmartPlaylist.Domain.Rule
 
         public User User { get; }
         public BaseItem Item { get; }
-        public SmartPlaylist SmartPlaylist{get;}
+        public SmartPlaylist SmartPlaylist { get; }
         public bool TryGetUserItemData(out UserItemData userItemData)
         {
-            userItemData = BaseItem.UserDataManager.GetUserData(User, Item);
+            return TryGetUserItemData(out userItemData, User, Item);
+        }
+
+        public static bool TryGetUserItemData(out UserItemData userItemData, User user, BaseItem item)
+        {
+            userItemData = BaseItem.UserDataManager.GetUserData(user, item);
             return userItemData != null;
         }
     }

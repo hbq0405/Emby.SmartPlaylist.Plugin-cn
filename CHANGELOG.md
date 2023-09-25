@@ -1,4 +1,12 @@
 # ChangeLog
+## Version 2.4.0.2
+  ## Feature
+  - Added Resolution Height Criteria
+  - Added Resolution Width Criteria
+  - Added Favorite (Tree Crawl) Criteria
+  - Allow sorting on Limited items for Shuffle playlist. (Shuffle will destroy and create new playlist, where as normal will just append/remove items that mismatch in filter rules.)
+
+
 ## Version 2.4.0.1
   ## Feature
   - Added Import/Export functionality allowing you to backup and restore playlists.

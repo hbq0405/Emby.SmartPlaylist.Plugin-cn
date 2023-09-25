@@ -63,7 +63,7 @@ namespace SmartPlaylist.Services
 
         private int AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
+            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId && n.ParentId == c.ParentId));
             if (toAdd.Any())
                 foreach (var chunk in toAdd.Partition(100))
                 {
@@ -75,7 +75,7 @@ namespace SmartPlaylist.Services
 
         public async Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
+            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId && c.ParentId == n.ParentId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
 

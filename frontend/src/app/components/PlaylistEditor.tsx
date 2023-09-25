@@ -14,6 +14,7 @@ import { Toggle } from '~/common/components/Toggle';
 
 type PlaylistEditorProps = {};
 
+
 export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const playlistContext = React.useContext(PlaylistContext);
     const appContext = React.useContext(AppContext);
@@ -22,6 +23,9 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const basicData = playlistContext.getBasicData();
     const ordersBy = appContext.getOrdersBy();
     var sourceItems = appContext.getSourcesFor(basicData.sourceType);
+    var [uiState, setUIState] = React.useState({
+        sortLabel: isShuffleUpdateType ? 'Sort by:' : 'Sort newly added items by:'
+    })
 
     return (
         <>
@@ -83,11 +87,21 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     label="Update type:"
                     values={UpdateTypes.map(x => x)}
                     value={basicData.updateType}
-                    onChange={newVal =>
+                    onChange={newVal => {
                         updateBasicData({
                             updateType: newVal,
-                        })
-                    }
+                        });
+
+                        const shuffle: boolean = (
+                            newVal === 'ShuffleDaily' ||
+                            newVal === 'ShuffleMonthly' ||
+                            newVal === 'ShuffleWeekly'
+                        )
+
+                        setUIState({
+                            sortLabel: shuffle ? 'Sort by:' : 'Sort newly added items by:'
+                        });
+                    }}
                     style={{ width: '120px' }}
                 />
             </Inline>
@@ -118,7 +132,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             }}
                         />
                         <Select
-                            label='Sort newly added items by:'
+                            label={uiState.sortLabel}
                             disabled={!basicData.newItemOrder.hasSort}
                             maxWidth={true}
                             values={ordersBy}
@@ -173,10 +187,10 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     }
                 />
                 <Select
-                    disabled={!basicData.limit.hasLimit || isShuffleUpdateType()}
+                    disabled={!basicData.limit.hasLimit}
                     maxWidth={true}
                     values={ordersBy}
-                    label="Sort by:"
+                    label="Limit Order:"
                     value={basicData.limit.orderBy}
                     onChange={newVal =>
                         updateBasicData({
