@@ -131,7 +131,7 @@ namespace SmartPlaylist.Domain
             }
             else if (Limit.HasLimit)
             {
-                Log($"Sorting items by: {NewItemOrder.OrderBy.Name} and taking the top {Limit.MaxItems} items");
+                Log($"Limiting items to {Limit.MaxItems} based on {Limit.OrderBy.Name}:{Limit.OrderBy.Direction}:Shuffled - {Limit.OrderBy.IsShuffle}. Using Comparer: {Limit.OrderBy.Comparer}");
                 newItems = OrderLimitItems(newItems).Take(Limit.MaxItems).ToArray();
             }
             return newItems;
