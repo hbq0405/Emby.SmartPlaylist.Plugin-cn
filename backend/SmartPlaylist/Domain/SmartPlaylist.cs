@@ -118,7 +118,7 @@ namespace SmartPlaylist.Domain
                 newItems = RollUpTo(newItems);
             }
 
-            if (IsShuffleUpdateType)
+            if (IsShuffleUpdateType && !NewItemOrder.HasSort && !Limit.HasLimit)
             {
                 Log("Type is shuffles so shuffling items.");
                 newItems = newItems.Shuffle();
