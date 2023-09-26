@@ -82,7 +82,6 @@ namespace SmartPlaylist.Domain
                                            UpdateType == UpdateType.ShuffleMonthly ||
                                            UpdateType == UpdateType.ShuffleWeekly;
 
-        public bool CanUpdatePlaylistWithNewItems => (IsRandomSort || !Limit.HasLimit) && !IsShuffleUpdateType && !IsScheduledType;
         public bool IsRandomSort => Limit.OrderBy is OrderRandom;
         public string MediaType { get; }
         public String SourceType { get; }
@@ -131,7 +130,7 @@ namespace SmartPlaylist.Domain
             }
             else if (Limit.HasLimit)
             {
-                Log($"Limiting items to {Limit.MaxItems} based on {Limit.OrderBy.Name}:{Limit.OrderBy.Direction}:Shuffled - {Limit.OrderBy.IsShuffle}. Using Comparer: {Limit.OrderBy.Comparer}");
+                Log($"Limiting items to {Limit.MaxItems} based on {Limit.OrderBy.Name}:{Limit.OrderBy.Direction}:Shuffled - {Limit.OrderBy.IsShuffle}.");
                 newItems = OrderLimitItems(newItems).Take(Limit.MaxItems).ToArray();
             }
             return newItems;
