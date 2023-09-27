@@ -47,6 +47,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
             <div className='playlist-menu'>
                 <Menu
                     open={false}
+                    position='left center'
                     menuItems={[
                         { label: 'Details', icon: 'info', onClick: () => props.onViewClick() },
                         { label: 'Duplicate', icon: 'content_copy', onClick: () => props.onDuplicateClick() },

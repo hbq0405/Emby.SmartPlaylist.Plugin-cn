@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Popup from 'reactjs-popup';
 import './Menu.css';
+import { PopupPosition } from 'reactjs-popup/dist/types';
 
 export type MenuItem = {
     label: string;
@@ -18,15 +19,17 @@ export type MenuItemToggle = {
 export type MenuProps = {
     menuItems: MenuItem[]
     open?: boolean;
+    position?: PopupPosition;
 } & React.HtmlHTMLAttributes<HTMLDivElement>
 
 export const Menu: React.FC<MenuProps> = props => {
+    const pos = props.position ? props.position : "left top";
     return (
         <Popup
             trigger={<div className='menu-container' {...props}>
                 <i className="md-icon">pending</i>
             </div>}
-            position="left top"
+            position={pos}
             open={props.open}
             on='hover'
             closeOnDocumentClick

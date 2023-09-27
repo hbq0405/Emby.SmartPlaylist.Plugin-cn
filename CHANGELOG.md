@@ -1,7 +1,8 @@
 # ChangeLog
 ## Version 2.4.0.3
   ## Feature
-  - Create a copy of a play list.
+  - Create a copy of a play list. (Duplicate)
+  - Declutter UI by adding a pop up menu to playlist
 - 
 ## Version 2.4.0.2
   ## Feature
