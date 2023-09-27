@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Playlists;
-using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
 using System.Collections.Generic;
 using SmartPlaylist.Extensions;
@@ -50,7 +49,8 @@ namespace SmartPlaylist.Services
 
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
                     Name = folder.SmartPlaylist.Name,
-                    UserId = folder.User.InternalId,
+                    User = folder.User,
+
                 }).ConfigureAwait(false);
 
                 ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
@@ -63,7 +63,7 @@ namespace SmartPlaylist.Services
 
         private int AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId && n.ParentId == c.ParentId));
+            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
             if (toAdd.Any())
                 foreach (var chunk in toAdd.Partition(100))
                 {
@@ -75,7 +75,7 @@ namespace SmartPlaylist.Services
 
         public async Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId && c.ParentId == n.ParentId));
+            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
 
