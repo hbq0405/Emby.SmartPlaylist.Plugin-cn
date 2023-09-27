@@ -3,6 +3,7 @@
   ## Feature
   - Create a copy of a play list. (Duplicate)
   - Declutter UI by adding a pop up menu to playlist
+  - Added Audio Stream Language Criteria
 - 
 ## Version 2.4.0.2
   ## Feature
