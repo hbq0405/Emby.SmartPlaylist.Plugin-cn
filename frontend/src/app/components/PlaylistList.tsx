@@ -10,7 +10,7 @@ type PlaylistListProps = {};
 export const PlaylistList: React.FC<PlaylistListProps> = () => {
     const appContext = React.useContext(AppContext);
 
-    const { getPlaylists, editPlaylist, updatePlaylist, confirmDeletePlaylist, viewPlaylist, executePlaylist, editSortJob } = appContext;
+    const { getPlaylists, editPlaylist, updatePlaylist, confirmDeletePlaylist, viewPlaylist, executePlaylist, editSortJob, duplicatePlaylist } = appContext;
 
     return (
         <>
@@ -19,6 +19,7 @@ export const PlaylistList: React.FC<PlaylistListProps> = () => {
                 <ListItem
                     onDeleteClick={() => confirmDeletePlaylist(playlist)}
                     onEditClick={() => editPlaylist(playlist)}
+                    onDuplicateClick={() => duplicatePlaylist(playlist)}
                     onViewClick={() => viewPlaylist(playlist)}
                     onExecuteClick={() => executePlaylist(playlist)}
                     onSortJobClick={() => editSortJob(playlist)}

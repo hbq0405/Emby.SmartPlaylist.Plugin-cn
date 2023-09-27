@@ -1,4 +1,8 @@
 # ChangeLog
+## Version 2.4.0.3
+  ## Feature
+  - Create a copy of a play list.
+- 
 ## Version 2.4.0.2
   ## Feature
   - Added Resolution Height Criteria

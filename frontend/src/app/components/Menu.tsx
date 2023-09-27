@@ -5,6 +5,7 @@ import './Menu.css';
 export type MenuItem = {
     label: string;
     icon?: string;
+    hidden?: boolean;
     onClick(): void;
 }
 
@@ -16,7 +17,7 @@ export type MenuItemToggle = {
 
 export type MenuProps = {
     menuItems: MenuItem[]
-    open: boolean;
+    open?: boolean;
 } & React.HtmlHTMLAttributes<HTMLDivElement>
 
 export const Menu: React.FC<MenuProps> = props => {
@@ -35,17 +36,22 @@ export const Menu: React.FC<MenuProps> = props => {
             arrow={false}
         >
             <div className='menu'>
-                {props.menuItems.map((m, i) =>
-                    <div
-                        className='menu-item'
-                        key={i}
-                        onClick={() => m.onClick()} >
-                        {m.icon && (
-                            <i className="md-icon button-icon button-icon-left">{m.icon}</i>
-                        )}
-                        <span>{m.label}</span>
-                    </div>
-                )}
+                {props.menuItems.map((m, i) => {
+                    if (m.hidden) {
+                        return ''
+                    }
+                    else {
+                        return <div
+                            className='menu-item'
+                            key={i}
+                            onClick={() => m.onClick()} >
+                            {m.icon && (
+                                <i className="md-icon button-icon button-icon-left">{m.icon}</i>
+                            )}
+                            <span>{m.label}</span>
+                        </div>
+                    }
+                })}
             </div>
         </Popup>
     )

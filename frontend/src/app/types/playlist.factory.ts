@@ -10,6 +10,11 @@ import {
 } from '~/common/components/TreeView/actions/treeViewData.actions';
 import { defaultPlaylistLimit, defaultSmartType, defaultUpdateType, defaultCollectionMode, defaultNewItemOrder, defaultSortJob } from '~/app/app.const';
 
+export const duplicatePlaylist = (plalist: Playlist): Playlist => {
+    alert(JSON.stringify({ ...plalist, id: Guid.newGuid(), internalId: -1, name: plalist.name + ' (Copy)' }));
+    return { ...plalist, id: Guid.newGuid(), internalId: -1, name: plalist.name + ' (Copy)' };
+}
+
 export const createPlaylist = (): Playlist => {
     const newChildNode = createTreeNodeData({
         id: Guid.newGuid(),

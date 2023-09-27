@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Playlist, ServerResponse } from '~/app/types/playlist';
-import { createPlaylist } from '~/app/types/playlist.factory';
+import { createPlaylist, duplicatePlaylist } from '~/app/types/playlist.factory';
 import { AppAction, AppState } from '~/app/state/app.reducer';
 import { AppData, AppPlaylist } from '~/app/types/appData';
 import { saveAppPlaylist, deletePlaylist, viewPlaylist } from '~/app/app.data';
@@ -12,6 +12,7 @@ import { showError, showInfo } from '~/common/helpers/utils';
 export type AppActions = {
     addNewPlaylist(): void;
     editPlaylist(plalist: Playlist): void;
+    duplicatePlaylist(plalist: Playlist): void;
     editSortJob(plalist: Playlist): void;
     updatePlaylist(plalist: Playlist): void;
     savePlaylist(): void;
@@ -52,6 +53,12 @@ export const createAppActions = (
             dispatcher({
                 type: 'app:editPlaylist',
                 playlist: playlist,
+            });
+        },
+        duplicatePlaylist: (playlist: Playlist) => {
+            dispatcher({
+                type: 'app:editPlaylist',
+                playlist: duplicatePlaylist(playlist),
             });
         },
         editSortJob: (playlist: Playlist) => {

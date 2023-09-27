@@ -16,6 +16,7 @@ export type AppSelectors = {
     getPlaylists(): Playlist[];
     getEditedPlaylist(): Playlist;
     getSortJobPlaylist(): Playlist;
+
     isNewPlaylist(id: string): boolean;
     getRuleCriteriaOperators(criteriaName: string): RuleCriteriaOperator[];
     getRulesCriteriaDefinitions(): RuleCriteriaDefinition[];
