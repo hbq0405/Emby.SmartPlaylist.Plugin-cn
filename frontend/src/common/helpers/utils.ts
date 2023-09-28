@@ -53,3 +53,14 @@ export const toBase64 = file => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
 });
+
+export const loadLog = (id) => {
+    try {
+        openUrl(`../smartplaylist/log/${id}`, true)
+    } catch (e) {
+        var msg = e instanceof Response ? "Log file for playlist does not exist yet" :
+            e instanceof Error ? e.message : e;
+
+        showError({ label: "Error loading playlist log", content: msg, modal: true });
+    }
+}

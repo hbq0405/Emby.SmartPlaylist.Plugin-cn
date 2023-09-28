@@ -16,30 +16,6 @@ export type PlaylistDetailProps = {
 export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
     const playlist = props.playlist;
 
-    const handleButton = (btn: HTMLButtonElement, disable: boolean) => {
-        try {
-            btn.disabled = disable;
-            btn.children[0].innerHTML = disable ? 'hourglass_empty' : 'checklist';
-        } catch (e) { }
-    }
-
-    const loadLog = (ev) => {
-        if (ev.target instanceof HTMLButtonElement)
-            handleButton(ev.target, true);
-
-        try {
-            openUrl(`../smartplaylist/log/${playlist.id}`, true)
-        } catch (e) {
-            var msg = e instanceof Response ? "Log file for playlist does not exist yet" :
-                e instanceof Error ? e.message : e;
-
-            showError({ label: "Error loading playlist log", content: msg, modal: true });
-        } finally {
-            if (ev.target instanceof HTMLButtonElement)
-                handleButton(ev.target, false);
-        }
-    }
-
     return (
         <>
             <InfoRow InfoItems={[
@@ -93,10 +69,6 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
 
             <div className='info-row info-row-label'>Items:</div>
             <TagList Items={playlist.items} />
-
-            <Button style={{ position: 'absolute', top: '15px', right: '10px' }} onClick={loadLog} title="View detailed log file.">
-                <Icon type='checklist' />
-            </Button>
         </>
     );
 };

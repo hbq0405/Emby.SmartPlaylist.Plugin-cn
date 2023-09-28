@@ -4,6 +4,8 @@ import { playlistReducer } from '~/app/state/playlist/playlist.reducer';
 import { getIconsForPlayList, Playlist } from '~/app/types/playlist';
 import { Toggle } from './Toggle';
 import { Menu } from '~/app/components/Menu';
+import { loadLog } from '~/common/helpers/utils';
+
 
 export type ListItemProps = {
     onEditClick(): void;
@@ -52,7 +54,8 @@ export const ListItem: React.FC<ListItemProps> = props => {
                         { label: 'Details', icon: 'info', onClick: () => props.onViewClick() },
                         { label: 'Duplicate', icon: 'content_copy', onClick: () => props.onDuplicateClick() },
                         { label: 'Sort Job', icon: 'sort_by_alpha', onClick: () => props.onSortJobClick(), hidden: props.playList.smartType !== "Playlist" },
-                        { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() }
+                        { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() },
+                        { label: 'Show Log', icon: 'open_in_new', onClick: () => loadLog(props.playList.id) }
                     ]}
                 />
             </div>
