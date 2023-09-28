@@ -23,9 +23,6 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
     const basicData = playlistContext.getBasicData();
     const ordersBy = appContext.getOrdersBy();
     var sourceItems = appContext.getSourcesFor(basicData.sourceType);
-    var [uiState, setUIState] = React.useState({
-        sortLabel: isShuffleUpdateType ? 'Sort by:' : 'Sort newly added items by:'
-    })
 
     return (
         <>
@@ -60,7 +57,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                         sourceItems = appContext.getSourcesFor(newVal);
                         updateBasicData({
                             sourceType: newVal,
-                            source: sourceItems[0]
+                            source: sourceItems[0],
+                            monitorMode: false
                         });
                     }}
                     style={{ width: '150px' }}
@@ -92,18 +90,26 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             updateType: newVal,
                         });
 
-                        const shuffle: boolean = (
-                            newVal === 'ShuffleDaily' ||
-                            newVal === 'ShuffleMonthly' ||
-                            newVal === 'ShuffleWeekly'
-                        )
-
-                        setUIState({
-                            sortLabel: shuffle ? 'Sort by:' : 'Sort newly added items by:'
-                        });
+                        if (!isShuffleUpdateType()) {
+                            updateBasicData({
+                                monitorMode: false
+                            })
+                        }
                     }}
                     style={{ width: '120px' }}
                 />
+                {(isShuffleUpdateType()) && (
+                    <Toggle
+                        id='Toggle-Monitor-Mode'
+                        label='Monitor'
+                        checked={basicData.monitorMode}
+                        labelTooltip='For shuffle modes, monitor will monitor library changes and include/exclude items between scheduled rebuilds. (Performance hit)'
+                        onToggled={c => {
+                            updateBasicData({
+                                monitorMode: c
+                            })
+                        }} />
+                )}
             </Inline>
 
             <Inline>
@@ -111,8 +117,9 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                     <>
                         <Toggle
                             id="Toggle-Sort"
-                            label='Sort'
+                            label='Sort by:'
                             checked={basicData.newItemOrder.hasSort}
+                            labelTooltip={isShuffleUpdateType() ? 'Sort all items by' : 'Sort newly added items by'}
                             onToggled={c => {
                                 updateBasicData({
                                     newItemOrder: {
@@ -132,7 +139,7 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                             }}
                         />
                         <Select
-                            label={uiState.sortLabel}
+                            label={isShuffleUpdateType() ? 'Sort all items by:' : 'Sort newly added items by:'}
                             disabled={!basicData.newItemOrder.hasSort}
                             maxWidth={true}
                             values={ordersBy}
@@ -146,12 +153,14 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
                                 })
                             }
                         />
+
                     </>
                 )}
                 <Toggle
                     id="Toggle-Limit"
                     label='Limited:'
                     checked={basicData.limit.hasLimit}
+                    labelTooltip='Limit the amount if items ordered by the Limit Order'
                     onToggled={c => {
                         updateBasicData({
                             limit: {

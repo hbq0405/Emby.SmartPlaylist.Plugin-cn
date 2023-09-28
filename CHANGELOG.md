@@ -2,9 +2,10 @@
 ## Version 2.4.0.3
   ## Feature
   - Create a copy of a play list. (Duplicate)
-  - Declutter UI by adding a pop up menu to playlist
+  - Decluttered UI by adding a pop up menu to playlist
   - Added Audio Stream Language Criteria
-- 
+  - Added Monitor Mode to shuffle playlist type. Meaning that the playlist will be destroyed and recreated on a schedule, but between scheduled executions, media item changes will be batched and monitored for inclusion/exclusion. (So .... combination of live and shuffle modes)
+  
 ## Version 2.4.0.2
   ## Feature
   - Added Resolution Height Criteria

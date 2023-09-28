@@ -47,6 +47,7 @@ export const createPlaylist = (): Playlist => {
         newItemOrder: defaultNewItemOrder,
         sourceType: 'Media Items',
         source: undefined,
-        sortJob: defaultSortJob
+        sortJob: defaultSortJob,
+        monitorMode: false
     };
 };

@@ -20,7 +20,8 @@ export type PlaylistBasicData = {
     newItemOrder: NewItemOrder;
     sourceType: SourceType,
     source: Source | undefined,
-    sortJob: SortJob | undefined
+    sortJob: SortJob | undefined,
+    monitorMode: boolean | undefined
 };
 
 export type PlaylistLimit = {

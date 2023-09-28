@@ -53,7 +53,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             UpdateAllSmartPlaylistsCommand message, Domain.SmartPlaylist[] smartPlaylists)
         {
             return message.HasItems
-                ? smartPlaylists.Where(x => x.UpdateType == Domain.UpdateType.Live).ToArray()
+                ? smartPlaylists.Where(x => x.UpdateType == Domain.UpdateType.Live || (x.IsShuffleUpdateType && x.MonitorMode)).ToArray()
                 : new Domain.SmartPlaylist[0];
         }
 

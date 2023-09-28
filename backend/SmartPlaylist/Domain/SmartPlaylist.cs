@@ -44,6 +44,7 @@ namespace SmartPlaylist.Domain
             if (dto.Source != null)
                 Source = new Source(dto.Source);
             SortJob = new SortJob(dto.SortJob);
+            MonitorMode = dto.MonitorMode;
         }
 
         public Guid Id { get; }
@@ -88,16 +89,31 @@ namespace SmartPlaylist.Domain
         public Source Source { get; }
 
         public SortJob SortJob { get; }
+        public bool MonitorMode { get; }
         internal StringCollection LogEntries { get => _logEntries; }
 
         private bool CheckIfCanUpdatePlaylist()
         {
             if (UpdateType == UpdateType.Manual) return false;
 
+            if (IsShuffleUpdateType && MonitorMode)
+                return true;
+
             if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType))
-                return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
+                return IsShuffleDue();
 
             return true;
+        }
+
+        public bool IsShuffleDue()
+        {
+            if (!IsShuffleUpdateType)
+                return false;
+
+            if (!LastShuffleUpdate.HasValue)
+                return true;
+
+            return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
         }
 
         public BaseItem[] FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
@@ -240,7 +256,8 @@ namespace SmartPlaylist.Domain
                 Enabled = Enabled,
                 SourceType = SourceType,
                 Source = _dto.Source,
-                SortJob = SortJob.ToDto()
+                SortJob = SortJob.ToDto(),
+                MonitorMode = _dto.MonitorMode
             };
         }
     }

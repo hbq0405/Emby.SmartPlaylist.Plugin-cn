@@ -10,7 +10,7 @@ export type ToggleProps = {
     title?: string,
     labelPos?: 'top' | 'right'
     onToggled(change: boolean): void,
-
+    labelTooltip?: string
 } & BaseProps;
 
 export const Toggle: React.FC<ToggleProps> = props => {
@@ -49,13 +49,13 @@ export const Toggle: React.FC<ToggleProps> = props => {
 
     if (props.labelPos == 'top')
         return <div className='inputContainer padding-lr'>
-            <label className='inputLabel inputLabelUnfocused' htmlFor={props.id}>{props.label}</label>
+            <label className='inputLabel inputLabelUnfocused' title={props.labelTooltip} htmlFor={props.id}>{props.label}</label>
             {main}
         </div>
     else
         return <div className='label-right-container'>
             {main}
-            <div className='label-right'>{props.label}</div>
+            <div className='label-right' title={props.labelTooltip}>{props.label}</div>
         </div>
 
 }

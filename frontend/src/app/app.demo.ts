@@ -57,7 +57,8 @@ export const demoAppPlaylists: AppPlaylist[] = [
                 level: 1,
             }),
         ],
-        sortJob: defaultSortJob
+        sortJob: defaultSortJob,
+        monitorMode: false
     },
 ];
 
@@ -79,7 +80,8 @@ export const demoAppPlaylistView: PlaylistInfo = {
         byId: {},
         rootIds: []
     },
-    sortJob: defaultSortJob
+    sortJob: defaultSortJob,
+    monitorMode: false
 }
 
 export const demoLimitOrdersBy = ['Album', 'Artist'];

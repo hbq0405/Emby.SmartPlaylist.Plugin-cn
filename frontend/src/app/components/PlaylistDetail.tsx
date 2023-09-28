@@ -51,7 +51,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             ]} />
             <InfoRow InfoItems={[
                 { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? (playlist.collectionMode ? playlist.collectionMode : 'Item') : 'N/A', visible: true },
-                { label: 'Update: ', text: playlist.updateType, visible: true },
+                { label: 'Update: ', text: playlist.updateType + (playlist.monitorMode ? ' (Monitored)' : ''), visible: true },
                 { label: 'Next Update: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A', visible: true },
                 { label: 'Last Edited: ', text: playlist.lastUpdated ? playlist.lastUpdated.toLocaleString() : 'N/A', visible: true },
 
