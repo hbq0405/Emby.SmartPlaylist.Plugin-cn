@@ -4,7 +4,9 @@
   - Create a copy of a play list. (Duplicate)
   - Decluttered UI by adding a pop up menu to playlist
   - Added Audio Stream Language Criteria
-  - Added Monitor Mode to shuffle playlist type. Meaning that the playlist will be destroyed and recreated on a schedule, but between scheduled executions, media item changes will be batched and monitored for inclusion/exclusion. (So .... combination of live and shuffle modes)
+  - Added Monitor Mode to shuffle playlist type. Meaning that the playlist will be destroyed and recreated on a schedule, but between scheduled executions, media item changes will be batched and monitored for inclusion/exclusion. (So .... combination of live and shuffle modes but could have a perf hit on larger playlists)
+  - Collapsible sections in the playlist editor that keeps state, for more UI real estate.
+  - Add the ability to add notes to a playlist (limited to 256 chars). If the are notes assigned this pop up when hovering over a playlist. 
   
 ## Version 2.4.0.2
   ## Feature

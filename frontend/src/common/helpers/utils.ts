@@ -64,3 +64,19 @@ export const loadLog = (id) => {
         showError({ label: "Error loading playlist log", content: msg, modal: true });
     }
 }
+
+export const showHoverToast = (content) => {
+    if (!content || content === '')
+        return;
+
+    toast.info(
+        content, {
+        toastId: 'notes-toast',
+        position: "bottom-right",
+        autoClose: false,
+    });
+};
+
+export const dismissToast = () => {
+    toast.dismiss();
+}

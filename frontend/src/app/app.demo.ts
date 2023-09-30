@@ -12,7 +12,8 @@ import {
     defaultSmartType,
     defaultCollectionMode,
     defaultNewItemOrder,
-    defaultSortJob
+    defaultSortJob,
+    defaultUISections
 } from '~/app/app.const';
 import { PlaylistInfo, ServerResponse } from './types/playlist';
 
@@ -58,7 +59,9 @@ export const demoAppPlaylists: AppPlaylist[] = [
             }),
         ],
         sortJob: defaultSortJob,
-        monitorMode: false
+        monitorMode: false,
+        uiSections: defaultUISections,
+        notes: ''
     },
 ];
 
@@ -81,7 +84,9 @@ export const demoAppPlaylistView: PlaylistInfo = {
         rootIds: []
     },
     sortJob: defaultSortJob,
-    monitorMode: false
+    monitorMode: false,
+    uiSections: defaultUISections,
+    notes: ''
 }
 
 export const demoLimitOrdersBy = ['Album', 'Artist'];

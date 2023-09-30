@@ -9,7 +9,7 @@ import {
     RuleCriteriaDefinitionType,
     StringValue,
 } from '~/app/types/rule';
-import { LimitOrderBy, PlaylistLimit, SmartType, UpdateType, CollectionMode as CollectionMode, NewItemOrder, SortJob } from '~/app/types/playlist';
+import { LimitOrderBy, PlaylistLimit, SmartType, UpdateType, CollectionMode as CollectionMode, NewItemOrder, SortJob, UISections } from '~/app/types/playlist';
 
 export const RuleMatchTypes = ['All', 'Any'] as const;
 export const PeriodValues = ['days', 'weeks', 'months'] as const;
@@ -154,3 +154,10 @@ export const defaultUpdateType: UpdateType = 'Live';
 export const defaultGroupMatchType: GroupMatchMode = 'All';
 export const defaultSmartType: SmartType = 'Playlist';
 export const defaultCollectionMode: CollectionMode = 'Item';
+
+export const defaultUISections: UISections = {
+    setup: true,
+    sort: true,
+    rules: true,
+    notes: false
+}

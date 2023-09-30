@@ -45,6 +45,8 @@ namespace SmartPlaylist.Domain
                 Source = new Source(dto.Source);
             SortJob = new SortJob(dto.SortJob);
             MonitorMode = dto.MonitorMode;
+            UISections = new UISections(dto.UISections);
+            Notes = dto.Notes;
         }
 
         public Guid Id { get; }
@@ -87,9 +89,10 @@ namespace SmartPlaylist.Domain
         public string MediaType { get; }
         public String SourceType { get; }
         public Source Source { get; }
-
         public SortJob SortJob { get; }
         public bool MonitorMode { get; }
+        public UISections UISections { get; }
+        public string Notes { get; }
         internal StringCollection LogEntries { get => _logEntries; }
 
         private bool CheckIfCanUpdatePlaylist()
@@ -116,9 +119,18 @@ namespace SmartPlaylist.Domain
             return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
         }
 
+        private BaseItem[] GetSourceItems(UserFolder userPlaylist)
+        {
+            if (SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase))
+            {
+                return userPlaylist.GetItems();
+            }
+            return new BaseItem[] { };
+        }
+
         public BaseItem[] FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
         {
-            var playlistItems = SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase) ? userPlaylist.GetItems() : new BaseItem[] { };
+            var playlistItems = this.GetSourceItems(userPlaylist);
             var newItems = FilterItems(playlistItems, items, userPlaylist.User).ToArray();
             Log($"Dealing with {newItems.Length} after filter.");
             if (newItems.Length == 0)
@@ -257,7 +269,9 @@ namespace SmartPlaylist.Domain
                 SourceType = SourceType,
                 Source = _dto.Source,
                 SortJob = SortJob.ToDto(),
-                MonitorMode = _dto.MonitorMode
+                MonitorMode = _dto.MonitorMode,
+                UISections = _dto.UISections,
+                Notes = _dto.Notes
             };
         }
     }

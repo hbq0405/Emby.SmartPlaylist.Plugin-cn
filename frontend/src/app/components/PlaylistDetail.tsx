@@ -3,11 +3,6 @@ import { PlaylistInfo } from '~/app/types/playlist';
 import './PlaylistDetail.css'
 import { InfoRow } from '~/common/components/InfoRow';
 import { TagList } from '~/common/components/TagList';
-import { Button } from '~/emby/components/Button';
-import { Icon } from '~/emby/components/Icon';
-import { viewPlaylistLog } from '~/emby/app.data';
-import { openUrl, showError } from '~/common/helpers/utils';
-
 
 export type PlaylistDetailProps = {
     playlist: PlaylistInfo

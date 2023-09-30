@@ -5,7 +5,7 @@ import { PlaylistAction, playlistReducer } from '~/app/state/playlist/playlist.r
 import { normalizeArray } from '~/common/helpers/array';
 import { createTreeViewData } from '~/common/components/TreeView/types/tree.factory';
 import { AppData, Source, User } from '~/app/types/appData';
-import { defaultPlaylistLimit } from '~/app/app.const';
+import { defaultPlaylistLimit, defaultUISections } from '~/app/app.const';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
 import { getAppPlaylistForPlaylist } from './app.selectors';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
