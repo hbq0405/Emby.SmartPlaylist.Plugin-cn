@@ -55,11 +55,11 @@ export const ListItem: React.FC<ListItemProps> = props => {
                     open={false}
                     position='left center'
                     menuItems={[
-                        { label: 'Details', icon: 'info', onClick: () => props.onViewClick() },
+                        { label: 'Details', icon: 'info_outline', onClick: () => props.onViewClick() },
                         { label: 'Duplicate', icon: 'content_copy', onClick: () => props.onDuplicateClick() },
                         { label: 'Sort Job', icon: 'sort_by_alpha', onClick: () => props.onSortJobClick(), hidden: props.playList.smartType !== "Playlist" },
                         { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() },
-                        { label: 'Show Log', icon: 'description', onClick: () => loadLog(props.playList.id) }
+                        { label: 'Show Log', icon: 'grading', onClick: () => loadLog(props.playList.id) }
                     ]}
                 />
             </div>
