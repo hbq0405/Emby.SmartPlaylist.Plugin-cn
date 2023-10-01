@@ -32,6 +32,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             <Collapsible
                 trigger="Setup"
                 open={basicData.uiSections.setup}
+                openedClassName='Window_look'
+                contentOuterClassName={basicData.uiSections.setup ? '' : 'Hide_window'}
                 onTriggerOpening={() => updateBasicData({
                     uiSections: {
                         ...basicData.uiSections,
@@ -137,6 +139,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             <Collapsible
                 trigger="Sorting"
                 open={basicData.uiSections.sort}
+                openedClassName='Window_look'
+                contentOuterClassName={basicData.uiSections.sort ? '' : 'Hide_window'}
                 onTriggerOpening={() => updateBasicData({
                     uiSections: {
                         ...basicData.uiSections,
@@ -255,6 +259,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             <Collapsible
                 trigger="Rules"
                 open={basicData.uiSections.rules}
+                openedClassName='Window_look'
+                contentOuterClassName={basicData.uiSections.rules ? '' : 'Hide_window'}
                 onTriggerOpening={() => updateBasicData({
                     uiSections: {
                         ...basicData.uiSections,
@@ -294,6 +300,8 @@ export const PlaylistEditor: React.FC<PlaylistEditorProps> = () => {
             <Collapsible
                 trigger="Notes"
                 open={basicData.uiSections.notes}
+                openedClassName='Window_look'
+                contentOuterClassName={basicData.uiSections.notes ? '' : 'Hide_window'}
                 onTriggerOpening={() => updateBasicData({
                     uiSections: {
                         ...basicData.uiSections,

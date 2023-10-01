@@ -65,18 +65,23 @@ export const loadLog = (id) => {
     }
 }
 
-export const showHoverToast = (content) => {
+var hoverTimer;
+export const showHoverToast = (content, delay = 2000) => {
+    clearTimeout(hoverTimer);
     if (!content || content === '')
         return;
 
-    toast.info(
-        content, {
-        toastId: 'notes-toast',
-        position: "bottom-right",
-        autoClose: false,
-    });
+    hoverTimer = setTimeout(() => {
+        toast.info(
+            content, {
+            toastId: 'notes-toast',
+            position: "bottom-right",
+            autoClose: false
+        });
+    }, delay);
 };
 
 export const dismissToast = () => {
+    clearTimeout(hoverTimer);
     toast.dismiss();
 }
