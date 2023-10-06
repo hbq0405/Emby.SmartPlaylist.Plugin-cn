@@ -44,14 +44,14 @@ namespace SmartPlaylist.Infrastructure
                     .ToList()
                     .ForEach(x => _items[x.Key] = x.Value);
 
-                _lastCacheUpdateTime = DateTimeOffset.UtcNow;
+                _lastCacheUpdateTime = DateTimeOffset.Now;
                 return items.Values;
             });
         }
 
         private bool IsValidGetAllCache(TimeSpan absoluteExpiration)
         {
-            return _lastCacheUpdateTime.HasValue && _lastCacheUpdateTime + absoluteExpiration >= DateTimeOffset.UtcNow;
+            return _lastCacheUpdateTime.HasValue && _lastCacheUpdateTime + absoluteExpiration >= DateTimeOffset.Now;
         }
 
         public void Set(object key, object value)

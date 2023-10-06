@@ -83,7 +83,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
                 }
                 else if (IsOldListOrMapValue(criteria.Value, criteriaDefinition.Values))
                 {
-                    criteria.Value = criteriaDefinition.Values.First();
+                    criteria.Value = criteriaDefinition.Values.FirstOrDefault();
                     changed = true;
                 }
             }
@@ -94,7 +94,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         private static void ChangeCriteriaDefinition(RuleCriteriaValueDto criteria)
         {
             var criteriaDefinition = GetFirstBestMatchedCriteriaDef(criteria);
-            var criteriaDefOperator = criteriaDefinition.Type.Operators.First();
+            var criteriaDefOperator = criteriaDefinition.Type.Operators.FirstOrDefault();
             criteria.Name = criteriaDefinition.Name;
             if (criteria.Operator.Type != criteriaDefOperator.Type)
             {
@@ -106,7 +106,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
         private static CriteriaDefinition GetFirstBestMatchedCriteriaDef(RuleCriteriaValueDto criteria)
         {
             return DefinedCriteriaDefinitions.All.FirstOrDefault(x => x.Type.Name == criteria.Operator.Type) ??
-                   DefinedCriteriaDefinitions.All.First();
+                   DefinedCriteriaDefinitions.All.FirstOrDefault();
         }
 
         private static bool CleanupOldLimit(SmartPlaylistDto dto)
@@ -117,7 +117,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
             var changed = false;
             if (dto.Limit.HasLimit && !DefinedOrders.AllNames.Contains(dto.Limit.OrderBy))
             {
-                dto.Limit.OrderBy = DefinedOrders.AllNames.First();
+                dto.Limit.OrderBy = DefinedOrders.AllNames.FirstOrDefault();
                 changed = true;
             }
 

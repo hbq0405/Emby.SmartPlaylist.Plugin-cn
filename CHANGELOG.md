@@ -2,11 +2,21 @@
 ## Version 2.4.0.3
   ## Feature
   - Create a copy of a play list. (Duplicate)
-  - Decluttered UI by adding a pop up menu to playlist
-  - Added Audio Stream Language Criteria
+  - Decluttered UI by adding a pop up menu to playlists
+  - New Criteria:
+    - Added Audio Stream Codec Criteria (Stream: Audio Codec)
+    - Added Audio Stream Language Criteria (Stream: Audio Language)
+    - Added Audio Stream Display title Criteria (Stream: Audio Display Title)
+    - Added Subtitle Stream Language Criteria (Stream: Subtitle Language)
+    - Added Video Stream Codec Criteria (Stream: Video Codec)
+    - Added Video Stream Display title Criteria (Stream: Video Display Title)
+  - Updated Criteria:
+    - Parental Rating: Now uses official rating under the hood
+    - Resolution Height: Now uses video streams to determine the available video heights rather than the metadata.
+    - Resolution Width: Now uses video streams to determine the available video widths rather than the metadata.
   - Added Monitor Mode to shuffle playlist type. Meaning that the playlist will be destroyed and recreated on a schedule, but between scheduled executions, media item changes will be batched and monitored for inclusion/exclusion. (So .... combination of live and shuffle modes but could have a perf hit on larger playlists, experimental)
   - Collapsible sections in the playlist editor that keeps state, for more UI real estate.
-  - Add the ability to add notes to a playlist (limited to 256 chars). If the are notes assigned this pop up when hovering over a playlist (2 second delay). 
+  - Added the ability to add notes to a playlist (limited to 256 chars). If there are notes assigned a pop up is displayed when hovering over a playlist (2 second delay). 
   
 ## Version 2.4.0.2
   ## Feature

@@ -1,9 +1,6 @@
 .textarea {
-    width: 99%;
-    height: 99%;
     margin: 5px;
     border-width: 1px;
     border-radius: 5px;
     padding: 5px;
-    display: inline-block;
 }

@@ -68,7 +68,7 @@ namespace SmartPlaylist.Api
                 var user = GetUser();
 
                 playlist.UserId = user.Id;
-                playlist.LastShuffleUpdate = DateTimeOffset.UtcNow.Date;
+                playlist.LastShuffleUpdate = DateTimeOffset.Now.Date;
 
                 _smartPlaylistValidator.Validate(playlist);
 

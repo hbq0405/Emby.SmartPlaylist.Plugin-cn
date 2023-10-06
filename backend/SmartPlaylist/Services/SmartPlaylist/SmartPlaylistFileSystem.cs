@@ -25,7 +25,7 @@ namespace SmartPlaylist.Services.SmartPlaylist
 
         public string GetSmartPlaylistFilePath(Guid smartPlaylistId)
         {
-            return Directory.GetFiles(BasePath, $"{smartPlaylistId}.json", SearchOption.AllDirectories).First();
+            return Directory.GetFiles(BasePath, $"{smartPlaylistId}.json", SearchOption.AllDirectories).FirstOrDefault();
         }
 
         public string[] GetSmartPlaylistFilePaths(Guid userId)

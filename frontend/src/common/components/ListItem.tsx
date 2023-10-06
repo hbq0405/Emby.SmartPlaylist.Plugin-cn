@@ -28,8 +28,7 @@ export const ListItem: React.FC<ListItemProps> = props => {
         <div className={mainStyle} data-ripple="false"
             onMouseEnter={() => showHoverToast(notes)}
             onMouseLeave={() => dismissToast()}
-            onClick={() => props.onEditClick()}>
-
+        >
             <div className="plist-icon-container">
                 <span title={props.playList.smartType + ' ' + props.playList.updateType} className="plist-icon md-icon listItemIcon-transparent">{getIconsForPlayList(props.playList)}</span>
             </div>
@@ -58,8 +57,9 @@ export const ListItem: React.FC<ListItemProps> = props => {
                         { label: 'Details', icon: 'info_outline', onClick: () => props.onViewClick() },
                         { label: 'Duplicate', icon: 'content_copy', onClick: () => props.onDuplicateClick() },
                         { label: 'Sort Job', icon: 'sort_by_alpha', onClick: () => props.onSortJobClick(), hidden: props.playList.smartType !== "Playlist" },
-                        { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() },
-                        { label: 'Show Log', icon: 'grading', onClick: () => loadLog(props.playList.id) }
+                        { label: 'Show Log', icon: 'grading', onClick: () => loadLog(props.playList.id) },
+                        { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() }
+
                     ]}
                 />
             </div>

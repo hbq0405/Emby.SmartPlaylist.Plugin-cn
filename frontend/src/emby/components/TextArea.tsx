@@ -28,8 +28,8 @@ export const TextArea: React.FC<TextAreaProps> = props => {
                     throw new Error("Size limit " + props.maxChar + " exceeded");
                 }
 
-                props.onValueChange(sanitizeHtml(d.html(), {
-                    allowedTags: ["b", "i", "em", "strong", "a", "p", "h1", "br", "div"],
+                props.onValueChange(sanitizeHtml(d.text().trim() === "" ? "" : d.html(), {
+                    allowedTags: ["b", "i", "em", "strong", "a", "p", "h1", "br", "div", "ul", "ol", "li"],
                     allowedAttributes: { a: ["href"] }
                 }));
 

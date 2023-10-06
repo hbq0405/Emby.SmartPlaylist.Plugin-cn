@@ -99,24 +99,20 @@ namespace SmartPlaylist.Domain
         {
             if (UpdateType == UpdateType.Manual) return false;
 
-            if (IsShuffleUpdateType && MonitorMode)
-                return true;
+            if (IsShuffleUpdateType && MonitorMode) return true;
 
-            if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType))
-                return IsShuffleDue();
+            if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType)) return IsShuffleDue();
 
             return true;
         }
 
         public bool IsShuffleDue()
         {
-            if (!IsShuffleUpdateType)
-                return false;
+            if (!(IsShuffleUpdateType || IsScheduledType)) return false;
 
-            if (!LastShuffleUpdate.HasValue)
-                return true;
+            if (!LastShuffleUpdate.HasValue) return true;
 
-            return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
+            return DateTimeOffset.Now > LastShuffleUpdate.Value;
         }
 
         private BaseItem[] GetSourceItems(UserFolder userPlaylist)
@@ -218,7 +214,7 @@ namespace SmartPlaylist.Domain
 
         public void UpdateLastShuffleTime()
         {
-            var now = DateTime.UtcNow.Date;
+            var now = DateTime.Now.Date;
 
             switch (UpdateType)
             {

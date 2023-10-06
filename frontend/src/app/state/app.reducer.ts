@@ -194,32 +194,33 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                     ...state
                 };
         }
+    }
 
-            function refreshPlaylist(playlist: Playlist) {
-                let names = state.playlists.names;
-                if (!names.includes(playlist.id)) {
-                    names = [...names, playlist.id];
-                }
+    function refreshPlaylist(playlist: Playlist) {
+        let names = state.playlists.names;
+        if (!names.includes(playlist.id)) {
+            names = [...names, playlist.id];
+        }
 
-                if (playlist.rulesTree instanceof Array) {
-                    playlist.rulesTree = createTreeViewData(playlist.rulesTree as TreeNodeData[])
-                }
+        if (playlist.rulesTree instanceof Array) {
+            playlist.rulesTree = createTreeViewData(playlist.rulesTree as TreeNodeData[])
+        }
 
-                return {
-                    ...state,
-                    playlists: {
-                        ...state.playlists,
-                        byId: {
-                            ...state.playlists.byId,
-                            [playlist.id]: {
-                                ...playlist,
-                            },
-                        },
-                        names: names,
+        return {
+            ...state,
+            playlists: {
+                ...state.playlists,
+                byId: {
+                    ...state.playlists.byId,
+                    [playlist.id]: {
+                        ...playlist,
                     },
-                    editedPlaylist: undefined,
-                    sortJobPlaylist: undefined
-                };
-            }
+                },
+                names: names,
+            },
+            editedPlaylist: undefined,
+            sortJobPlaylist: undefined
+        };
     }
 };
+

@@ -15,7 +15,7 @@ namespace SmartPlaylist.Domain.Operator.Operators.DateOperators
 
         public override bool Compare(DateValue itemValue, LastPeriodValue value)
         {
-            return itemValue.IsBetween(value.ToDateRange(DateTimeOffset.UtcNow));
+            return itemValue.IsBetween(value.ToDateRange(DateTimeOffset.Now));
         }
 
         public override bool Compare(ArrayValue<DateValue> itemValues, LastPeriodValue value)

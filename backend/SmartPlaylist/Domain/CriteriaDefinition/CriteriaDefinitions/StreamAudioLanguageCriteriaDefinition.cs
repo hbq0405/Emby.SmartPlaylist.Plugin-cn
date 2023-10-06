@@ -4,17 +4,17 @@ using System.Linq;
 
 namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 {
-    public class AudioStreamDetailsCriteriaDefinition : CriteriaDefinition
+    public class StreamAudioLanguageCriteriaDefinition : CriteriaDefinition
     {
-        private static readonly Value[] languageValues = Plugin.Instance.LibraryManager.GetStreamLanguages(
+        private static readonly Value[] LanguageValues = Plugin.Instance.LibraryManager.GetStreamLanguages(
             new MediaBrowser.Controller.Entities.InternalItemsQuery(), MediaBrowser.Model.Entities.MediaStreamType.Audio)
-            .Items.Select(x => ListValue.Create(x)).ToArray();
+            .Items.OrderBy(x => x).Select(x => ListValue.Create(x)).ToArray();
 
-        public override string Name => "Audio Stream Language";
+        public override string Name => "Stream: Audio Language";
 
-        public override CriteriaDefinitionType Type => new ListValueDefinitionType(languageValues.First() as ListValue);
+        public override CriteriaDefinitionType Type => new ListValueDefinitionType(LanguageValues.Count() == 0 ? ListValue.Create("") : LanguageValues.First() as ListValue);
 
-        public override Value[] Values => languageValues;
+        public override Value[] Values => LanguageValues;
 
         public override Value GetValue(UserItem item)
         {

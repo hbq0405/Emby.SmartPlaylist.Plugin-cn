@@ -15,8 +15,11 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 
         public override Value GetValue(UserItem item)
         {
-            if (item.Item is Video video)
-                return NumberValue.Create(video.Width);
+            var video = item.Item.GetMediaStreams().Where(x => x.Type == MediaBrowser.Model.Entities.MediaStreamType.Video);
+            if (video.Any())
+                return ArrayValue<NumberValue>.Create(video.Select(x => x.Width.Value).Distinct().Select(x => NumberValue.Create(x)).ToArray());
+            else if (item.Item is Video videoItem)
+                return NumberValue.Create(videoItem.Width);
 
             return Value.None;
         }
