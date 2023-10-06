@@ -17,6 +17,7 @@
   - Added Monitor Mode to shuffle playlist type. Meaning that the playlist will be destroyed and recreated on a schedule, but between scheduled executions, media item changes will be batched and monitored for inclusion/exclusion. (So .... combination of live and shuffle modes but could have a perf hit on larger playlists, experimental)
   - Collapsible sections in the playlist editor that keeps state, for more UI real estate.
   - Added the ability to add notes to a playlist (limited to 256 chars). If there are notes assigned a pop up is displayed when hovering over a playlist (2 second delay). 
+  - Order all selection lists on criteria with dropdowns alphabetically. 
   
 ## Version 2.4.0.2
   ## Feature
