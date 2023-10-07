@@ -18,7 +18,7 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
                 var peoples = BaseItem.LibraryManager.GetItemPeople(item.Item);
 
                 return ArrayValue<StringValue>.Create(peoples.Where(x => PersonTypes.Any(x.IsType))
-                    .Select(x => x.Name)?.Select(StringValue.Create).ToArray());
+                    .Select(x => x.Name)?.OrderBy(x => x)?.Select(StringValue.Create).ToArray());
             }
 
             return Value.None;

@@ -61,7 +61,7 @@ namespace SmartPlaylist.Domain
 
         public void UpdateNextUpdate()
         {
-            var now = DateTime.UtcNow.Date;
+            var now = DateTime.Now.Date;
 
             switch (UpdateType)
             {
@@ -79,7 +79,7 @@ namespace SmartPlaylist.Domain
 
         public bool AvailableToSort()
         {
-            return Enabled && (DateTimeOffset.UtcNow > NextUpdate.Value);
+            return Enabled && (DateTimeOffset.Now > NextUpdate.Value);
         }
 
         public IOrder[] GetOrders()

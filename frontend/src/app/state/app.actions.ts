@@ -57,7 +57,7 @@ export const createAppActions = (
         },
         duplicatePlaylist: (playlist: Playlist) => {
             dispatcher({
-                type: 'app:editPlaylist',
+                type: 'app:addNewPlaylist',
                 playlist: duplicatePlaylist(playlist),
             });
         },

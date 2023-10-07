@@ -53,3 +53,35 @@ export const toBase64 = file => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
 });
+
+export const loadLog = (id) => {
+    try {
+        openUrl(`../smartplaylist/log/${id}`, true)
+    } catch (e) {
+        var msg = e instanceof Response ? "Log file for playlist does not exist yet" :
+            e instanceof Error ? e.message : e;
+
+        showError({ label: "Error loading playlist log", content: msg, modal: true });
+    }
+}
+
+var hoverTimer;
+export const showHoverToast = (content, delay = 2000) => {
+    clearTimeout(hoverTimer);
+    if (!content || content === '')
+        return;
+
+    hoverTimer = setTimeout(() => {
+        toast.info(
+            content, {
+            toastId: 'notes-toast',
+            position: "bottom-right",
+            autoClose: false
+        });
+    }, delay);
+};
+
+export const dismissToast = () => {
+    clearTimeout(hoverTimer);
+    toast.dismiss();
+}

@@ -3,11 +3,6 @@ import { PlaylistInfo } from '~/app/types/playlist';
 import './PlaylistDetail.css'
 import { InfoRow } from '~/common/components/InfoRow';
 import { TagList } from '~/common/components/TagList';
-import { Button } from '~/emby/components/Button';
-import { Icon } from '~/emby/components/Icon';
-import { viewPlaylistLog } from '~/emby/app.data';
-import { openUrl, showError } from '~/common/helpers/utils';
-
 
 export type PlaylistDetailProps = {
     playlist: PlaylistInfo
@@ -15,30 +10,6 @@ export type PlaylistDetailProps = {
 
 export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
     const playlist = props.playlist;
-
-    const handleButton = (btn: HTMLButtonElement, disable: boolean) => {
-        try {
-            btn.disabled = disable;
-            btn.children[0].innerHTML = disable ? 'hourglass_empty' : 'checklist';
-        } catch (e) { }
-    }
-
-    const loadLog = (ev) => {
-        if (ev.target instanceof HTMLButtonElement)
-            handleButton(ev.target, true);
-
-        try {
-            openUrl(`../smartplaylist/log/${playlist.id}`, true)
-        } catch (e) {
-            var msg = e instanceof Response ? "Log file for playlist does not exist yet" :
-                e instanceof Error ? e.message : e;
-
-            showError({ label: "Error loading playlist log", content: msg, modal: true });
-        } finally {
-            if (ev.target instanceof HTMLButtonElement)
-                handleButton(ev.target, false);
-        }
-    }
 
     return (
         <>
@@ -51,7 +22,7 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
             ]} />
             <InfoRow InfoItems={[
                 { label: 'EpiMode: ', text: playlist.smartType == 'Collection' ? (playlist.collectionMode ? playlist.collectionMode : 'Item') : 'N/A', visible: true },
-                { label: 'Update: ', text: playlist.updateType, visible: true },
+                { label: 'Update: ', text: playlist.updateType + (playlist.monitorMode ? ' (Monitored)' : ''), visible: true },
                 { label: 'Next Update: ', text: playlist.lastShuffleUpdate ? playlist.lastShuffleUpdate.toLocaleString() : 'N/A', visible: true },
                 { label: 'Last Edited: ', text: playlist.lastUpdated ? playlist.lastUpdated.toLocaleString() : 'N/A', visible: true },
 
@@ -93,10 +64,6 @@ export const PlaylistDetail: React.FC<PlaylistDetailProps> = props => {
 
             <div className='info-row info-row-label'>Items:</div>
             <TagList Items={playlist.items} />
-
-            <Button style={{ position: 'absolute', top: '15px', right: '10px' }} onClick={loadLog} title="View detailed log file.">
-                <Icon type='checklist' />
-            </Button>
         </>
     );
 };

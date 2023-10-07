@@ -44,6 +44,9 @@ namespace SmartPlaylist.Domain
             if (dto.Source != null)
                 Source = new Source(dto.Source);
             SortJob = new SortJob(dto.SortJob);
+            MonitorMode = dto.MonitorMode;
+            UISections = new UISections(dto.UISections);
+            Notes = dto.Notes;
         }
 
         public Guid Id { get; }
@@ -86,23 +89,44 @@ namespace SmartPlaylist.Domain
         public string MediaType { get; }
         public String SourceType { get; }
         public Source Source { get; }
-
         public SortJob SortJob { get; }
+        public bool MonitorMode { get; }
+        public UISections UISections { get; }
+        public string Notes { get; }
         internal StringCollection LogEntries { get => _logEntries; }
 
         private bool CheckIfCanUpdatePlaylist()
         {
             if (UpdateType == UpdateType.Manual) return false;
 
-            if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType))
-                return DateTimeOffset.UtcNow > LastShuffleUpdate.Value;
+            if (IsShuffleUpdateType && MonitorMode) return true;
+
+            if (LastShuffleUpdate.HasValue && (IsShuffleUpdateType || IsScheduledType)) return IsShuffleDue();
 
             return true;
         }
 
+        public bool IsShuffleDue()
+        {
+            if (!(IsShuffleUpdateType || IsScheduledType)) return false;
+
+            if (!LastShuffleUpdate.HasValue) return true;
+
+            return DateTimeOffset.Now > LastShuffleUpdate.Value;
+        }
+
+        private BaseItem[] GetSourceItems(UserFolder userPlaylist)
+        {
+            if (SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase))
+            {
+                return userPlaylist.GetItems();
+            }
+            return new BaseItem[] { };
+        }
+
         public BaseItem[] FilterPlaylistItems(UserFolder userPlaylist, IEnumerable<BaseItem> items)
         {
-            var playlistItems = SourceType.Equals("Media Items", StringComparison.OrdinalIgnoreCase) ? userPlaylist.GetItems() : new BaseItem[] { };
+            var playlistItems = this.GetSourceItems(userPlaylist);
             var newItems = FilterItems(playlistItems, items, userPlaylist.User).ToArray();
             Log($"Dealing with {newItems.Length} after filter.");
             if (newItems.Length == 0)
@@ -190,7 +214,7 @@ namespace SmartPlaylist.Domain
 
         public void UpdateLastShuffleTime()
         {
-            var now = DateTime.UtcNow.Date;
+            var now = DateTime.Now.Date;
 
             switch (UpdateType)
             {
@@ -240,7 +264,10 @@ namespace SmartPlaylist.Domain
                 Enabled = Enabled,
                 SourceType = SourceType,
                 Source = _dto.Source,
-                SortJob = SortJob.ToDto()
+                SortJob = SortJob.ToDto(),
+                MonitorMode = _dto.MonitorMode,
+                UISections = _dto.UISections,
+                Notes = _dto.Notes
             };
         }
     }

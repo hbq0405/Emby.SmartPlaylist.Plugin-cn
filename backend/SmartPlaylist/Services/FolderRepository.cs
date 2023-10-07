@@ -257,9 +257,9 @@ namespace SmartPlaylist.Services
             }
             else
             {
-                if (smartPlaylist.UpdateType == UpdateType.Live && smartPlaylist.InternalId > 0 && baseFolder is LibraryUserFolder<Playlist>)
+                if ((smartPlaylist.UpdateType == UpdateType.Live || (smartPlaylist.IsShuffleUpdateType && smartPlaylist.MonitorMode)) && smartPlaylist.InternalId > 0 && baseFolder is LibraryUserFolder<Playlist>)
                 {
-                    smartPlaylist.Log($"Source is {smartPlaylist.Name} [Live]");
+                    smartPlaylist.Log($"Source is {smartPlaylist.Name} {(smartPlaylist.IsShuffleUpdateType ? "[Shuffle:Monitor]" : "[Live]")}");
                     return (baseFolder, GetItemsForFolderId(smartPlaylist, baseFolder.User));
                 }
                 else

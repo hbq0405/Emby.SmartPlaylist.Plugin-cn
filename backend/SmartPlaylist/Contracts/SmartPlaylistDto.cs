@@ -11,6 +11,9 @@ namespace SmartPlaylist.Contracts
             NewItemOrder = SmartPlaylistNewItemOrderDto.Default;
             SourceType = "Media Items";
             SortJob = SortJobDto.Default;
+            MonitorMode = false;
+            UISections = UISectionsDto.Default;
+            Notes = string.Empty;
         }
 
         public string Id { get; set; }
@@ -35,6 +38,9 @@ namespace SmartPlaylist.Contracts
         public string SourceType { get; set; }
         public SourceDto Source { get; set; }
         public SortJobDto SortJob { get; set; }
+        public bool MonitorMode { get; set; }
+        public UISectionsDto UISections { get; set; }
+        public string Notes { get; set; }
 
     }
 }

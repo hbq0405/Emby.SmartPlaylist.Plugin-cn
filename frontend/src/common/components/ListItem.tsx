@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { SmartTypes } from '~/app/app.const';
-import { playlistReducer } from '~/app/state/playlist/playlist.reducer';
 import { getIconsForPlayList, Playlist } from '~/app/types/playlist';
 import { Toggle } from './Toggle';
 import { Menu } from '~/app/components/Menu';
+import { dismissToast, loadLog, showHoverToast } from '~/common/helpers/utils';
+
 
 export type ListItemProps = {
     onEditClick(): void;
@@ -22,8 +22,13 @@ export const ListItem: React.FC<ListItemProps> = props => {
     const mainStyle = "listItem listItem-border emby-button plist-row" + (props.playList.enabled ? "" : " plist-row-disabled");
     const sub = props.playList.sourceType + (props.playList.sourceType === "Media Items" ? "" : " (" + props.playList.source.name + ")");
 
+    const notes = !props.playList.notes || props.playList.notes === '' ? '' : <div dangerouslySetInnerHTML={{ __html: props.playList.notes }} />
+
     return (
-        <a className={mainStyle} data-ripple="false">
+        <div className={mainStyle} data-ripple="false"
+            onMouseEnter={() => showHoverToast(notes)}
+            onMouseLeave={() => dismissToast()}
+        >
             <div className="plist-icon-container">
                 <span title={props.playList.smartType + ' ' + props.playList.updateType} className="plist-icon md-icon listItemIcon-transparent">{getIconsForPlayList(props.playList)}</span>
             </div>
@@ -47,15 +52,18 @@ export const ListItem: React.FC<ListItemProps> = props => {
             <div className='playlist-menu'>
                 <Menu
                     open={false}
+                    position='left center'
                     menuItems={[
-                        { label: 'Details', icon: 'info', onClick: () => props.onViewClick() },
+                        { label: 'Details', icon: 'info_outline', onClick: () => props.onViewClick() },
                         { label: 'Duplicate', icon: 'content_copy', onClick: () => props.onDuplicateClick() },
                         { label: 'Sort Job', icon: 'sort_by_alpha', onClick: () => props.onSortJobClick(), hidden: props.playList.smartType !== "Playlist" },
+                        { label: 'Show Log', icon: 'grading', onClick: () => loadLog(props.playList.id) },
                         { label: 'Open', icon: 'open_in_new', onClick: () => props.onOpenClick() }
+
                     ]}
                 />
             </div>
-        </a >
+        </div>
     )
 
 }

@@ -10,6 +10,7 @@ using SmartPlaylist;
 using SmartPlaylist.Services.SmartPlaylist;
 using SmartPlaylist.Handlers.Commands;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace SmartPlaylist.Handlers.CommandHandlers
 {
@@ -35,6 +36,29 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             _executionMode = executionMode;
         }
 
+        public BaseItem[] GetItemsToProcess(SmartPlaylist.Domain.SmartPlaylist smartPlaylist, BaseItem[] newItems, BaseItem[] folderItems)
+        {
+            BaseItem[] ret = null;
+            if (newItems == null)
+            {
+                ret = folderItems;
+            }
+            else if (folderItems == null)
+            {
+                return newItems;
+            }
+            else if (smartPlaylist.UpdateType == UpdateType.Live || (smartPlaylist.IsShuffleUpdateType && smartPlaylist.MonitorMode && !smartPlaylist.IsShuffleDue()))
+            {
+                ret = newItems;
+            }
+            else
+            {
+                ret = folderItems.Union(newItems, new BaseItemComparer()).ToArray();
+            }
+
+            return ret == null ? new BaseItem[] { } : ret;
+        }
+
         public async Task Update(SmartPlaylist.Domain.SmartPlaylist smartPlaylist)
         {
             await Update(smartPlaylist, null);
@@ -52,9 +76,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
             {
                 smartPlaylist.Log($"Execution triggered by '{_executionMode}'");
                 (UserFolder user, BaseItem[] items) folder = await _folderRepository.GetBaseItemsForSmartPlayList(smartPlaylist, _userItemsProvider);
-                BaseItem[] processItems = items == null ? folder.items : folder.items.Union(items).ToArray();
-                if (processItems == null)
-                    processItems = new BaseItem[] { };
+                BaseItem[] processItems = GetItemsToProcess(smartPlaylist, items, folder.items);
 
                 smartPlaylist.Log($"Dealing with {processItems.Length} media items from source.");
                 smartPlaylist.Log($"Query: {smartPlaylist.ExplainRules()}");
@@ -103,6 +125,21 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                     Logger.Instance?.LogError(ex);
                 }
             }
+        }
+    }
+
+    public class BaseItemComparer : IEqualityComparer<BaseItem>
+    {
+        public bool Equals(BaseItem x, BaseItem y)
+        {
+            System.Console.WriteLine(x.Id.CompareTo(y.Id));
+            return x.Id.CompareTo(y.Id) == 0;
+        }
+
+        public int GetHashCode(BaseItem obj)
+        {
+            System.Console.WriteLine("Has");
+            return obj.Id.GetHashCode();
         }
     }
 }

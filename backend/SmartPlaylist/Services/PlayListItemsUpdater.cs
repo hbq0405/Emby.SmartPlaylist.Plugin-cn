@@ -30,7 +30,7 @@ namespace SmartPlaylist.Services
         public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
-            if (folder.SmartPlaylist.IsShuffleUpdateType || folder.SmartPlaylist.Limit.HasLimit)
+            if ((folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit)
                 await ClearPlaylist(folder);
 
             var currentItems = folder.GetItems();
@@ -89,7 +89,6 @@ namespace SmartPlaylist.Services
 
         public void DynamicUpdate()
         {
-            throw new System.NotImplementedException();
         }
 
         public async Task<int> ClearPlaylist(UserFolder folder)

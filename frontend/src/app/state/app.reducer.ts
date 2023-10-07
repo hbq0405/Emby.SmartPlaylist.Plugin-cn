@@ -5,7 +5,7 @@ import { PlaylistAction, playlistReducer } from '~/app/state/playlist/playlist.r
 import { normalizeArray } from '~/common/helpers/array';
 import { createTreeViewData } from '~/common/components/TreeView/types/tree.factory';
 import { AppData, Source, User } from '~/app/types/appData';
-import { defaultPlaylistLimit } from '~/app/app.const';
+import { defaultPlaylistLimit, defaultUISections } from '~/app/app.const';
 import { ConfirmationProps } from '~/emby/components/Confirmation';
 import { getAppPlaylistForPlaylist } from './app.selectors';
 import { TreeNodeData } from '~/common/components/TreeView/types/tree';
@@ -194,32 +194,33 @@ export const appReducer: React.Reducer<AppState, AppAction | PlaylistAction> = (
                     ...state
                 };
         }
+    }
 
-            function refreshPlaylist(playlist: Playlist) {
-                let names = state.playlists.names;
-                if (!names.includes(playlist.id)) {
-                    names = [...names, playlist.id];
-                }
+    function refreshPlaylist(playlist: Playlist) {
+        let names = state.playlists.names;
+        if (!names.includes(playlist.id)) {
+            names = [...names, playlist.id];
+        }
 
-                if (playlist.rulesTree instanceof Array) {
-                    playlist.rulesTree = createTreeViewData(playlist.rulesTree as TreeNodeData[])
-                }
+        if (playlist.rulesTree instanceof Array) {
+            playlist.rulesTree = createTreeViewData(playlist.rulesTree as TreeNodeData[])
+        }
 
-                return {
-                    ...state,
-                    playlists: {
-                        ...state.playlists,
-                        byId: {
-                            ...state.playlists.byId,
-                            [playlist.id]: {
-                                ...playlist,
-                            },
-                        },
-                        names: names,
+        return {
+            ...state,
+            playlists: {
+                ...state.playlists,
+                byId: {
+                    ...state.playlists.byId,
+                    [playlist.id]: {
+                        ...playlist,
                     },
-                    editedPlaylist: undefined,
-                    sortJobPlaylist: undefined
-                };
-            }
+                },
+                names: names,
+            },
+            editedPlaylist: undefined,
+            sortJobPlaylist: undefined
+        };
     }
 };
+

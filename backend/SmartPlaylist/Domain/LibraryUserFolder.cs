@@ -35,7 +35,7 @@ namespace SmartPlaylist.Domain
 
             }
             if (update)
-                Item.UpdateToRepository(MediaBrowser.Controller.Library.ItemUpdateType.MetadataDownload);
+                Item.UpdateToRepository(MediaBrowser.Controller.Library.ItemUpdateType.MetadataEdit);
         }
     }
 }

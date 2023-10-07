@@ -13,7 +13,7 @@ import './App.css';
 import { Confirmation } from '~/emby/components/Confirmation';
 import { Modal } from '~/emby/components/Modal';
 import BeatLoader from "react-spinners/BeatLoader"
-import { openUrl, showError, showInfo, utils_configure } from '~/common/helpers/utils';
+import { dismissToast, openUrl, showError, showInfo, utils_configure } from '~/common/helpers/utils';
 import { Menu } from './Menu';
 import { Export } from './Export';
 import { Inline } from '~/common/components/Inline';
@@ -128,9 +128,9 @@ export const App: React.FC<AppProps> = props => {
                 {editedPlaylist && (
                     <Modal
                         confirmLabel="Save"
-                        onClose={() => discardPlaylist()}
+                        onClose={() => { dismissToast(); discardPlaylist(); }}
                         title={isNewPlaylist(editedPlaylist.id) ? 'Add Playlist' : 'Edit Playlist'}
-                        onConfirm={() => savePlaylist()}
+                        onConfirm={() => { dismissToast(); savePlaylist(); }}
                     >
                         <PlaylistContext.Provider
                             value={createPlaylistContextValue(

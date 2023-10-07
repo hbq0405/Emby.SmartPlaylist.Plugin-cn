@@ -20,7 +20,10 @@ export type PlaylistBasicData = {
     newItemOrder: NewItemOrder;
     sourceType: SourceType,
     source: Source | undefined,
-    sortJob: SortJob | undefined
+    sortJob: SortJob | undefined,
+    monitorMode: boolean | undefined,
+    uiSections: UISections | undefined,
+    notes: string | undefined
 };
 
 export type PlaylistLimit = {
@@ -48,6 +51,13 @@ export type SortJob = {
     thenBys?: string[];
 }
 
+export type UISections = {
+    setup: boolean,
+    sort: boolean,
+    rules: boolean,
+    notes: boolean
+}
+
 export type PlaylistViewData = PlaylistBasicData & {
     internalId?: number,
     lastShuffleUpdate?: Date,
@@ -60,7 +70,6 @@ export type PlaylistViewData = PlaylistBasicData & {
     items: string[],
     ruleCount: number
 }
-
 export type Playlist = PlaylistBasicData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;
 export type PlaylistInfo = PlaylistViewData & PlaylistRulesTree<TreeViewData<RuleOrRuleGroup>>;
 
