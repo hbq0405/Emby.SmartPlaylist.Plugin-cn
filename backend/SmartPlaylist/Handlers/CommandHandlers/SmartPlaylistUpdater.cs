@@ -102,7 +102,7 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                 smartPlaylist.LastSync = DateTime.Now;
                 smartPlaylist.SyncCount++;
 
-                if ((smartPlaylist.IsShuffleUpdateType && smartPlaylist.IsShuffleDue()) || smartPlaylist.IsScheduledType)
+                if (smartPlaylist.IsShuffleUpdateType || smartPlaylist.IsScheduledType)
                     smartPlaylist.UpdateLastShuffleTime();
             }
             catch (Exception ex)
