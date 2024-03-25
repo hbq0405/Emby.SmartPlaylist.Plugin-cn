@@ -1,4 +1,6 @@
 # ChangeLog
+## Version 2.5.0.0-Beta
+
 ## Version 2.4.0.3
   ## Feature
   - Create a copy of a play list. (Duplicate)

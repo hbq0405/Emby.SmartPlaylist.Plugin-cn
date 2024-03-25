@@ -132,13 +132,11 @@ namespace SmartPlaylist.Handlers.CommandHandlers
     {
         public bool Equals(BaseItem x, BaseItem y)
         {
-            System.Console.WriteLine(x.Id.CompareTo(y.Id));
             return x.Id.CompareTo(y.Id) == 0;
         }
 
         public int GetHashCode(BaseItem obj)
         {
-            System.Console.WriteLine("Has");
             return obj.Id.GetHashCode();
         }
     }

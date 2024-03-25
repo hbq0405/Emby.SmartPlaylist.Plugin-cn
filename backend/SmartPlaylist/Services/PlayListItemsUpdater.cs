@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Playlists;
 using SmartPlaylist.Domain;
 using System.Collections.Generic;
 using SmartPlaylist.Extensions;
 using System;
+using MediaBrowser.Controller.Playlists;
 
 namespace SmartPlaylist.Services
 {
@@ -49,8 +49,7 @@ namespace SmartPlaylist.Services
 
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
                     Name = folder.SmartPlaylist.Name,
-                    User = folder.User,
-
+                    User = folder.User
                 }).ConfigureAwait(false);
 
                 ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
