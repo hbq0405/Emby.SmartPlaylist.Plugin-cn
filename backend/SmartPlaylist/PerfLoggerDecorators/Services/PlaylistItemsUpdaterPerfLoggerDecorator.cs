@@ -15,7 +15,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             _decorated = decorated;
         }
 
-        public Task<int> ClearPlaylist(UserFolder folder)
+        public int ClearPlaylist(UserFolder folder)
         {
             using (PerfLogger.Create("ClearPlaylist",
                 () => new { folder }))
@@ -25,7 +25,7 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             using (PerfLogger.Create("RemoveItems",
                 () => new { playlistName = folder.SmartPlaylist.Name, newItemsCount = currentItems.Length }))
@@ -35,13 +35,13 @@ namespace SmartPlaylist.PerfLoggerDecorators.Services
             }
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(UserFolder playlist, BaseItem[] newItems)
+        public (long internalId, string message) UpdateAsync(UserFolder playlist, BaseItem[] newItems)
         {
             using (PerfLogger.Create("UpdatePlaylistItems",
                 () => new { playlistName = playlist.SmartPlaylist.Name, newItemsCount = newItems.Length }))
 
             {
-                return await _decorated.UpdateAsync(playlist, newItems).ConfigureAwait(false);
+                return _decorated.UpdateAsync(playlist, newItems);
             }
         }
     }

@@ -24,24 +24,26 @@ namespace SmartPlaylist.Services
             _collectionManager = collectionManager;
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public (long internalId, string message) UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
             if (folder is LibraryUserFolder<Folder> libraryUserCollection)
             {
                 var currentItems = libraryUserCollection.GetItems();
-                int removed = await RemoveItems(libraryUserCollection, currentItems, (folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
-                int added = await AddItemsToCollection(libraryUserCollection, (folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems).ConfigureAwait(false);
+                int removed = RemoveItems(libraryUserCollection, currentItems,
+                    (folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : newItems);
+                int added = AddItemsToCollection(libraryUserCollection,
+                    (folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit ? new BaseItem[] { } : currentItems, newItems);
                 libraryUserCollection.DynamicUpdate();
                 ret = (libraryUserCollection.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing collection)");
             }
             else if (newItems.Any())
             {
-                BoxSet result = await CreateCollection(new CollectionCreationOptions()
+                BoxSet result = CreateCollection(new CollectionCreationOptions()
                 {
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray<long>(),
                     Name = folder.SmartPlaylist.Name
-                }).ConfigureAwait(false);
+                });
 
                 ret = (result.InternalId, $"Completed - (Added {newItems.Count()} to new collection)");
 
@@ -52,7 +54,7 @@ namespace SmartPlaylist.Services
             return ret;
         }
 
-        public Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
 
@@ -61,15 +63,15 @@ namespace SmartPlaylist.Services
                 _collectionManager.RemoveFromCollection((BoxSet)collectionFolder.Item, toRemove.Select(i => i.InternalId).ToArray());
             }
 
-            return Task.FromResult<int>(toRemove.Count);
+            return toRemove.Count;
         }
 
-        private async Task<int> AddItemsToCollection(LibraryUserFolder<Folder> collection, BaseItem[] currentItems, BaseItem[] newItems)
+        private int AddItemsToCollection(LibraryUserFolder<Folder> collection, BaseItem[] currentItems, BaseItem[] newItems)
         {
             List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (c, n) => c.InternalId == n.InternalId));
             if (toAdd.Any() && collection is LibraryUserFolder<Folder> collectionFolder)
             {
-                await _collectionManager.AddToCollection(collectionFolder.InternalId, toAdd.Select(i => i.InternalId).ToArray());
+                _collectionManager.AddToCollection(collectionFolder.InternalId, toAdd.Select(i => i.InternalId).ToArray());
             }
             return toAdd.Count;
         }
@@ -85,10 +87,10 @@ namespace SmartPlaylist.Services
                 ).OfType<Folder>().ToList<Folder>();
 
 
-        public async Task<BoxSet> CreateCollection(CollectionCreationOptions options)
+        public BoxSet CreateCollection(CollectionCreationOptions options)
         {
 
-            Folder folder = await EnsureLibraryFolder(true).ConfigureAwait(false);
+            Folder folder = EnsureLibraryFolder(true);
             BoxSet newEntry = null;
 
             foreach (long itemId in options.ItemIdList)
@@ -105,7 +107,7 @@ namespace SmartPlaylist.Services
             return newEntry;
         }
 
-        internal async Task<Folder> EnsureLibraryFolder(bool createIfNeeded)
+        internal Folder EnsureLibraryFolder(bool createIfNeeded)
         {
             List<Folder> folders = this.FindFolders();
             if (folders.Count > 0)
@@ -119,7 +121,7 @@ namespace SmartPlaylist.Services
                 ContentType = CollectionType.BoxSets.ToString()
             };
 
-            await this._libraryManager.AddVirtualFolder("Collections", options, true).ConfigureAwait(false);
+            this._libraryManager.AddVirtualFolder("Collections", options, true);
             return this.FindFolders().FirstOrDefault<Folder>();
         }
 
@@ -132,16 +134,16 @@ namespace SmartPlaylist.Services
             return (BoxSet)this._libraryManager.GetItemById(linkedItemInfo.Id);
         }
 
-        public Task<int> ClearPlaylist(UserFolder folder)
+        public int ClearPlaylist(UserFolder folder)
         {
             if (folder is LibraryUserFolder<Folder> collectionFolder)
             {
                 BaseItem[] items = collectionFolder.GetItems();
                 _collectionManager.RemoveFromCollection((BoxSet)collectionFolder.Item, items.Select(i => i.InternalId).ToArray());
 
-                return Task.FromResult<int>(items.Length);
+                return items.Length;
             }
-            return Task.FromResult<int>(0);
+            return 0;
         }
     }
 }

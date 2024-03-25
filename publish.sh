@@ -1,5 +1,5 @@
 #!/bin/bash
-version=2.5.0.48049-beta
+version=2.5.1.4830
 cd frontend
 yarn install
 yarn build

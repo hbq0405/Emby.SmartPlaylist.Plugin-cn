@@ -4,7 +4,7 @@ import { version } from '~/emby/app.data';
 import { Guid } from './guid';
 
 export function utils_configure() {
-    toast.configure();
+    toast.configure({ containerId: "smartPlaylistToast" })
 }
 
 export type ErrorProps = {
@@ -17,7 +17,7 @@ export type ErrorProps = {
 export function showError(errorProps: ErrorProps): void {
     var m = `${errorProps.label}: ${(errorProps.content instanceof Error ? errorProps.content.message : errorProps.content)}`;
     toast.error(m, {
-        containerId: errorProps.modal ? "modalToast" : "appToast",
+        containerId: errorProps.modal ? "smartPlaylistToast-modalToast" : "smartPlaylistToast-appToast",
         autoClose: errorProps.timeout ? errorProps.timeout : false,
         position: 'top-center',
         bodyStyle: {
@@ -28,7 +28,7 @@ export function showError(errorProps: ErrorProps): void {
 
 export function showInfo(msg: string, modal: boolean) {
     toast(msg, {
-        containerId: modal ? "modalToast" : "appToast"
+        containerId: modal ? "smartPlaylistToast-modalToast" : "smartPlaylistToast-appToast"
     });
 }
 
@@ -74,7 +74,7 @@ export const showHoverToast = (content, delay = 2000) => {
     hoverTimer = setTimeout(() => {
         toast.info(
             content, {
-            toastId: 'notes-toast',
+            toastId: 'smartPlaylistToast-notes-toast',
             position: "bottom-right",
             autoClose: false
         });

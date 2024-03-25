@@ -87,8 +87,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                     newItems = smartPlaylist.FilterPlaylistItems(folder.user, processItems).ToArray();
                 }
 
-                var update = await (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                    .UpdateAsync(folder.user, newItems).ConfigureAwait(false);
+                var update = (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+                    .UpdateAsync(folder.user, newItems);
 
                 smartPlaylist.Status = update.message;
 

@@ -1,6 +1,9 @@
 # ChangeLog
-## Version 2.5.0.0-Beta
-
+## Version 2.5.0.4810
+  ## General
+  - Code refactor.
+  - 4.8 compatibility.
+- 
 ## Version 2.4.0.3
   ## Feature
   - Create a copy of a play list. (Duplicate)
@@ -28,7 +31,6 @@
   - Added Favorite (Tree Crawl) Criteria
   - Allow sorting on Limited items for Shuffle playlist. (Shuffle will destroy and create new playlist, where as normal will just append/remove items that mismatch in filter rules.)
 
-
 ## Version 2.4.0.1
   ## Feature
   - Added Import/Export functionality allowing you to backup and restore playlists.
@@ -40,6 +42,7 @@
   - Added More logging around errors and error handling.
 - ## Bug
   - Changed the way log files are transferred.
+
 ## Version 2.4.0.0
   ## Feature
   - Added verbose log to info section.
@@ -56,6 +59,7 @@
   ## Bug
   - If any playlists backend files are corrupt, skips loading the playlist and moves the file to a *.failed file, and continues to load. Currently just crashes out with no notification. 
   - Fixed bug when source was playlist or collection not picking up source items.
+
 ## Version 2.3.0.2
 - ## Feature
   - Removed "Sort newly added items" if the playlist is in "Live" mode
@@ -99,6 +103,7 @@
 - ### Bug
   - Schedule task was not executing scheduled lists correctly.
   - Renaming a playlist. If the Name field is locked the smartplaylist name will be reverted so that the playlist and smartplaylist names stay in sync.
+
 ## Version 2.1.0.3
 - ### Feature
   - Added "Country" Filter Criteria. Filter item on the "ProductionLocation" metadata.
@@ -113,6 +118,7 @@
   - Added tooltips to buttons and icons
 - ### Bug
   - Fixed a legacy bug where the next shuffle date was calculated based on the last shuffle date isn't of the current run date. Meaning that if the playlist ran twice the shuffle date would be bumped twice.
+
 ## Version 2.1.0.2
 - ### Performance
   - Optimized addition and removal of items to a playlist or collection.
@@ -120,6 +126,7 @@
   - Fixed a bug where images could be removed under certain circumstances.
   - Fixed bug where it sometimes would not remove the related playlist when deleting or converting to collection.
   - Fixed when limiting results to 'X' number of items, was not being applied correctly. 
+
 ## Version 2.1.0.1
 - ### Feature
   - Added Sync Count to playlist statistics
@@ -133,6 +140,7 @@
   - Added the ability to execute a playlist from the editor.(Pop up is not the actual execution time, you need to check the info to see how the playlist updated)
   - Renamed criteria "Path" to "Path/Filename".  <span style="color:red">**BREAKING CHANGE, please re-select path/filename, save any playlist that uses the criteria**</span>
   - Fixed thumbnail image rendering in plugin list.
+
 ## Version 2.1.0.0
 - ### Feature
   - Added a new feature that can roll up episode items to either their season or series, this is only available for smart collections. (Emby restriction)
