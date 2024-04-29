@@ -21,8 +21,8 @@
                     "/var/lib/emby/plugins",
                     "${workspaceFolder}/backend/SmartPlaylist/bin/Debug/netstandard2.0"
                 ],
-                "searchMicrosoftSymbolServer": true,
-                "searchNuGetOrgSymbolServer": true,
+                "searchMicrosoftSymbolServer": false,
+                "searchNuGetOrgSymbolServer": false,
                 "moduleFilter": {
                     "mode": "loadAllButExcluded"
                 }

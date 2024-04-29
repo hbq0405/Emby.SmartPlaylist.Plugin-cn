@@ -74,9 +74,8 @@ namespace SmartPlaylist.Services
             List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
-
                 _playlistManager.RemoveFromPlaylist(playlist.InternalId,
-                    toRemove.Select(x => x.ListItemEntryId).ToArray());
+                    toRemove.Select(x => x.ListItemEntryId).ToArray()).ConfigureAwait(true);
             }
 
             return toRemove.Count;
@@ -91,8 +90,11 @@ namespace SmartPlaylist.Services
             if (folder is LibraryUserFolder<Playlist> playlist)
             {
                 BaseItem[] items = playlist.Item.GetChildren(folder.User);
-                _playlistManager.RemoveFromPlaylist(playlist.InternalId, items.Select(c => c.ListItemEntryId).ToArray());
-                return items.Length;
+                if (items != null && items.Length > 0)
+                {
+                    _playlistManager.RemoveFromPlaylist(playlist.InternalId, items.Select(c => c.ListItemEntryId).ToArray()).ConfigureAwait(true);
+                }
+                return items == null ? 0 : items.Length;
             }
             return 0;
         }

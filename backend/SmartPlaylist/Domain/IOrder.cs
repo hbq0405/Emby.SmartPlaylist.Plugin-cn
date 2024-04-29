@@ -13,8 +13,13 @@ namespace SmartPlaylist.Domain
     public static class Sorter
     {
 
-        public static BaseItem[] Sort(BaseItem[] items, params IOrder[] orders)
+        public static BaseItem[] Sort(BaseItem[] items, SmartPlaylist smartPlaylist, params IOrder[] orders)
         {
+
+            foreach (IOrder order in orders)
+            {
+                order.SmartPlaylist = smartPlaylist;
+            }
 
             if (orders.Any(x => x.IsShuffle))
                 return items.Shuffle();
@@ -97,6 +102,7 @@ namespace SmartPlaylist.Domain
         public virtual Func<BaseItem, IComparable> Function => x => (IComparable)x;
         public virtual IComparer<BaseItem> Comparer { get; }
         public virtual SortOrder Direction => SortOrder.Ascending;
+        public virtual SmartPlaylist SmartPlaylist { get; set; }
     }
 
     public class OrderRandom : IOrder
@@ -162,7 +168,11 @@ namespace SmartPlaylist.Domain
     public class OrderLeastPlayed : IOrder
     {
         public override string Name => "Least played";
-        public override Func<BaseItem, IComparable> Function => x => x.PlayCount;
+        public override Func<BaseItem, IComparable> Function => x =>
+        {
+            //this.SmartPlaylist.Log($"OrderLeastPlayed:{x.Name}:PlayCount:{x.PlayCount}");
+            return x.PlayCount;
+        };
     }
 
     public class OrderPlayedDateDesc : IOrder
@@ -175,7 +185,11 @@ namespace SmartPlaylist.Domain
     public class OrderPlayedDateAsc : IOrder
     {
         public override string Name => "Played date asc";
-        public override Func<BaseItem, IComparable> Function => x => x.LastPlayedDate;
+        public override Func<BaseItem, IComparable> Function => x =>
+        {
+            this.SmartPlaylist.Log($"Sort: Last Play date:{x.Name}:{x.LastPlayedDate}");
+            return x.LastPlayedDate;
+        };
     }
 
     public class OrderName : IOrder

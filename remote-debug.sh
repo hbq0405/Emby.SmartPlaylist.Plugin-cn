@@ -11,9 +11,7 @@ dotnet publish --configuration debug
 cd ..
 
 echo "====== Copying ======"
-rm -f /var/lib/emby/plugins/SmartPlaylist.dll
-rm -f /var/lib/emby/plugins/SmartPlaylist.pdb
-cp -v backend/SmartPlaylist/bin/Debug/netstandard2.0/SmartPlaylist.dll /var/lib/emby/plugins/SmartPlaylist.dll
-cp -v backend/SmartPlaylist/bin/Debug/netstandard2.0/SmartPlaylist.pdb /var/lib/emby/plugins/SmartPlaylist.pdb
+rm -f /var/lib/emby/plugins/SmartPlaylist.*
+cp -v backend/SmartPlaylist/bin/Debug/netstandard2.0/SmartPlaylist.* /var/lib/emby/plugins/
 #sudo chmod 777 /var/lib/emby/plugins/SmartPlaylist.*
 echo "====== !!DONE!! ======"

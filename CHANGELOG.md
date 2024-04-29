@@ -1,9 +1,13 @@
 # ChangeLog
+## Version 2.5.1.4850
+  ## Bug
+  - Fixed bug with clearing playlist.
+
 ## Version 2.5.0.4810
   ## General
   - Code refactor.
   - 4.8 compatibility.
-- 
+ 
 ## Version 2.4.0.3
   ## Feature
   - Create a copy of a play list. (Duplicate)
