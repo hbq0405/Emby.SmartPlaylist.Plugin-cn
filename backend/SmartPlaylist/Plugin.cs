@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Collections;
-using MediaBrowser.Controller.Configuration;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using MediaBrowser.Controller.Session;
@@ -101,7 +101,6 @@ namespace SmartPlaylist
                 GlobalCache.Add(key, item);
                 return item;
             }
-
         }
 
         public ImageFormat ThumbImageFormat => ImageFormat.Png;
@@ -112,22 +111,17 @@ namespace SmartPlaylist
             {
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.4.0.3.html",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.4.0.3.html",
+                    Name = "smartplaylist.2.5.1.4850.html",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.5.1.4850.html",
                     EnableInMainMenu = true,
-                    MenuIcon = "subscriptions"
+                    MenuIcon = "subscriptions",
+                    IsMainConfigPage = true
                 },
                 new PluginPageInfo
                 {
-                    Name = "smartplaylist.2.4.0.3.css",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.4.0.3.css"
-                },
-                new PluginPageInfo
-                {
-                    Name = "smartplaylist.2.4.0.3.js",
-                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.4.0.3.js"
+                    Name = "smartplaylist.2.5.1.4850.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Configuration.smartplaylist.2.5.1.4850.js"
                 }
-
             };
         }
 
@@ -147,7 +141,6 @@ namespace SmartPlaylist
             MessageBus.Subscribe(Decorate(SmartPlaylistCommandHandler));
             MessageBus.Subscribe(Decorate(updateAllSmartPlaylistsWithItemsCommandHandler));
             MessageBus.Subscribe(Decorate(sortAllSmartPlaylistsCommandHandler));
-
         }
 
         private IMessageHandler<T> Decorate<T>(IMessageHandler<T> messageHandler) where T : IMessage

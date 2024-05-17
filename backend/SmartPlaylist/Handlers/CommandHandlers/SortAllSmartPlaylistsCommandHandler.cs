@@ -36,7 +36,7 @@ public class SortAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<SortAllS
         var smartPlaylists =
                 await SmartPlaylistProvider.GetAllSortableSmartPlaylistsAsync().ConfigureAwait(false);
 
-        smartPlaylists.ForEach(async (SmartPlaylist.Domain.SmartPlaylist smartPlaylist) =>
+        smartPlaylists.ForEach((SmartPlaylist.Domain.SmartPlaylist smartPlaylist) =>
         {
             Stopwatch sw = new Stopwatch();
 
@@ -48,11 +48,11 @@ public class SortAllSmartPlaylistsCommandHandler : IMessageHandlerAsync<SortAllS
                 UserFolder folder = FolderRepository.GetUserPlaylistOrCollectionFolder(smartPlaylist);
 
                 BaseItem[] currentItems = folder.GetItems();
-                BaseItem[] sortedItems = Sorter.Sort(currentItems, smartPlaylist.SortJob.GetOrders());
+                BaseItem[] sortedItems = Sorter.Sort(currentItems, smartPlaylist, smartPlaylist.SortJob.GetOrders());
 
                 var updater = (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? CollectionUpdater : PlaylistUpdater);
-                await updater.ClearPlaylist(folder);
-                await updater.UpdateAsync(folder, sortedItems);
+                updater.ClearPlaylist(folder);
+                updater.UpdateAsync(folder, sortedItems);
 
                 smartPlaylist.SortJob.Status = $"Sorted {sortedItems.Length} Items successfully";
                 smartPlaylist.SortJob.LastRan = DateTime.Now;

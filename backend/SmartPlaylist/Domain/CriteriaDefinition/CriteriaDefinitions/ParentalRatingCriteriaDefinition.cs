@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Model.Entities;
 using SmartPlaylist.Domain.Rule;
@@ -8,15 +9,9 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 {
     public class ParentalRatingCriteriaDefinition : CriteriaDefinition
     {
-        private static readonly Value[] OfficialRatings = Plugin.Instance.LibraryManager.GetOfficialRatings(new InternalItemsQuery())
-            .Items.OrderBy(x => x).Select(x => ListValue.Create(x)).ToArray();
-
         public override string Name => "Parental Rating";
-
-        public override CriteriaDefinitionType Type => new ListValueDefinitionType(OfficialRatings.Length == 0 ? ListValue.Create("") : OfficialRatings.First() as ListValue);
-
-        public override Value[] Values { get; } = OfficialRatings;
-
+        public override CriteriaDefinitionType Type => new ListValueDefinitionType(Getter.OfficialRatings.First());
+        public override Value[] Values { get; } = Getter.OfficialRatings;
         public override Value GetValue(UserItem item)
         {
             var rating = item.Item.OfficialRating;
@@ -24,5 +19,7 @@ namespace SmartPlaylist.Domain.CriteriaDefinition.CriteriaDefinitions
 
             return ListValue.Create(rating);
         }
+
+
     }
 }

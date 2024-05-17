@@ -23,7 +23,7 @@
     border-radius: 10px 10px 0px 0px;
 
     &:after {
-        content: 'expand_circle_down';
+        content: '⇣';
         display: block;
         font-family: 'Material Icons Round' !important;
         position: absolute;

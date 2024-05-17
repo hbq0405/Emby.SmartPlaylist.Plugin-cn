@@ -12,6 +12,12 @@
     border: calc(var(--line-size) * 1.8) solid var(--line-background);
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(169, 169, 169, 0.6);
+    background-color: hsla(
+        var(--background-hue),
+        var(--background-saturation),
+        var(--background-lightness),
+        1
+    );
 }
 
 .menu-item {

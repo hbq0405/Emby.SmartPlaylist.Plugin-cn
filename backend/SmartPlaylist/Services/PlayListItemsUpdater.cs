@@ -1,22 +1,19 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Playlists;
-using MediaBrowser.Model.Playlists;
 using SmartPlaylist.Domain;
 using System.Collections.Generic;
 using SmartPlaylist.Extensions;
 using System;
+using MediaBrowser.Controller.Playlists;
 
 namespace SmartPlaylist.Services
 {
     public interface IFolderItemsUpdater
     {
-        Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems);
-        Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
-
-        Task<int> ClearPlaylist(UserFolder folder);
-
+        (long internalId, string message) UpdateAsync(UserFolder folder, BaseItem[] newItems);
+        int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems);
+        int ClearPlaylist(UserFolder folder);
     }
 
     public class PlayListItemsUpdater : IFolderItemsUpdater
@@ -28,30 +25,29 @@ namespace SmartPlaylist.Services
             _playlistManager = playlistManager;
         }
 
-        public async Task<(long internalId, string message)> UpdateAsync(UserFolder folder, BaseItem[] newItems)
+        public (long internalId, string message) UpdateAsync(UserFolder folder, BaseItem[] newItems)
         {
             (long internalId, string message) ret = (0, string.Empty);
             if ((folder.SmartPlaylist.IsShuffleUpdateType && folder.SmartPlaylist.IsShuffleDue()) || folder.SmartPlaylist.Limit.HasLimit)
-                await ClearPlaylist(folder);
+                ClearPlaylist(folder);
 
             var currentItems = folder.GetItems();
 
             if (folder is LibraryUserFolder<Playlist> libraryUserPlaylist)
             {
-                int removed = await RemoveItems(libraryUserPlaylist, currentItems, newItems);
+                int removed = RemoveItems(libraryUserPlaylist, currentItems, newItems);
                 int added = AddToPlaylist(libraryUserPlaylist, currentItems, newItems);
                 libraryUserPlaylist.DynamicUpdate();
                 ret = (libraryUserPlaylist.InternalId, $"Completed - (Removed: {removed} Added: {added} items to the existing playlist)");
             }
             else if (newItems.Any())
             {
-                PlaylistCreationResult request = await _playlistManager.CreatePlaylist(new PlaylistCreationRequest
+                PlaylistCreationResult request = _playlistManager.CreatePlaylist(new PlaylistCreationRequest
                 {
-
                     ItemIdList = newItems.Select(x => x.InternalId).ToArray(),
                     Name = folder.SmartPlaylist.Name,
-                    UserId = folder.User.InternalId,
-                }).ConfigureAwait(false);
+                    User = folder.User
+                }).Result;
 
                 ret = (long.Parse(request.Id), $"Completed - (Added {newItems.Count()} to new playlist)");
             }
@@ -63,7 +59,7 @@ namespace SmartPlaylist.Services
 
         private int AddToPlaylist(LibraryUserFolder<Playlist> playlist, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId && n.ParentId == c.ParentId));
+            List<BaseItem> toAdd = new List<BaseItem>(newItems.Except(currentItems, (n, c) => n.InternalId == c.InternalId));
             if (toAdd.Any())
                 foreach (var chunk in toAdd.Partition(100))
                 {
@@ -73,15 +69,13 @@ namespace SmartPlaylist.Services
             return toAdd.Count;
         }
 
-        public async Task<int> RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
+        public int RemoveItems(UserFolder folder, BaseItem[] currentItems, BaseItem[] newItems)
         {
-            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId && c.ParentId == n.ParentId));
+            List<BaseItem> toRemove = new List<BaseItem>(currentItems.Except(newItems, (c, n) => c.InternalId == n.InternalId));
             if (toRemove.Any() && folder is LibraryUserFolder<Playlist> playlist)
             {
-
-                await _playlistManager.RemoveFromPlaylist(playlist.InternalId,
-                  toRemove.Select(x => x.ListItemEntryId).ToArray()).ConfigureAwait(false);
-
+                _playlistManager.RemoveFromPlaylist(playlist.InternalId,
+                    toRemove.Select(x => x.ListItemEntryId).ToArray()).ConfigureAwait(true);
             }
 
             return toRemove.Count;
@@ -91,13 +85,16 @@ namespace SmartPlaylist.Services
         {
         }
 
-        public async Task<int> ClearPlaylist(UserFolder folder)
+        public int ClearPlaylist(UserFolder folder)
         {
             if (folder is LibraryUserFolder<Playlist> playlist)
             {
                 BaseItem[] items = playlist.Item.GetChildren(folder.User);
-                await _playlistManager.RemoveFromPlaylist(playlist.InternalId, items.Select(c => c.ListItemEntryId).ToArray());
-                return items.Length;
+                if (items != null && items.Length > 0)
+                {
+                    _playlistManager.RemoveFromPlaylist(playlist.InternalId, items.Select(c => c.ListItemEntryId).ToArray()).ConfigureAwait(true);
+                }
+                return items == null ? 0 : items.Length;
             }
             return 0;
         }

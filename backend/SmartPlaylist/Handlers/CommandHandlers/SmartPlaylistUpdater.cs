@@ -87,8 +87,8 @@ namespace SmartPlaylist.Handlers.CommandHandlers
                     newItems = smartPlaylist.FilterPlaylistItems(folder.user, processItems).ToArray();
                 }
 
-                var update = await (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
-                    .UpdateAsync(folder.user, newItems).ConfigureAwait(false);
+                var update = (smartPlaylist.SmartType == SmartPlaylist.Domain.SmartType.Collection ? _collectionItemsUpdater : _playlistItemsUpdater)
+                    .UpdateAsync(folder.user, newItems);
 
                 smartPlaylist.Status = update.message;
 
@@ -132,13 +132,11 @@ namespace SmartPlaylist.Handlers.CommandHandlers
     {
         public bool Equals(BaseItem x, BaseItem y)
         {
-            System.Console.WriteLine(x.Id.CompareTo(y.Id));
             return x.Id.CompareTo(y.Id) == 0;
         }
 
         public int GetHashCode(BaseItem obj)
         {
-            System.Console.WriteLine("Has");
             return obj.Id.GetHashCode();
         }
     }
