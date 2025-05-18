@@ -1,4 +1,4 @@
-name: Build SmartPlaylist Plugin
+name: Build SmartPlaylist Plugin (No Upload)
 
 on:
   push:
@@ -29,9 +29,3 @@ jobs:
 
       - name: List output files for debugging
         run: ls -R SmartPlaylist/bin/Release
-
-      - name: Upload artifact
-        uses: actions-cool/upload-artifact@v1
-        with:
-          name: SmartPlaylist_Emby4.8_CN
-          path: SmartPlaylist/bin/Release/
