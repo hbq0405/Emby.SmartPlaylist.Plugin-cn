@@ -1,0 +1,31 @@
+name: Build SmartPlaylist Plugin
+
+on:
+  push:
+    branches: [ emby4.8-cn ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SmartPlaylist_Emby4.8_CN
+          path: bin/Release/net8.0/SmartPlaylist.dll
