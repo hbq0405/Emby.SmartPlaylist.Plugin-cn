@@ -18,14 +18,20 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Clean previous builds
+        run: dotnet clean
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release
 
+      - name: List output files for debugging
+        run: ls -R bin/Release
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: SmartPlaylist_Emby4.8_CN
-          path: bin/Release/net8.0/SmartPlaylist.dll
+          path: bin/Release/
