@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SmartPlaylist_Emby4.8_CN
-          path: backend/SmartPlaylist/bin/Release/SmartPlaylist.dll
+          path: backend/SmartPlaylist/bin/Release/netstandard2.0/SmartPlaylist.dll
