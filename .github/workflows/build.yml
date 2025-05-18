@@ -30,8 +30,8 @@ jobs:
       - name: List output files for debugging
         run: ls -R bin/Release
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3.0.2
+      - name: Upload artifact mirror
+        uses: actions-cool/upload-artifact@v1
         with:
           name: SmartPlaylist_Emby4.8_CN
           path: bin/Release/
