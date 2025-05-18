@@ -1,4 +1,4 @@
-name: Build SmartPlaylist Plugin (No Upload)
+name: Build SmartPlaylist Plugin (Emby 4.8 中文版)
 
 on:
   push:
@@ -28,4 +28,4 @@ jobs:
         run: dotnet build backend/SmartPlaylist/SmartPlaylist.csproj --configuration Release
 
       - name: List output files for debugging
-        run: ls -R SmartPlaylist/bin/Release
+        run: ls -R backend/SmartPlaylist/bin/Release
