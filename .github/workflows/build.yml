@@ -19,13 +19,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Clean previous builds
-        run: dotnet clean SmartPlaylist/SmartPlaylist.csproj
+        run: dotnet clean backend/SmartPlaylist/SmartPlaylist.csproj
 
       - name: Restore dependencies
-        run: dotnet restore SmartPlaylist/SmartPlaylist.csproj
+        run: dotnet restore backend/SmartPlaylist/SmartPlaylist.csproj
 
       - name: Build
-        run: dotnet build SmartPlaylist/SmartPlaylist.csproj --configuration Release
+        run: dotnet build backend/SmartPlaylist/SmartPlaylist.csproj --configuration Release
 
       - name: List output files for debugging
         run: ls -R SmartPlaylist/bin/Release
