@@ -1,4 +1,4 @@
-name: Build SmartPlaylist Plugin (Emby 4.8 中文版)
+name: Build SmartPlaylist Plugin
 
 on:
   push:
@@ -13,13 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
-
-      - name: Clean previous builds
-        run: dotnet clean backend/SmartPlaylist/SmartPlaylist.csproj
 
       - name: Restore dependencies
         run: dotnet restore backend/SmartPlaylist/SmartPlaylist.csproj
@@ -27,7 +24,7 @@ jobs:
       - name: Build
         run: dotnet build backend/SmartPlaylist/SmartPlaylist.csproj --configuration Release
 
-      - name: Upload SmartPlaylist.dll
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: SmartPlaylist_Emby4.8_CN
