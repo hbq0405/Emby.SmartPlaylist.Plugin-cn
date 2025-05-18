@@ -27,5 +27,8 @@ jobs:
       - name: Build
         run: dotnet build backend/SmartPlaylist/SmartPlaylist.csproj --configuration Release
 
-      - name: List output files for debugging
-        run: ls -R backend/SmartPlaylist/bin/Release
+      - name: Upload SmartPlaylist.dll
+        uses: actions/upload-artifact@v3
+        with:
+          name: SmartPlaylist_Emby4.8_CN
+          path: backend/SmartPlaylist/bin/Release/net8.0/SmartPlaylist.dll
