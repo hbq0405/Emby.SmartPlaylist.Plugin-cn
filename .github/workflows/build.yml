@@ -19,20 +19,19 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Clean previous builds
-        run: dotnet clean
+        run: dotnet clean SmartPlaylist/SmartPlaylist.csproj
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore SmartPlaylist/SmartPlaylist.csproj
 
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet build SmartPlaylist/SmartPlaylist.csproj --configuration Release
 
       - name: List output files for debugging
-        run: ls -R bin/Release
+        run: ls -R SmartPlaylist/bin/Release
 
-            #- name: Upload artifact
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: SmartPlaylist_Emby4.8_CN
-      #    path: bin/Release/
-
+      - name: Upload artifact
+        uses: actions-cool/upload-artifact@v1
+        with:
+          name: SmartPlaylist_Emby4.8_CN
+          path: SmartPlaylist/bin/Release/
